@@ -1,0 +1,8 @@
+# তৈরি হওয়া সাইট (GitHub Actions নিজে তৈরি করে)
+dist/
+__pycache__/
+*.pyc
+.claude/
+*.exe
+.DS_Store
+Thumbs.db

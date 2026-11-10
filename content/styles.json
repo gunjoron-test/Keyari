@@ -1,0 +1,53 @@
+{
+  "_note": "InDesign-এর মতো স্টাইল শিট। প্রতিটি স্টাইল একটি CSS ক্লাসে রূপান্তরিত হয়: অনুচ্ছেদ = .ps-<id>, অক্ষর = .cs-<id>, টেবিল = .ts-<id>, সেল = .tc-<id>। 'extra'-তে & চিহ্ন মানে ঐ স্টাইলের সিলেক্টর।",
+  "paragraph": [
+    { "id": "body", "name": "মূল অনুচ্ছেদ", "css": { "text-indent": "0", "margin-bottom": "1.6em" } },
+    { "id": "indent", "name": "ইন্ডেন্টসহ অনুচ্ছেদ", "css": { "text-indent": "2em", "margin-bottom": "0.4em" } },
+    { "id": "first", "name": "প্রথম অনুচ্ছেদ (ড্রপ ক্যাপ)", "css": { "text-indent": "0" }, "extra": "&::first-letter{float:left;font-size:3.6em;line-height:.9;padding:.08em .12em 0 0;color:var(--accent);font-weight:700}" },
+    { "id": "lead", "name": "সূচনা-অনুচ্ছেদ (বড় লেখা)", "css": { "font-size": "1.2em", "line-height": "1.75", "color": "var(--text-muted)" } },
+    { "id": "subhead", "name": "উপশিরোনাম", "css": { "font-size": "1.3em", "font-weight": "700", "margin-top": "1.8em", "margin-bottom": "0.6em", "text-align": "left", "line-height": "1.4" } },
+    { "id": "subhead-center", "name": "উপশিরোনাম (মাঝখানে)", "css": { "font-size": "1.3em", "font-weight": "700", "margin-top": "1.8em", "margin-bottom": "0.6em", "text-align": "center" } },
+    { "id": "poem", "name": "কবিতা", "css": { "white-space": "pre-wrap", "text-align": "left", "line-height": "2", "margin-left": "auto", "margin-right": "auto", "width": "fit-content", "max-width": "100%", "text-indent": "0" } },
+    { "id": "poem-title", "name": "কবিতার শিরোনাম", "css": { "font-size": "1.25em", "font-weight": "700", "text-align": "center", "margin-top": "2.2em", "margin-bottom": "1em" } },
+    { "id": "poem-center", "name": "কবিতা (মাঝখানে)", "css": { "white-space": "pre-wrap", "text-align": "center", "line-height": "2" } },
+    { "id": "scene-break", "name": "দৃশ্য-বিরতি (***)", "css": { "text-align": "center", "letter-spacing": "0.6em", "margin": "2em 0", "color": "var(--accent)", "text-indent": "0" } },
+    { "id": "pullquote", "name": "পুল কোট", "css": { "font-size": "1.35em", "line-height": "1.6", "text-align": "center", "color": "var(--accent)", "border-top": "2px solid var(--line)", "border-bottom": "2px solid var(--line)", "padding": "1em 0.5em", "margin": "2em 0" } },
+    { "id": "quote", "name": "উদ্ধৃতি", "css": { "margin-left": "2em", "margin-right": "1em", "padding-left": "1em", "border-left": "3px solid var(--accent)", "color": "var(--text-muted)" } },
+    { "id": "note", "name": "সম্পাদকের টীকা / বক্স", "css": { "background": "var(--highlight)", "padding": "1em 1.2em", "border-radius": "12px", "font-size": "0.95em" } },
+    { "id": "prev", "name": "পূর্ব প্রকাশের পর…", "css": { "font-style": "italic", "color": "var(--text-muted)", "text-align": "left", "font-size": "0.95em" } },
+    { "id": "signature", "name": "স্বাক্ষর / সমাপ্তি (ডানে)", "css": { "text-align": "right", "font-weight": "600", "margin-top": "2em" } },
+    { "id": "center", "name": "মাঝখানে লেখা", "css": { "text-align": "center", "text-indent": "0" } },
+    { "id": "hanging", "name": "ঝুলন্ত ইন্ডেন্ট (তথ্যসূত্র)", "css": { "padding-left": "2em", "text-indent": "-2em", "text-align": "left" } },
+    { "id": "letter", "name": "চিঠি / পত্র", "css": { "font-style": "italic", "margin-left": "1.5em", "margin-right": "1.5em" } },
+    { "id": "question", "name": "সাক্ষাৎকার — প্রশ্ন", "css": { "font-weight": "700", "color": "var(--accent)", "margin-top": "1.6em", "margin-bottom": "0.4em" } },
+    { "id": "answer", "name": "সাক্ষাৎকার — উত্তর", "css": { "margin-bottom": "1.2em" } },
+    { "id": "caption", "name": "ক্যাপশন", "css": { "font-size": "0.85em", "text-align": "center", "color": "var(--text-muted)", "line-height": "1.5" } },
+    { "id": "reference", "name": "তথ্যসূত্র (ছোট লেখা)", "css": { "font-size": "0.85em", "line-height": "1.6", "color": "var(--text-muted)", "text-align": "left" } },
+    { "id": "two-col", "name": "দুই কলামের অনুচ্ছেদ", "css": { "column-count": "2", "column-gap": "2em", "column-rule": "1px solid var(--line)" } }
+  ],
+  "character": [
+    { "id": "accent", "name": "সবুজ জোর", "css": { "color": "var(--accent)", "font-weight": "700" } },
+    { "id": "smallcaps", "name": "স্মল ক্যাপস", "css": { "font-variant": "small-caps", "letter-spacing": "0.04em" } },
+    { "id": "mark", "name": "হাইলাইট", "css": { "background": "linear-gradient(transparent 55%, #CCEDE0 55%)" } },
+    { "id": "foreign", "name": "বিদেশি শব্দ", "css": { "font-style": "italic" } },
+    { "id": "spaced", "name": "ফাঁকা অক্ষর (ট্র্যাকিং)", "css": { "letter-spacing": "0.15em" } },
+    { "id": "big", "name": "বড় অক্ষর", "css": { "font-size": "1.25em" } },
+    { "id": "small", "name": "ছোট অক্ষর", "css": { "font-size": "0.85em" } },
+    { "id": "muted", "name": "ধূসর লেখা", "css": { "color": "var(--text-muted)" } },
+    { "id": "wavy", "name": "ঢেউ আন্ডারলাইন", "css": { "text-decoration": "underline wavy var(--accent)", "text-underline-offset": "4px" } },
+    { "id": "boxed", "name": "বক্সে শব্দ", "css": { "border": "1px solid var(--line)", "padding": "0 .3em", "border-radius": "4px" } }
+  ],
+  "table": [
+    { "id": "basic", "name": "সাধারণ", "css": { "width": "100%", "border-collapse": "collapse" }, "extra": "& td,& th{border:1px solid var(--line);padding:.6em .8em;vertical-align:top}& th{background:var(--highlight);font-weight:700}" },
+    { "id": "striped", "name": "ডোরাকাটা", "css": { "width": "100%", "border-collapse": "collapse" }, "extra": "& td,& th{padding:.6em .8em;border-bottom:1px solid var(--line)}& tbody tr:nth-child(odd){background:var(--highlight)}& th{text-align:left}" },
+    { "id": "green-head", "name": "সবুজ শিরোনাম", "css": { "width": "100%", "border-collapse": "separate", "border-spacing": "0", "border-radius": "12px", "overflow": "hidden", "box-shadow": "var(--shadow)" }, "extra": "& th{background:var(--accent);color:#fff;padding:.7em .9em;text-align:left}& td{padding:.6em .9em;border-bottom:1px solid var(--line);background:var(--surface)}" },
+    { "id": "borderless", "name": "সীমানাহীন", "css": { "width": "100%", "border-collapse": "collapse" }, "extra": "& td,& th{padding:.4em .8em;border:0}" },
+    { "id": "compact", "name": "ঘন (কমপ্যাক্ট)", "css": { "width": "100%", "border-collapse": "collapse", "font-size": "0.9em" }, "extra": "& td,& th{border:1px solid var(--line);padding:.25em .5em}" },
+    { "id": "poetry-grid", "name": "কবিতা পাশাপাশি (মূল ও অনুবাদ)", "css": { "width": "100%", "border-collapse": "collapse" }, "extra": "& td{width:50%;padding:0 1em;vertical-align:top;white-space:pre-wrap;line-height:2}& td+td{border-left:1px solid var(--line)}" }
+  ],
+  "cell": [
+    { "id": "highlight", "name": "হাইলাইট সেল", "css": { "background": "#CCEDE0" } },
+    { "id": "center", "name": "মাঝখানে", "css": { "text-align": "center", "vertical-align": "middle" } },
+    { "id": "number", "name": "সংখ্যা (ডানে)", "css": { "text-align": "right", "font-variant-numeric": "tabular-nums" } }
+  ]
+}

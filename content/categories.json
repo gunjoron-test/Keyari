@@ -1,0 +1,218 @@
+[
+  {
+    "slug": "kothamukh",
+    "name": "কথামুখ",
+    "parent": null,
+    "column": 1,
+    "order": 1,
+    "icon": "✒",
+    "home_pill": true,
+    "description": "সম্পাদকের কথা ও সূচনা-ভাবনা।"
+  },
+  {
+    "slug": "kothasahityo",
+    "name": "কথাসাহিত্য",
+    "parent": null,
+    "column": 1,
+    "order": 2,
+    "icon": "📖",
+    "home_pill": true,
+    "description": "গল্প, উপন্যাস ও অনুবাদ কথাসাহিত্য।"
+  },
+  {
+    "slug": "golpo",
+    "name": "গল্প",
+    "parent": "kothasahityo",
+    "order": 1,
+    "description": ""
+  },
+  {
+    "slug": "onubad-golpo",
+    "name": "অনুবাদ গল্প",
+    "parent": "kothasahityo",
+    "order": 2,
+    "description": ""
+  },
+  {
+    "slug": "uponnyas",
+    "name": "উপন্যাস",
+    "parent": "kothasahityo",
+    "order": 3,
+    "description": ""
+  },
+  {
+    "slug": "onubad-uponnyas",
+    "name": "অনুবাদ উপন্যাস",
+    "parent": "kothasahityo",
+    "order": 4,
+    "description": ""
+  },
+  {
+    "slug": "alapon",
+    "name": "আলাপন",
+    "parent": null,
+    "column": 1,
+    "order": 3,
+    "icon": "💬",
+    "home_pill": true,
+    "description": "সাক্ষাৎকার ও আলাপচারিতা।"
+  },
+  {
+    "slug": "rochonaboli",
+    "name": "রচনাবলি",
+    "parent": null,
+    "column": 2,
+    "order": 4,
+    "icon": "📜",
+    "home_pill": true,
+    "description": "প্রবন্ধ, ইতিহাস, তুরাস ও ফিচার।"
+  },
+  {
+    "slug": "turas",
+    "name": "তুরাস",
+    "parent": "rochonaboli",
+    "order": 1,
+    "description": ""
+  },
+  {
+    "slug": "itihas",
+    "name": "ইতিহাস",
+    "parent": "rochonaboli",
+    "order": 2,
+    "description": ""
+  },
+  {
+    "slug": "probondho",
+    "name": "প্রবন্ধ",
+    "parent": "rochonaboli",
+    "order": 3,
+    "description": ""
+  },
+  {
+    "slug": "feature",
+    "name": "ফিচার",
+    "parent": "rochonaboli",
+    "order": 4,
+    "description": ""
+  },
+  {
+    "slug": "kobitapunjo",
+    "name": "কবিতাকুঞ্জ",
+    "parent": null,
+    "column": 2,
+    "order": 5,
+    "icon": "🌿",
+    "home_pill": true,
+    "description": "কবিতা ও অনুবাদ কবিতা।"
+  },
+  {
+    "slug": "somalochona",
+    "name": "সমালোচনা",
+    "parent": null,
+    "column": 2,
+    "order": 6,
+    "icon": "🔍",
+    "home_pill": true,
+    "description": "আলোকপাত, মতামত ও বইকথা।"
+  },
+  {
+    "slug": "alokpat",
+    "name": "আলোকপাত",
+    "parent": "somalochona",
+    "order": 1,
+    "description": ""
+  },
+  {
+    "slug": "motamot",
+    "name": "মতামত",
+    "parent": "somalochona",
+    "order": 2,
+    "description": ""
+  },
+  {
+    "slug": "boikotha",
+    "name": "বইকথা",
+    "parent": "somalochona",
+    "order": 3,
+    "description": ""
+  },
+  {
+    "slug": "godyolekha",
+    "name": "গদ্যলেখা",
+    "parent": null,
+    "column": 3,
+    "order": 7,
+    "icon": "🖋",
+    "home_pill": true,
+    "description": "মুক্তগদ্য, স্মৃতিগদ্য, ভ্রমণকাহিনি ও দিনলিপি।"
+  },
+  {
+    "slug": "muktogoddo",
+    "name": "মুক্তগদ্য",
+    "parent": "godyolekha",
+    "order": 1,
+    "description": ""
+  },
+  {
+    "slug": "sritikotha",
+    "name": "স্মৃতিগদ্য",
+    "parent": "godyolekha",
+    "order": 2,
+    "description": ""
+  },
+  {
+    "slug": "bhromonkahini",
+    "name": "ভ্রমণকাহিনি",
+    "parent": "godyolekha",
+    "order": 3,
+    "description": ""
+  },
+  {
+    "slug": "dinlipi",
+    "name": "দিনলিপি",
+    "parent": "godyolekha",
+    "order": 4,
+    "description": ""
+  },
+  {
+    "slug": "jibonisahityo",
+    "name": "জীবনীসাহিত্য",
+    "parent": null,
+    "column": 3,
+    "order": 8,
+    "icon": "👤",
+    "home_pill": true,
+    "description": "গল্পভাষ্য, আত্মজীবনী ও জীবনপাঠ।"
+  },
+  {
+    "slug": "golpobhashyo",
+    "name": "গল্পভাষ্য",
+    "parent": "jibonisahityo",
+    "order": 1,
+    "description": ""
+  },
+  {
+    "slug": "attojiboni",
+    "name": "আত্মজীবনী",
+    "parent": "jibonisahityo",
+    "order": 2,
+    "description": ""
+  },
+  {
+    "slug": "jibonpath",
+    "name": "জীবনপাঠ",
+    "parent": "jibonisahityo",
+    "order": 3,
+    "description": ""
+  },
+  {
+    "slug": "shilposomachar",
+    "name": "শিল্পসমাচার",
+    "parent": null,
+    "column": 3,
+    "order": 9,
+    "icon": "🎨",
+    "home_pill": true,
+    "description": "শিল্পভাবনা, শিল্পগল্প ও চিত্রকথা।"
+  }
+]
