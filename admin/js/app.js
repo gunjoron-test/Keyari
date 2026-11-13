@@ -22,7 +22,7 @@ function readAuth() { try { return JSON.parse(localStorage.getItem(AUTH_KEY) || 
 
 async function connect(be, silent) {
   const app = $('#app');
-  app.innerHTML = `<div class="boot"><div class="boot__logo">কেয়ারি</div><div class="spinner"></div><p data-msg>সংযোগ হচ্ছে…</p><div class="progress" style="width:260px"><span data-p></span></div></div>`;
+  app.innerHTML = `<div class="boot"><img class="boot__logo" src="../assets/img/logo.svg" alt="কেয়ারি"><div class="spinner"></div><p data-msg>সংযোগ হচ্ছে…</p><div class="progress" style="width:260px"><span data-p></span></div></div>`;
   try {
     S.be = be;
     S.user = await be.verify();
@@ -45,7 +45,7 @@ function loginScreen(localOk, err = '') {
   const saved = readAuth() || {};
   const c = S.cfg;
   $('#app').innerHTML = `<div class="login">
-    <div class="login__art"><div class="login__brand">কেয়ারি</div>
+    <div class="login__art"><img class="login__brand" src="../assets/img/logo.svg" alt="কেয়ারি">
       <p class="login__quote">“কেয়ারি চায় এমন একটি বীজতলা গড়তে—যেখানে হবে সুন্দরের চাষবাস, শুদ্ধতার পরিচর্যা।”</p>
       <p style="opacity:.85">সম্পাদনা কক্ষ · লেখা, সম্পাদনা ও প্রকাশ</p></div>
     <div class="login__form"><form class="login__card" data-form>
@@ -81,7 +81,7 @@ const NAV = [
 function shell() {
   const role = ROLES[S.role] || ROLES.contributor;
   $('#app').innerHTML = `<div class="shell">
-    <aside class="side" data-side><div class="side__brand">কেয়ারি <small>সম্পাদনা কক্ষ</small></div>
+    <aside class="side" data-side><div class="side__brand"><img src="../assets/img/logo.svg" alt="কেয়ারি" width="58" height="34"><small>সম্পাদনা কক্ষ</small></div>
       <nav class="side__nav" aria-label="অ্যাডমিন মেনু">${NAV.map(([g, items]) => {
         const vis = items.filter((it) => !it[3] || can(it[3]));
         return vis.length ? `<div class="side__group">${g}</div>` + vis.map(([r, ico, label]) => `<a class="side__link" href="#/${r}" data-r="${r}"><span class="ico" aria-hidden="true">${ico}</span>${label}${r === 'posts' ? `<span class="n" data-n-posts>${bn(S.posts.filter((p) => p.status !== 'trash').length)}</span>` : ''}</a>`).join('') : '';
