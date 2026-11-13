@@ -922,7 +922,7 @@ def avatar(a, size=64):
         return f'<img class="avatar" src="{asset(a["photo"])}" alt="{esc(a["name"])}" width="{size}" height="{size}" loading="lazy">'
     initial = (a.get("name") or "?").strip()[:1]
     hue = sum(ord(ch) for ch in a.get("slug", "x")) % 360
-    return f'<span class="avatar avatar--ph" style="--h:{hue};width:{size}px;height:{size}px" aria-hidden="true">{esc(initial)}</span>'
+    return f'<span class="avatar avatar--ph" style="--h:{hue};width:{size}px;height:{size}px;font-size:{round(size * 0.4)}px" aria-hidden="true">{esc(initial)}</span>'
 
 
 def share_bar(p):
@@ -1097,18 +1097,20 @@ def build_post(p):
                              body_class="single", fonts=fonts_in(p.get("body"))))
 
 
-def archive_page(*, path, title, items, crumbs, header_html, description, active="বিষয়সূচি", per=None, ld_type="CollectionPage"):
+def archive_page(*, path, title, items, crumbs, header_html, description, active="বিষয়সূচি", per=None, ld_type="CollectionPage",
+                 header_cls="archive-header", before_grid="", card_fn=None):
     per = per or S.get("archive_per_page", 12)
     total = max(1, math.ceil(len(items) / per))
     bc_html, bc_ld = breadcrumb(crumbs)
     for page in range(1, total + 1):
         chunk = items[(page - 1) * per: page * per]
         ppath = path if page == 1 else f"{path}page/{page}/"
-        grid = "".join(card_v(p) for p in chunk) or '<p class="empty">এই বিভাগে এখনো কোনো লেখা প্রকাশিত হয়নি।</p>'
+        grid = "".join((card_fn or card_v)(p) for p in chunk) or '<p class="empty">এই বিভাগে এখনো কোনো লেখা প্রকাশিত হয়নি।</p>'
         body = f'''<div class="container archive">
   {bc_html}
-  <header class="archive-header">{header_html}</header>
-  <div class="grid grid--3">{grid}</div>
+  <header class="{header_cls}">{header_html}</header>
+  {before_grid}
+  <div class="grid grid--3" data-grid>{grid}</div>
   {pagination(page, total, path)}
 </div>'''
         prev_p = None if page == 1 else (path if page == 2 else f"{path}page/{page - 1}/")
@@ -1162,11 +1164,32 @@ def build_authors():
             if a.get(k):
                 href = ("mailto:" + a[k]) if k == "email" else a[k]
                 social += f'<a class="social" href="{esc(href)}" target="_blank" rel="noopener" aria-label="{k}">{icon(ic, 16)}</a>'
-        header_html = f'''<div class="author-head">{avatar(a, 130)}<div>
-<p class="sec-label">লেখক · {bn(len(a["_posts"]))}টি লেখা</p><h1 class="archive-title">{esc(a["name"])}</h1>
-{f'<p class="archive-desc">{esc(a["bio"])}</p>' if a.get("bio") else ""}
-{f'<div class="footer__social">{social}</div>' if social else ""}</div></div>'''
-        archive_page(path=path, title=a["name"], items=a["_posts"], header_html=header_html, active="বাতায়ন",
+        posts = a["_posts"]
+        cat_counts = {}
+        for p in posts:
+            if p["_top"]:
+                cat_counts[p["_top"]] = cat_counts.get(p["_top"], 0) + 1
+        latest = max(p["_date"] for p in posts)
+        stats = (f'<div><dt>লেখা</dt><dd>{bn(len(posts))}</dd></div>'
+                 f'<div><dt>বিভাগ</dt><dd>{bn(len(cat_counts))}</dd></div>'
+                 f'<div><dt>সর্বশেষ প্রকাশ</dt><dd>{bn_date(latest)}</dd></div>')
+        header_html = f'''<div class="author-hero__ring">{avatar(a, 144)}</div>
+<div class="author-hero__main">
+  <p class="author-hero__kicker">লেখক</p>
+  <h1 class="author-hero__name">{esc(a["name"])}</h1>
+  {f'<p class="author-hero__bio">{esc(a["bio"])}</p>' if a.get("bio") else ""}
+  <dl class="author-stats">{stats}</dl>
+  {f'<div class="author-hero__social">{social}</div>' if social else ""}
+</div>'''
+        chips = ""
+        per_page = 24
+        if 6 <= len(posts) <= per_page and len(cat_counts) > 1:
+            chips = ('<div class="chips" role="group" aria-label="বিভাগ অনুযায়ী ছাঁকুন"><button type="button" class="chip-btn is-active" data-chip="" aria-pressed="true">সব <span class="count">' + bn(len(posts)) + '</span></button>'
+                     + "".join(f'<button type="button" class="chip-btn" data-chip="{k}" aria-pressed="false">{esc(CAT[k]["name"])} <span class="count">{bn(v)}</span></button>' for k, v in sorted(cat_counts.items(), key=lambda kv: -kv[1])) + "</div>")
+        before = f'<div class="author-works">{section_head("লেখাসমূহ", h="h2")}{chips}</div>'
+        archive_page(path=path, title=a["name"], items=posts, header_html=header_html, active="বাতায়ন", per=per_page,
+                     header_cls="author-hero", before_grid=before,
+                     card_fn=lambda p: card_v(p).replace('<article class="card-v">', f'<article class="card-v" data-cat="{p["_top"] or ""}">', 1),
                      crumbs=[("মুখপাতা", "/"), ("লেখক তালিকা", "/লেখক-তালিকা/"), (a["name"], path)],
                      description=a.get("bio") or f'{a["name"]}-এর লেখা — {SITE}', ld_type="ProfilePage")
     # লেখক তালিকা

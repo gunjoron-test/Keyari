@@ -218,6 +218,18 @@
     });
   });
 
+  // ---------- লেখক পাতার বিভাগ-ছাঁকনি ----------
+  $$('.chips').forEach(function (box) {
+    var cards = $$('[data-grid] .card-v');
+    $$('.chip-btn', box).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var k = b.getAttribute('data-chip');
+        $$('.chip-btn', box).forEach(function (x) { var on = x === b; x.classList.toggle('is-active', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+        cards.forEach(function (c) { c.hidden = !!k && c.getAttribute('data-cat') !== k; });
+      });
+    });
+  });
+
   // ---------- অনুসন্ধান পাতা ----------
   var results = $('[data-search-results]');
   if (results) {
