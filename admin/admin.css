@@ -7,7 +7,7 @@
   --shadow: 0 5px 20px rgba(114, 114, 255, .13); --shadow-lg: 0 20px 60px rgba(41, 41, 75, .22);
   --r-lg: 16px; --r-md: 10px; --r-sm: 6px;
   --ui: 'Noto Serif by Gunjoron', serif; --serif: 'Noto Serif by Gunjoron', serif;
-  --side: 252px; --top: 66px;
+  --side: 256px; --top: 76px;
   color-scheme: light;
 }
 [data-scheme="dark"] {
@@ -360,3 +360,7 @@ body.focus-mode .top__title { display: none; }
 .side__link.is-active::before { content: ""; position: absolute; left: -14px; top: 9px; bottom: 9px; width: 4px; border-radius: 0 4px 4px 0; background: var(--accent); }
 .side__link .n { font-size: 12px; font-weight: 600; background: var(--highlight); color: var(--muted); padding: 1px 9px; }
 .side__link.is-active .n { background: var(--surface); color: var(--accent-ink); }
+
+/* ---------- লোগোর জন্য পর্যাপ্ত জায়গা: কখনো কাটবে না, সঙ্কুচিত হবে না ---------- */
+.side__brand { flex: none; position: sticky; top: 0; z-index: 3; height: var(--top); min-height: var(--top); padding: 0 30px; background: var(--surface); overflow: visible; }
+.side__brand img { flex: none; width: 92px; height: auto; max-width: none; max-height: none; aspect-ratio: 824 / 484; object-fit: contain; }
