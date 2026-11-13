@@ -72,19 +72,19 @@ function loginScreen(localOk, err = '') {
 
 // ==================================================================== কাঠামো
 const NAV = [
-  ['মূল', [['dashboard', '◧', 'ড্যাশবোর্ড'], ['posts', '✎', 'লেখাসমূহ', 'posts'], ['post/new', '＋', 'নতুন লেখা', 'posts'], ['media', '▣', 'মিডিয়া', 'media']]],
-  ['প্রকাশনা', [['pages', '▤', 'পাতাসমূহ', 'pages'], ['ayojon', '✦', 'আয়োজন', 'ayojon'], ['categories', '☰', 'বিভাগ', 'categories'], ['authors', '☺', 'লেখক', 'authors'], ['comments', '✉', 'মন্তব্য', 'comments']]],
-  ['নকশা', [['home', '⌂', 'মুখপাতার বিন্যাস', 'home'], ['menu', '≡', 'মেনু', 'menu'], ['styles', '¶', 'স্টাইল শিট', 'styles']]],
-  ['ব্যবস্থাপনা', [['seo', '↗', 'SEO ও র‍্যাংকিং', 'seo'], ['deploy', '⟳', 'প্রকাশের অবস্থা', 'deploy'], ['settings', '⚙', 'সেটিংস', 'settings'], ['users', '⚇', 'ব্যবহারকারী', 'users'], ['import', '⇅', 'আমদানি ও ব্যাকআপ', 'import']]],
+  ['মূল', [['dashboard', 'dash', 'ড্যাশবোর্ড'], ['posts', 'posts', 'লেখাসমূহ', 'posts'], ['post/new', 'new', 'নতুন লেখা', 'posts'], ['media', 'media', 'মিডিয়া', 'media']]],
+  ['প্রকাশনা', [['pages', 'pages', 'পাতাসমূহ', 'pages'], ['ayojon', 'ayojon', 'আয়োজন', 'ayojon'], ['categories', 'cats', 'বিভাগ', 'categories'], ['authors', 'authors', 'লেখক', 'authors'], ['comments', 'comments', 'মন্তব্য', 'comments']]],
+  ['নকশা', [['home', 'home', 'মুখপাতার বিন্যাস', 'home'], ['menu', 'menu2', 'মেনু', 'menu'], ['styles', 'styles', 'স্টাইল শিট', 'styles']]],
+  ['ব্যবস্থাপনা', [['seo', 'seo', 'SEO ও র‍্যাংকিং', 'seo'], ['deploy', 'deploy', 'প্রকাশের অবস্থা', 'deploy'], ['settings', 'settings', 'সেটিংস', 'settings'], ['users', 'users', 'ব্যবহারকারী', 'users'], ['import', 'import', 'আমদানি ও ব্যাকআপ', 'import']]],
 ];
 
 function shell() {
   try { document.body.classList.toggle('side-collapsed', !!localStorage.getItem('keyari-side')); } catch (e) { /* */ }
   $('#app').innerHTML = `<div class="shell">
-    <aside class="side" data-side><div class="side__brand"><img src="../assets/img/logo.svg" alt="কেয়ারি" height="38"><small>সম্পাদনা<br>কক্ষ</small></div>
+    <aside class="side" data-side><a class="side__brand" href="#/dashboard" aria-label="কেয়ারি — ড্যাশবোর্ড"><img src="../assets/img/logo.svg" alt="কেয়ারি" height="42"></a>
       <nav class="side__nav" aria-label="অ্যাডমিন মেনু">${NAV.map(([g, items]) => {
         const vis = items.filter((it) => !it[3] || can(it[3]));
-        return vis.length ? `<div class="side__group">${g}</div>` + vis.map(([r, ico, label]) => `<a class="side__link" href="#/${r}" data-r="${r}"><span class="ico" aria-hidden="true">${ico}</span>${label}${r === 'posts' ? `<span class="n" data-n-posts>${bn(S.posts.filter((p) => p.status !== 'trash').length)}</span>` : ''}</a>`).join('') : '';
+        return vis.length ? `<div class="side__group">${g}</div>` + vis.map(([r, ic, label]) => `<a class="side__link" href="#/${r}" data-r="${r}"><span class="ico" aria-hidden="true">${ico(ic, 19)}</span><span class="side__label">${label}</span>${r === 'posts' ? `<span class="n" data-n-posts>${bn(S.posts.filter((p) => p.status !== 'trash').length)}</span>` : ''}</a>`).join('') : '';
       }).join('')}</nav></aside>
     <div class="main"><header class="top" data-top></header><div class="view" data-view></div></div></div>`;
   window.addEventListener('beforeunload', (e) => { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
@@ -98,6 +98,23 @@ const IC = {
   chev: '<path d="m6 9 6 6 6-6"/>',
   out: '<path d="M10 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M15 8l4 4-4 4M19 12H9"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
+  dash: '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+  posts: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+  new: '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+  media: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 9"/>',
+  pages: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+  ayojon: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16v4M17 18h4"/>',
+  cats: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  authors: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 20a6.5 6.5 0 0 0-3-5.4"/>',
+  comments: '<path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z"/>',
+  home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  menu2: '<path d="M4 6h16M4 12h10M4 18h16"/>',
+  styles: '<path d="M5 20 11 4h2l6 16M7.5 14h9"/>',
+  seo: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
+  deploy: '<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  users: '<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+  import: '<path d="M7 4v13M3.5 13.5 7 17l3.5-3.5"/><path d="M17 20V7M13.5 10.5 17 7l3.5 3.5"/>',
 };
 const ico = (n, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`;
 
