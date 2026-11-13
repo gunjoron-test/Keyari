@@ -8,6 +8,7 @@
   "editor_name": "মুজিব হাসান",
   "email": "thekeyari@gmail.com",
   "facebook": "https://www.facebook.com/profile.php?id=61584421030620",
+  "app_url": "",
   "social": {
     "x": "",
     "youtube": "",
@@ -33,9 +34,19 @@
   },
   "comments": {
     "provider": "none",
-    "giscus": { "repo": "", "repo_id": "", "category": "", "category_id": "" },
-    "cusdis": { "app_id": "", "host": "https://cusdis.com" },
-    "disqus": { "shortname": "" },
+    "giscus": {
+      "repo": "",
+      "repo_id": "",
+      "category": "",
+      "category_id": ""
+    },
+    "cusdis": {
+      "app_id": "",
+      "host": "https://cusdis.com"
+    },
+    "disqus": {
+      "shortname": ""
+    },
     "facebook": {}
   },
   "reading": {

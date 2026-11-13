@@ -558,6 +558,10 @@ def ayojon_path(a):
 
 
 # ------------------------------------------------------------------ layout
+def app_attrs():
+    return ' target="_blank" rel="noopener"' if S.get("app_url") else ""
+
+
 def header(active=""):
     def is_act(item):
         return active and item.get("label") == active
@@ -623,7 +627,7 @@ def header(active=""):
       <button class="icon-btn" type="button" data-search-open aria-label="অনুসন্ধান" aria-controls="search-pop" aria-expanded="false">{icon("search", 20)}</button>
       <span class="header-tools__sep" aria-hidden="true"></span>
       {toggle}
-      <a class="btn btn--fb" href="{esc(S.get("facebook"))}" target="_blank" rel="noopener">ফেসবুক পেজ</a>
+      <a class="btn btn--fb" href="{esc(S.get("app_url") or "#")}"{app_attrs()}>অ্যাপে পড়ুন</a>
     </div>
     <div class="search-pop" id="search-pop" role="dialog" aria-label="অনুসন্ধান" hidden>
       <button class="icon-btn search-pop__close" type="button" data-search-close aria-label="বন্ধ করুন">{icon("close", 18)}</button>
@@ -644,7 +648,7 @@ def header(active=""):
     <label class="sr-only" for="ms">খুঁজুন</label><input id="ms" type="search" name="s" placeholder="খুঁজুন…" required><button class="btn" type="submit">খুঁজুন</button>
   </form>
   <ul class="m-nav">{"".join(m_items)}</ul>
-  <a class="btn btn--block" href="{esc(S.get("facebook"))}" target="_blank" rel="noopener">ফেসবুক পেজ</a>
+  <a class="btn btn--block" href="{esc(S.get("app_url") or "#")}"{app_attrs()}>অ্যাপে পড়ুন</a>
   <div class="offcanvas__foot">{toggle}</div>
 </div>
 <div class="offcanvas-backdrop" data-offcanvas-close hidden></div>'''
