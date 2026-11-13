@@ -1276,6 +1276,26 @@ def build_ayojon():
         render(a, ayojon_path(a))
 
 
+EMPTY_SOON = '<p class="empty">শীঘ্রই আসছে।</p>'
+
+
+def build_issues():
+    """সংখ্যাগুচ্ছ — সব সংখ্যা (আয়োজন) একসাথে, নতুন থেকে পুরোনো"""
+    cards = ""
+    for a in AYOJON:
+        n = len([i for i in a.get("posts", []) if i in POST_BY_ID])
+        cards += f'''<a class="series-card" href="{u(ayojon_path(a))}">{img_tag(a.get("banner", {}).get("src"), a["title"], "series-card__img", sizes="400px")}
+<span class="series-card__body"><span class="series-card__count">{("সংখ্যা " + bn(a["number"])) if a.get("number") else "বিশেষ সংখ্যা"}</span><span class="series-card__name">{esc(a["title"])}</span>
+<span class="series-card__count">{esc(a.get("subtitle", ""))}{" · " if a.get("subtitle") else ""}{bn(n)}টি লেখা</span></span></a>'''
+    bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("সংখ্যাগুচ্ছ", "/সংখ্যাগুচ্ছ/")])
+    body = (f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">সংখ্যাগুচ্ছ</h1>'
+            f'<p class="archive-desc">কেয়ারির প্রকাশিত সব সংখ্যা এক জায়গায়, নতুন থেকে পুরোনো ক্রমে।</p></header>'
+            f'<div class="grid grid--3">{cards or EMPTY_SOON}</div></div>')
+    write("/সংখ্যাগুচ্ছ/", layout(title="সংখ্যাগুচ্ছ", description=f"{SITE}-এর সব সংখ্যা ও বিশেষ আয়োজন একসাথে।",
+                                  path="/সংখ্যাগুচ্ছ/", body=body, active="সংখ্যাগুচ্ছ", ld=[bc_ld],
+                                  og_image=(AYOJON[0].get("banner", {}).get("src", "") if AYOJON else "")))
+
+
 def build_series():
     items = sorted(SERIES.values(), key=lambda s: max(p["_date"] for p in s["posts"]), reverse=True)
     cards = "".join(f'''<a class="series-card" href="{u("/ধারাবাহিক/" + s["slug"] + "/")}">{img_tag(s["posts"][-1]["cover"].get("src"), s["name"], "series-card__img")}
@@ -1421,12 +1441,13 @@ def main():
     build_authors()
     build_pages()
     build_ayojon()
+    build_issues()
     build_series()
     build_tags()
     build_search()
     build_404()
     build_feeds()
-    extra = ["/বিষয়সূচি/", "/লেখক-তালিকা/", "/আয়োজন/", "/ধারাবাহিক/"] + [f"/{p['slug']}/" for p in PAGES] + \
+    extra = ["/বিষয়সূচি/", "/লেখক-তালিকা/", "/আয়োজন/", "/সংখ্যাগুচ্ছ/", "/ধারাবাহিক/"] + [f"/{p['slug']}/" for p in PAGES] + \
             [ayojon_path(a) for a in AYOJON] + [f"/ধারাবাহিক/{s}/" for s in SERIES]
     build_sitemaps(extra)
     n = sum(1 for _ in DIST.rglob("*.html"))
