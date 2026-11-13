@@ -203,6 +203,8 @@ for p in POSTS:
     p["_read"] = max(1, math.ceil(p["_words"] / WPM))
     if not p.get("excerpt"):
         p["excerpt"] = truncate(text, 220)
+    # কার্ডে ৩ লাইন ভরার মতো লম্বা সারাংশ (CSS তৃতীয় লাইনে "…" বসায়)
+    p["_long"] = p["excerpt"] if len(p["excerpt"]) >= 240 else truncate(text, 320)
     cats = [c for c in p.get("categories", []) if c in CAT]
     # প্রধান বিভাগ (টপ-লেভেল) ও উপ-বিভাগ
     top = next((c for c in cats if not CAT[c].get("parent")), None)
@@ -414,7 +416,7 @@ def card_h(p, eager=False):
   <div class="card-h__body">
     <a class="card__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{esc(p["_author"]["name"])}</a>
     <h3 class="card-h__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
-    <p class="card__excerpt clamp-3">{esc(p["excerpt"])}</p>
+    <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
     <div class="card__foot">
       <a class="btn" href="{p["_url"]}">পুরোটা পড়ুন<span class="sr-only">: {esc(p["title"])}</span></a>
       <span class="card__meta">{bn_date(p["_date"])} · {bn(p["_read"])} মিনিটের পাঠ</span>
@@ -429,7 +431,7 @@ def card_v(p, show_date=True, heading="h3"):
   <div class="card-v__pills">{pills(p, "pill pill--img")}</div></div>
   {('<p class="card__meta"><a class="card__author" href="' + u("/author/" + p["_author"]["slug"] + "/") + '">' + esc(p["_author"]["name"]) + '</a> · ' + bn_date(p["_date"]) + '</p>') if show_date else ''}
   <{heading} class="card-v__title"><a href="{p["_url"]}">{esc(p["title"])}</a></{heading}>
-  <p class="card__excerpt clamp-3">{esc(p["excerpt"])}</p>
+  <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
 </article>'''
 
 
@@ -437,7 +439,7 @@ def card_small(p):
     return f'''<article class="card-s">
   <div class="card-s__body">
     <h3 class="card-s__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
-    <p class="card__excerpt clamp-2">{esc(p["excerpt"])}</p>
+    <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
     <div class="card-s__pills">{pills(p, "pill pill--soft")}</div>
   </div>
   <a class="card-s__media" href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["title"], "card-s__img", 160, 160, sizes="160px")}</a>
@@ -844,7 +846,7 @@ def build_home():
     <div class="hero__body">
       <a class="card__author" href="{u("/author/" + main["_author"]["slug"] + "/")}">{esc(main["_author"]["name"])}</a>
       <h2 class="hero__title"><a href="{main["_url"]}">{esc(main["title"])}</a></h2>
-      <p class="hero__excerpt clamp-2">{esc(main.get("subtitle") or main["excerpt"])}</p>
+      <p class="hero__excerpt clamp-3">{esc(main.get("subtitle") or main["_long"])}</p>
       <p class="card__meta">{bn_date(main["_date"])} · {bn(main["_read"])} মিনিটের পাঠ</p>
     </div>
   </article>
@@ -1000,7 +1002,8 @@ def build_post(p):
     bc_html, bc_ld = breadcrumb(crumbs)
     body = process_body(p.get("body", ""))
     layout_opts = p.get("layout") or {}
-    body_cls = "entry-content" + ("" if layout_opts.get("justify", True) else " no-justify") + (" has-dropcap" if layout_opts.get("dropcap") else "")
+    is_poetry = any(c == "kobitapunjo" or (CAT[c].get("parent") == "kobitapunjo") for c in p["_cats"])
+    body_cls = "entry-content" + ("" if (layout_opts.get("justify", True) and not is_poetry) else " no-justify") + (" has-dropcap" if layout_opts.get("dropcap") else "")
     # সিরিজ
     series_html = ""
     s = p.get("_series")

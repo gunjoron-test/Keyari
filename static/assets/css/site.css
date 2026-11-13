@@ -378,8 +378,11 @@ ul, ol { margin: 0; padding: 0; }
 /* article typography */
 .entry-content { font-size: var(--read-size); line-height: 1.9; overflow-wrap: break-word; hyphens: manual; }
 .entry-content > * + * { margin-top: 0; }
-.entry-content p { margin: 0 0 1.6em; text-align: justify; text-justify: inter-character; }
-.entry-content.no-justify p { text-align: left; }
+/* :where() দিয়ে নিচু অগ্রাধিকার — অনুচ্ছেদ স্টাইল (.ps-*) ও ইনলাইন সারিবদ্ধতা এগুলোকে বদলাতে পারে */
+:where(.entry-content) p { margin: 0 0 1.6em; }
+:where(.entry-content) :where(p, li, blockquote) { text-align: justify; text-justify: inter-character; }
+:where(.entry-content.no-justify) :where(p, li, blockquote) { text-align: left; }
+.card__excerpt, .hero__excerpt, .archive-desc, .author-box__bio, .footer__desc, .editor-card + p, .ay-card__title { text-align: justify; text-justify: inter-character; }
 .entry-content h2, .entry-content h3, .entry-content h4, .entry-content h5, .entry-content h6 { margin: 1.8em 0 .7em; line-height: 1.4; }
 .entry-content h2 { font-size: 1.45em; }
 .entry-content h3 { font-size: 1.25em; }
@@ -584,7 +587,6 @@ ul, ol { margin: 0; padding: 0; }
   .grid--3, .grid--4 { grid-template-columns: 1fr; }
   .entry-title, .page-title { font-size: 28px; }
   .archive-title { font-size: 28px; }
-  .entry-content p { text-align: left; }
   .entry-content .alignleft, .entry-content .alignright img { float: none; max-width: 100%; margin: 1em auto; }
   .entry-content .k-cols-2, .entry-content .k-cols-3, .entry-content .ps-two-col { column-count: 1; }
   .entry-content .wp-block-columns { flex-direction: column; }
