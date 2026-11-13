@@ -209,7 +209,7 @@ export async function createEditor(target, ctx) {
       kbangla: { title: 'বাংলা ও টাইপোগ্রাফি', items: 'kpara kchar | kparastyles kcharstyles | kbnall kpunctall kquotesall | kcleanall | kfootnote kscene kpoem kpullquote kbox' },
     },
     plugins: 'advlist anchor autolink charmap code directionality help image insertdatetime link lists media nonbreaking pagebreak preview quickbars searchreplace table visualblocks visualchars wordcount accordion emoticons',
-    toolbar, toolbar_mode: 'wrap', toolbar_sticky: true, toolbar_sticky_offset: 60,
+    toolbar, toolbar_mode: 'wrap', toolbar_sticky: true, toolbar_sticky_offset: 64,
     content_css: [ctx.fontsCss, ctx.siteCss],
     content_style: `${css}
       html{background:#fff}

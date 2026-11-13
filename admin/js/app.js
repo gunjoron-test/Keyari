@@ -80,31 +80,104 @@ const NAV = [
 
 function shell() {
   try { document.body.classList.toggle('side-collapsed', !!localStorage.getItem('keyari-side')); } catch (e) { /* */ }
-  const role = ROLES[S.role] || ROLES.contributor;
   $('#app').innerHTML = `<div class="shell">
-    <aside class="side" data-side><div class="side__brand"><img src="../assets/img/logo.svg" alt="কেয়ারি" width="58" height="34"><small>সম্পাদনা কক্ষ</small></div>
+    <aside class="side" data-side><div class="side__brand"><img src="../assets/img/logo.svg" alt="কেয়ারি" height="38"><small>সম্পাদনা<br>কক্ষ</small></div>
       <nav class="side__nav" aria-label="অ্যাডমিন মেনু">${NAV.map(([g, items]) => {
         const vis = items.filter((it) => !it[3] || can(it[3]));
         return vis.length ? `<div class="side__group">${g}</div>` + vis.map(([r, ico, label]) => `<a class="side__link" href="#/${r}" data-r="${r}"><span class="ico" aria-hidden="true">${ico}</span>${label}${r === 'posts' ? `<span class="n" data-n-posts>${bn(S.posts.filter((p) => p.status !== 'trash').length)}</span>` : ''}</a>`).join('') : '';
-      }).join('')}</nav>
-      <div class="side__foot">
-        <div style="display:flex;gap:10px;align-items:center">${S.user.avatar ? `<img src="${esc(S.user.avatar)}" alt="" width="32" height="32" style="border-radius:50%">` : ''}<div><b>${esc(S.user.name || S.user.login)}</b><br>${esc(role.name)}${S.be.mode === 'local' ? ' · লোকাল' : ''}</div></div>
-        <div class="btn-row"><a class="btn btn--light btn--sm" href="${esc(siteUrl('/'))}" target="_blank" rel="noopener">সাইট দেখুন ↗</a><button class="btn btn--ghost btn--sm" data-theme title="আলো/আঁধার">◐</button><button class="btn btn--ghost btn--sm" data-logout>প্রস্থান</button></div>
-      </div></aside>
+      }).join('')}</nav></aside>
     <div class="main"><header class="top" data-top></header><div class="view" data-view></div></div></div>`;
-  $('[data-theme]').onclick = () => { const n = document.documentElement.getAttribute('data-scheme') === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-scheme', n); localStorage.setItem('keyari-admin-scheme', n); };
-  $('[data-logout]').onclick = () => { localStorage.removeItem(AUTH_KEY); sessionStorage.removeItem(AUTH_KEY); sessionStorage.setItem('keyari-local', 'off'); Backend.clearCache(); location.hash = ''; location.reload(); };
   window.addEventListener('beforeunload', (e) => { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
 }
 
+const IC = {
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  ext: '<path d="M14 4h6v6M20 4l-9 9M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/>',
+  theme: '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 0 0 16z" fill="currentColor"/>',
+  chev: '<path d="m6 9 6 6 6-6"/>',
+  out: '<path d="M10 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M15 8l4 4-4 4M19 12H9"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+};
+const ico = (n, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`;
+
 export function setTop(html, bind) {
   const top = $('[data-top]'); if (!top) return;
-  top.innerHTML = `<button class="btn btn--ghost btn--icon top__menu" data-menu aria-label="মেনু">☰</button>${html}`;
+  const role = ROLES[S.role] || ROLES.contributor;
+  const name = S.user.name || S.user.login || '';
+  const avatar = S.user.avatar ? `<img src="${esc(S.user.avatar)}" alt="" width="34" height="34">` : `<span class="umenu__ph">${esc(name.trim().slice(0, 1) || '•')}</span>`;
+  top.innerHTML = `<button class="top__icon" data-menu aria-label="মেনু খুলুন বা গুটান" title="মেনু খুলুন / গুটান">${ico('menu')}</button>
+    <div class="top__slot">${html}</div>
+    <div class="top__tools">
+      <div class="gsearch" data-gsearch>
+        <span class="gsearch__ico">${ico('search', 18)}</span>
+        <input type="search" placeholder="লেখা, লেখক বা পাতা খুঁজুন…" aria-label="অ্যাডমিনে খুঁজুন" autocomplete="off">
+        <kbd class="gsearch__kbd">Ctrl K</kbd>
+        <div class="gsearch__pop" role="listbox" hidden></div>
+      </div>
+      ${S.be.mode === 'local' ? '<span class="top__mode" title="পরিবর্তন সরাসরি এই কম্পিউটারের ফাইলে জমা হচ্ছে">লোকাল মোড</span>' : ''}
+      <a class="top__link" href="${esc(siteUrl('/'))}" target="_blank" rel="noopener" title="প্রকাশিত সাইট নতুন ট্যাবে দেখুন">সাইট দেখুন ${ico('ext', 15)}</a>
+      <a class="btn" href="#/post/new">${ico('plus', 16)} নতুন লেখা</a>
+      <button class="top__icon" data-theme aria-label="আলো/আঁধার মোড" title="আলো / আঁধার মোড">${ico('theme')}</button>
+      <div class="umenu" data-umenu>
+        <button class="umenu__btn" type="button" aria-haspopup="true" aria-expanded="false" title="অ্যাকাউন্ট">${avatar}<span class="umenu__name">${esc(name)}</span>${ico('chev', 16)}</button>
+        <div class="umenu__pop" hidden>
+          <div class="umenu__head"><b>${esc(name)}</b><span>${esc(role.name)}${S.be.mode === 'local' ? ' · লোকাল মোড' : S.user.login ? ' · @' + esc(S.user.login) : ''}</span></div>
+          <a href="${esc(siteUrl('/'))}" target="_blank" rel="noopener">${ico('ext', 17)} সাইট দেখুন</a>
+          <a href="#/deploy">${ico('theme', 17)} প্রকাশের অবস্থা</a>
+          <button type="button" data-logout class="umenu__out">${ico('out', 17)} প্রস্থান</button>
+        </div>
+      </div>
+    </div>`;
   $('[data-menu]', top).onclick = () => {
     if (window.innerWidth > 860) { const on = document.body.classList.toggle('side-collapsed'); try { localStorage.setItem('keyari-side', on ? '1' : ''); } catch (e) { /* */ } }
     else $('[data-side]').classList.toggle('is-open');
   };
+  $('[data-theme]', top).onclick = () => { const n = document.documentElement.getAttribute('data-scheme') === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-scheme', n); try { localStorage.setItem('keyari-admin-scheme', n); } catch (e) { /* */ } };
+  $('[data-logout]', top).onclick = () => { localStorage.removeItem(AUTH_KEY); sessionStorage.removeItem(AUTH_KEY); sessionStorage.setItem('keyari-local', 'off'); Backend.clearCache(); location.hash = ''; location.reload(); };
+  const um = $('[data-umenu]', top), ub = $('.umenu__btn', um), up = $('.umenu__pop', um);
+  const closeU = () => { up.hidden = true; ub.setAttribute('aria-expanded', 'false'); };
+  ub.onclick = (e) => { e.stopPropagation(); const open = up.hidden; up.hidden = !open; ub.setAttribute('aria-expanded', String(open)); };
+  up.addEventListener('click', (e) => { if (e.target.closest('a')) closeU(); });
+  document.addEventListener('click', function h(e) { if (!document.body.contains(um)) { document.removeEventListener('click', h); return; } if (!um.contains(e.target)) closeU(); });
+  bindSearch($('[data-gsearch]', top));
   bind && bind(top);
+}
+
+// ---------- অ্যাডমিনের সার্চ (লেখা + পাতা) ----------
+let searchKeyBound = false;
+function bindSearch(box) {
+  const input = $('input', box), pop = $('.gsearch__pop', box);
+  let items = [], idx = -1;
+  const close = () => { pop.hidden = true; idx = -1; };
+  const flat = NAV.flatMap(([, list]) => list.filter((it) => !it[3] || can(it[3])).map(([r, , label]) => ({ type: 'পাতা', label, href: '#/' + r })));
+  const render = () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q) { close(); return; }
+    const posts = S.posts.filter((p) => p.status !== 'trash' && ((p.title || '').toLowerCase().includes(q) || (authorName(p.author) || '').toLowerCase().includes(q))).slice(0, 7)
+      .map((p) => ({ type: 'লেখা', label: p.title || '(শিরোনামহীন)', sub: authorName(p.author), href: '#/post/' + encodeURIComponent(p.id) }));
+    const pages = flat.filter((x) => x.label.toLowerCase().includes(q)).slice(0, 4);
+    items = [...posts, ...pages];
+    pop.innerHTML = items.length ? items.map((it, i) => `<a class="gsearch__it" role="option" href="${esc(it.href)}" data-i="${i}"><span class="gsearch__tag">${it.type}</span><span class="gsearch__t">${esc(it.label)}</span>${it.sub ? `<span class="gsearch__s">${esc(it.sub)}</span>` : ''}</a>`).join('') : '<div class="gsearch__none">কিছু পাওয়া যায়নি</div>';
+    pop.hidden = false; idx = -1;
+  };
+  const mark = () => $$('.gsearch__it', pop).forEach((el, i) => el.classList.toggle('is-on', i === idx));
+  input.addEventListener('input', render);
+  input.addEventListener('focus', render);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); idx = Math.min(items.length - 1, idx + 1); mark(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); idx = Math.max(0, idx - 1); mark(); }
+    else if (e.key === 'Enter' && items.length) { e.preventDefault(); location.hash = items[Math.max(0, idx)].href; input.value = ''; close(); input.blur(); }
+    else if (e.key === 'Escape') { close(); input.blur(); }
+  });
+  pop.addEventListener('click', () => { input.value = ''; close(); });
+  document.addEventListener('click', function h(e) { if (!document.body.contains(box)) { document.removeEventListener('click', h); return; } if (!box.contains(e.target)) close(); });
+  if (!searchKeyBound) {
+    searchKeyBound = true;
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { const i = document.querySelector('[data-gsearch] input'); if (i) { e.preventDefault(); i.focus(); i.select(); } }
+    });
+  }
 }
 export function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }
 
@@ -126,7 +199,8 @@ async function route() {
   $('[data-side]').classList.remove('is-open');
   const n = $('[data-n-posts]'); if (n) n.textContent = bn(S.posts.filter((p) => p.status !== 'trash').length);
   const title = { dashboard: 'ড্যাশবোর্ড', posts: 'লেখাসমূহ', media: 'মিডিয়া', pages: 'পাতাসমূহ', ayojon: 'আয়োজন', categories: 'বিভাগ', authors: 'লেখক', comments: 'মন্তব্য', home: 'মুখপাতার বিন্যাস', menu: 'মেনু', styles: 'স্টাইল শিট', seo: 'SEO', deploy: 'প্রকাশের অবস্থা', settings: 'সেটিংস', users: 'ব্যবহারকারী', import: 'আমদানি ও ব্যাকআপ' }[parts[0]] || '';
-  setTop(`<span class="top__title">${esc(title)}</span><a class="btn btn--light btn--sm" href="#/post/new">＋ নতুন লেখা</a>`);
+  document.body.classList.remove('in-editor');
+  setTop(`<div class="top__crumb"><span class="top__kicker">সম্পাদনা কক্ষ</span><h1 class="top__title">${esc(title)}</h1></div>`);
   view.innerHTML = '<div class="empty"><span class="spinner"></span></div>';
   window.scrollTo(0, 0);
   try {
@@ -180,7 +254,7 @@ function dashboard(view) {
   const hr = now.getHours();
   const greet = hr < 12 ? 'শুভ সকাল' : hr < 17 ? 'শুভ অপরাহ্ণ' : 'শুভ সন্ধ্যা';
   view.innerHTML = `<div class="page-head"><div><h1>${greet}, ${esc((S.user.name || S.user.login || '').split(' ')[0])}</h1><p>আজ ${bnDate(new Date().toISOString())} · কেয়ারির সম্পাদনা কক্ষে স্বাগত</p></div>
-    <div class="btn-row"><a class="btn" href="#/post/new">＋ নতুন লেখা</a><a class="btn btn--light" href="${esc(siteUrl('/'))}" target="_blank" rel="noopener">সাইট দেখুন ↗</a></div></div>
+</div>
     <div class="stats">
       <a class="stat" href="#/posts?status=published"><div class="stat__n">${bn(pub.length)}</div><div class="stat__l">প্রকাশিত লেখা</div></a>
       <a class="stat" href="#/posts?status=review"><div class="stat__n">${bn(review.length)}</div><div class="stat__l">পর্যালোচনার অপেক্ষায়</div></a>

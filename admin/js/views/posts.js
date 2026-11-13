@@ -179,6 +179,7 @@ export async function editorView(view, kind, id) {
   const autoKey = 'keyari-autosave-' + kind + '-' + d.id;
 
   view.classList.add('view--wide'); view.style.padding = '0';
+  document.body.classList.add('in-editor');
   view.innerHTML = `<div class="ed"><div class="ed__main"><div class="ed__paper">
     <div data-restore></div>
     <input class="input input--title" data-f="title" placeholder="${kind === 'post' ? 'লেখার শিরোনাম' : kind === 'page' ? 'পাতার শিরোনাম' : 'আয়োজনের নাম'}" value="${esc(d.title)}" aria-label="শিরোনাম">
