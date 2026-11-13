@@ -264,6 +264,8 @@ export async function createEditor(target, ctx) {
     extended_valid_elements: 'sup[class|id|data-note|title],span[class|style|title|lang|dir],p[class|style|lang|dir|id|title],div[class|style|id|lang|dir],figure[class|style|id],figcaption[class|style],mark[class],cite,abbr[title]',
     invalid_elements: 'script,iframe[srcdoc],object,embed',
     browser_spellcheck: true, contextmenu: 'link image table kpara kchar',
+    quickbars_image_toolbar: 'kimgleft kimgcenter kimgright | kimgsize kimgcaption | kimgdlg kimgdel',
+    object_resizing: true,
     quickbars_selection_toolbar: 'bold italic underline | kcharstyle | quicklink blockquote | kfootnote',
     quickbars_insert_toolbar: 'quickimage quicktable | kscene kpoem hr',
     charmap_append: [
@@ -345,6 +347,90 @@ function setupKeyari(ed, ctx, paraStyles, charStyles) {
     },
     onSetup: (api) => { let o = false; try { o = !!localStorage.getItem(moreKey); } catch (x) { /* */ } api.setActive(o); return () => {}; },
   });
+  // ---------- ছবি: যেখানে খুশি বসান, যেকোনো মাপ, ক্যাপশনসহ (লেখা ছবির পাশ দিয়ে ঘুরে যায়) ----------
+  const imgOf = () => {
+    const n = ed.selection.getNode();
+    const img = n.nodeName === 'IMG' ? n : (n.querySelector && n.querySelector('img')) || (ed.dom.getParent(n, 'figure.image') || {}).querySelector?.('img');
+    if (!img) return {};
+    const fig = ed.dom.getParent(img, 'figure.image');
+    return { img, fig, t: fig || img };
+  };
+  const clearAlign = (t) => {
+    ['align-left', 'align-right', 'align-center', 'alignleft', 'alignright', 'aligncenter'].forEach((c) => ed.dom.removeClass(t, c));
+    ed.dom.setStyles(t, { float: '', display: '', marginLeft: '', marginRight: '', margin: '' });
+    if (!t.getAttribute('style')) t.removeAttribute('style');
+  };
+  const alignImg = (kind) => {
+    const { img, fig, t } = imgOf(); if (!t) return;
+    ed.undoManager.transact(() => {
+      clearAlign(img); if (fig) clearAlign(fig);
+      if (fig) ed.dom.addClass(fig, 'align-' + kind);
+      else ed.dom.addClass(img, { left: 'alignleft', right: 'alignright', center: 'aligncenter' }[kind]);
+    });
+    ed.nodeChanged();
+  };
+  const sizeImg = (value) => {
+    const { img, fig } = imgOf(); if (!img) return;
+    ed.undoManager.transact(() => {
+      img.removeAttribute('width'); img.removeAttribute('height'); img.removeAttribute('data-mce-style');
+      if (fig) {
+        ed.dom.setStyle(fig, 'width', value || '');
+        ed.dom.setStyles(img, value ? { width: '100%', height: 'auto' } : { width: '', height: '' });
+      } else ed.dom.setStyles(img, value ? { width: value, height: 'auto' } : { width: '', height: '' });
+      if (!img.getAttribute('style')) img.removeAttribute('style');
+      if (fig && !fig.getAttribute('style')) fig.removeAttribute('style');
+    });
+    ed.nodeChanged();
+  };
+  const captionImg = () => {
+    const { img, fig } = imgOf(); if (!img) return;
+    const clone = img.cloneNode(true);
+    ['alignleft', 'alignright', 'aligncenter'].forEach((c) => clone.classList.remove(c));
+    clone.removeAttribute('data-mce-selected');
+    let align = '', width = '';
+    if (fig) {
+      const m = fig.className.match(/align-(left|right|center)/); align = m ? m[1] : ''; width = fig.style.width || '';
+    } else {
+      align = img.classList.contains('alignleft') || img.style.float === 'left' ? 'left' : img.classList.contains('alignright') || img.style.float === 'right' ? 'right' : img.classList.contains('aligncenter') ? 'center' : '';
+      width = img.style.width || '';
+    }
+    clone.style.float = ''; clone.style.margin = ''; clone.style.display = '';
+    let html;
+    if (fig) {
+      // ক্যাপশন সরানো
+      if (width) clone.style.width = width; else clone.removeAttribute('style');
+      if (align) clone.className = ({ left: 'alignleft', right: 'alignright', center: 'aligncenter' })[align];
+      html = '<p>' + clone.outerHTML + '</p>';
+      ed.selection.select(fig);
+    } else {
+      // ক্যাপশন যোগ
+      clone.style.width = width ? '100%' : ''; clone.style.height = width ? 'auto' : '';
+      if (!clone.getAttribute('style')) clone.removeAttribute('style');
+      clone.removeAttribute('width'); clone.removeAttribute('height');
+      html = '<figure class="image' + (align ? ' align-' + align : '') + '"' + (width ? ' style="width: ' + width + '"' : '') + '>' + clone.outerHTML + '<figcaption>ক্যাপশন এখানে লিখুন</figcaption></figure>';
+      ed.selection.select(img);
+    }
+    ed.undoManager.transact(() => ed.insertContent(html));
+    ed.nodeChanged();
+  };
+  const sizeItems = () => [
+    ['২৫% (ছোট)', '25%'], ['৩৩%', '33%'], ['৫০% (অর্ধেক)', '50%'], ['৬৬%', '66%'], ['৭৫%', '75%'], ['১০০% (পূর্ণ প্রস্থ)', '100%'],
+  ].map(([t, v]) => ({ type: 'menuitem', text: t, onAction: () => sizeImg(v) })).concat([
+    { type: 'separator' },
+    { type: 'menuitem', text: 'নিজের মাপ দিন (px বা %)…', onAction: async () => {
+      const v = await promptBox('ছবির প্রস্থ', 'প্রস্থ লিখুন — যেমন 320px অথবা 40%', '', { placeholder: '320px' });
+      if (v && v.trim()) sizeImg(/^\d+$/.test(v.trim()) ? v.trim() + 'px' : v.trim());
+    } },
+    { type: 'menuitem', text: 'মূল মাপে ফেরান', onAction: () => sizeImg('') },
+  ]);
+  ed.ui.registry.addButton('kimgleft', { icon: 'align-left', tooltip: 'ছবি বামে — লেখা ডান পাশ দিয়ে ঘুরে যাবে', onAction: () => alignImg('left') });
+  ed.ui.registry.addButton('kimgcenter', { icon: 'align-center', tooltip: 'ছবি মাঝখানে (আলাদা লাইনে)', onAction: () => alignImg('center') });
+  ed.ui.registry.addButton('kimgright', { icon: 'align-right', tooltip: 'ছবি ডানে — লেখা বাম পাশ দিয়ে ঘুরে যাবে', onAction: () => alignImg('right') });
+  ed.ui.registry.addMenuButton('kimgsize', { icon: 'resize', text: 'আকার', tooltip: 'ছবির মাপ — ছোট, বড় বা নিজের মাপ', fetch: (cb) => cb(sizeItems()) });
+  ed.ui.registry.addButton('kimgcaption', { icon: 'comment', text: 'ক্যাপশন', tooltip: 'ছবির নিচে ক্যাপশন যোগ বা সরান', onAction: captionImg });
+  ed.ui.registry.addButton('kimgdlg', { icon: 'edit-block', text: 'বিস্তারিত', tooltip: 'ছবির বিস্তারিত — বিকল্প লেখা (alt), মাপ, ঠিকানা', onAction: () => ed.execCommand('mceImage') });
+  ed.ui.registry.addButton('kimgdel', { icon: 'remove', tooltip: 'ছবিটি মুছুন', onAction: () => { const { t } = imgOf(); if (t) { ed.undoManager.transact(() => ed.dom.remove(t)); ed.nodeChanged(); } } });
+
   ed.ui.registry.addButton('kfocus', { icon: 'fullscreen', text: 'ফোকাস মোড', tooltip: 'পুরো পর্দায় মনোযোগ দিয়ে লিখুন', onAction: () => ctx.toggleFocus && ctx.toggleFocus() });
   ed.ui.registry.addMenuItem('kfocusmenu', { icon: 'fullscreen', text: 'ফোকাস মোড (পুরো পর্দা)', onAction: () => ctx.toggleFocus && ctx.toggleFocus() });
 

@@ -919,7 +919,7 @@ def build_home():
 
 def avatar(a, size=64):
     if a.get("photo"):
-        return f'<img class="avatar" src="{asset(a["photo"])}" alt="{esc(a["name"])}" width="{size}" height="{size}" loading="lazy">'
+        return f'<img class="avatar" src="{asset(a["photo"])}" alt="{esc(a["name"])}" width="{size}" height="{size}" style="width:{size}px;height:{size}px" loading="lazy">'
     initial = (a.get("name") or "?").strip()[:1]
     hue = sum(ord(ch) for ch in a.get("slug", "x")) % 360
     return f'<span class="avatar avatar--ph" style="--h:{hue};width:{size}px;height:{size}px;font-size:{round(size * 0.4)}px" aria-hidden="true">{esc(initial)}</span>'

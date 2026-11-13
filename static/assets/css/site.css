@@ -335,7 +335,7 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .author-chip:hover { background: var(--surface); box-shadow: var(--shadow); }
 .author-chip__name { font-weight: 700; line-height: 1.3; }
 .author-chip__count { font-size: 13px; color: var(--text-muted); }
-.avatar { border-radius: 50%; object-fit: cover; flex: none; }
+.avatar { border-radius: 50%; object-fit: cover; flex: none; aspect-ratio: 1 / 1; align-self: flex-start; }
 .avatar--ph { display: inline-grid; place-items: center; background: linear-gradient(135deg, hsl(var(--h) 60% 93%), hsl(var(--h) 45% 82%)); color: hsl(var(--h) 40% 26%); font-weight: 600; }
 [data-scheme="dark"] .avatar--ph { background: linear-gradient(135deg, hsl(var(--h) 28% 30%), hsl(var(--h) 24% 20%)); color: hsl(var(--h) 60% 88%); }
 
@@ -379,7 +379,7 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .entry-main { min-width: 0; }
 
 /* article typography */
-.entry-content { font-size: var(--read-size); line-height: 1.9; overflow-wrap: break-word; hyphens: manual; }
+.entry-content { font-size: var(--read-size); line-height: 1.9; overflow-wrap: break-word; hyphens: manual; display: flow-root; }
 .entry-content > * + * { margin-top: 0; }
 /* :where() দিয়ে নিচু অগ্রাধিকার — অনুচ্ছেদ স্টাইল (.ps-*) ও ইনলাইন সারিবদ্ধতা এগুলোকে বদলাতে পারে */
 :where(.entry-content) p { margin: 0 0 1.6em; }
@@ -399,9 +399,18 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .entry-content blockquote, .entry-content .wp-block-quote { margin: 2em 0; padding: 1.2em 1.6em; background: var(--surface); border-left: 4px solid var(--accent); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; box-shadow: var(--shadow); color: var(--text-muted); }
 .entry-content blockquote p:last-child { margin-bottom: 0; }
 .entry-content blockquote cite { display: block; margin-top: .6em; font-size: .9em; font-style: normal; color: var(--accent-ink); }
-.entry-content img { border-radius: 12px; margin-inline: auto; height: auto; }
+/* ---------- লেখার ভেতরের ছবি: আকার, অবস্থান ও ক্যাপশন (লেখা ছবির পাশ দিয়ে ঘুরে যায়) ---------- */
+.entry-content img { max-width: 100%; height: auto; border-radius: 12px; }
 .entry-content figure { margin: 2em 0; }
+.entry-content figure.image { display: table; max-width: 100%; margin: 2em auto; }
+.entry-content figure.image > img { display: block; max-width: 100%; height: auto; margin: 0; }
 .entry-content figcaption { font-size: .85em; text-align: center; color: var(--text-muted); margin-top: .6em; line-height: 1.5; }
+.entry-content figure.image > figcaption { display: table-caption; caption-side: bottom; text-align: center; }
+.entry-content figure.align-left, .entry-content figure.alignleft, .entry-content img.alignleft, .entry-content img[style*="float: left"] { float: left; margin: .4em 1.8em 1em 0; max-width: 60%; }
+.entry-content figure.align-right, .entry-content figure.alignright, .entry-content img.alignright, .entry-content img[style*="float: right"] { float: right; margin: .4em 0 1em 1.8em; max-width: 60%; }
+.entry-content figure.align-center, .entry-content figure.aligncenter { float: none; margin: 2em auto; }
+.entry-content img.aligncenter { display: block; float: none; margin: 2em auto; }
+.entry-content figure.image.align-left > img, .entry-content figure.image.align-right > img { max-width: 100%; }
 .entry-content hr, .entry-content .wp-block-separator { border: 0; height: auto; margin: 2.4em 0; text-align: center; color: var(--accent); }
 .entry-content hr::before { content: "✻ ✻ ✻"; letter-spacing: .6em; font-size: .9em; }
 .entry-content .table-wrap { overflow-x: auto; margin: 2em 0; -webkit-overflow-scrolling: touch; }
@@ -413,10 +422,8 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .entry-content mark { background: linear-gradient(transparent 55%, #CCEDE0 55%); color: inherit; }
 .entry-content details { margin: 1.6em 0; border: 1px solid var(--line); border-radius: 12px; padding: .8em 1.2em; background: var(--surface); }
 .entry-content details summary { cursor: pointer; font-weight: 700; }
-.entry-content .aligncenter, .entry-content .has-text-align-center, .entry-content p[style*="text-align: center"] { text-align: center; }
-.entry-content .alignright, .entry-content .has-text-align-right { text-align: right; }
-.entry-content .alignleft { float: left; margin: .3em 1.4em 1em 0; max-width: 50%; }
-.entry-content .alignright img, .entry-content img.alignright { float: right; margin: .3em 0 1em 1.4em; max-width: 50%; }
+.entry-content .has-text-align-center, .entry-content p[style*="text-align: center"] { text-align: center; }
+.entry-content .has-text-align-right { text-align: right; }
 .entry-content .wp-block-image { margin: 2em 0; }
 .entry-content .wp-block-pullquote { border-block: 3px solid var(--line); padding: 1.6em 0; text-align: center; font-size: 1.2em; color: var(--accent-ink); }
 .entry-content .wp-block-columns { display: flex; gap: 2em; }
@@ -609,7 +616,8 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
   .grid--3, .grid--4 { grid-template-columns: 1fr; }
   .entry-title, .page-title { font-size: 28px; }
   .archive-title { font-size: 28px; }
-  .entry-content .alignleft, .entry-content .alignright img { float: none; max-width: 100%; margin: 1em auto; }
+  .entry-content figure.align-left, .entry-content figure.align-right, .entry-content figure.alignleft, .entry-content figure.alignright, .entry-content img.alignleft, .entry-content img.alignright, .entry-content img[style*="float"] { float: none; max-width: 100%; margin: 1.4em auto; }
+  .entry-content img.alignleft, .entry-content img.alignright, .entry-content img[style*="float"] { display: block; }
   .entry-content .k-cols-2, .entry-content .k-cols-3, .entry-content .ps-two-col { column-count: 1; }
   .entry-content .wp-block-columns { flex-direction: column; }
   .sidebar { grid-template-columns: 1fr; }
