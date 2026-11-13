@@ -349,7 +349,7 @@ def logo_img(cls="logo", eager=False):
     src = asset(S.get("logo") or "/assets/img/logo.svg")
     dark = asset(S.get("logo_dark") or "")
     fallback = u("/assets/img/logo.svg")
-    attrs = f'width="67" height="40" alt="{esc(SITE)}" onerror="this.onerror=null;this.src=\'{fallback}\'"'
+    attrs = f'width="92" height="54" alt="{esc(SITE)}" onerror="this.onerror=null;this.src=\'{fallback}\'"'
     load = 'fetchpriority="high"' if eager else 'loading="lazy"'
     if dark:
         return (f'<picture class="{cls}"><source srcset="{dark}" media="(prefers-color-scheme: dark)" data-dark>'
@@ -359,14 +359,14 @@ def logo_img(cls="logo", eager=False):
 
 def img_tag(src, alt, cls="", w=1169, h=658, eager=False, sizes=""):
     if not src:
-        return f'<div class="ph {cls}" role="img" aria-label="{esc(alt)}"><span>{esc(SITE)}</span></div>'
+        return f'<div class="ph {cls}" role="img" aria-label="{esc(alt)}"><span class="sr-only">{esc(SITE)}</span></div>'
     s = asset(src)
     srcset = ""
     m = re.match(r"^(/uploads/.+?)(\.webp)$", src)
     if m and (STATIC / (m.group(1).lstrip("/") + "-640.webp")).exists():
         srcset = f' srcset="{asset(m.group(1) + "-640.webp")} 640w, {s} 1600w" sizes="{sizes or "(max-width: 768px) 100vw, 800px"}"'
     load = 'fetchpriority="high" decoding="async"' if eager else 'loading="lazy" decoding="async"'
-    return f'<img class="{cls}" src="{s}"{srcset} alt="{esc(alt)}" width="{w}" height="{h}" {load}>'
+    return f'<img class="{cls}" data-lz src="{s}"{srcset} alt="{esc(alt)}" width="{w}" height="{h}" {load}>'
 
 
 def pills(p, cls="pill", limit=2):

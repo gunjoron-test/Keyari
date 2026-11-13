@@ -126,7 +126,7 @@ ul, ol { margin: 0; padding: 0; }
 .site-header.is-hidden { transform: translateY(-100%); }
 .site-header__inner { position: relative; display: flex; align-items: center; gap: 24px; height: 100%; }
 .site-logo { display: inline-flex; align-items: center; flex: none; }
-.site-logo img, .site-logo .logo { width: 67px; height: 40px; object-fit: contain; }
+.site-logo img, .site-logo .logo { width: 92px; height: 54px; object-fit: contain; }
 [data-scheme="dark"] .site-logo img:not([data-has-dark]) { filter: brightness(1.15) saturate(1.1); }
 .hamburger { display: none; }
 .nav { flex: 1; display: flex; justify-content: center; }
@@ -319,8 +319,11 @@ ul, ol { margin: 0; padding: 0; }
 .card-v__title { font-size: 21px; line-height: 1.32; letter-spacing: -0.02em; }
 .grid--4 .card-v__title { font-size: 18px; }
 .cat-block, .series-block, .authors-strip { margin-bottom: 80px; }
-.ph { display: grid; place-items: center; aspect-ratio: 16/9; width: 100%; background: linear-gradient(135deg, #CCEDE0, #E9E7FF); color: var(--accent-ink); font-size: 28px; font-weight: 700; border-radius: inherit; }
-.card-s .ph { width: 150px; height: 150px; aspect-ratio: 1; border-radius: var(--radius-md); }
+/* ছবি লোড হওয়ার সময় (বা ছবি না থাকলে) নরম পটভূমিতে ছোট লোগো — ছবি এলে সেটি ঢেকে দেয় */
+img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.svg") center / min(24%, 96px) auto no-repeat; }
+.ph { display: block; aspect-ratio: 16/9; width: 100%; border-radius: inherit; }
+.card-s .ph { width: 150px; height: 150px; aspect-ratio: 1; border-radius: var(--radius-md); background-size: 44px auto; }
+.card-s__img[data-lz], .mini__img[data-lz] { background-size: 40% auto; }
 .series-card { position: relative; display: block; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); color: #fff; }
 .series-card:hover { color: #fff; }
 .series-card__img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
@@ -564,6 +567,7 @@ ul, ol { margin: 0; padding: 0; }
   .hamburger { display: inline-grid; }
   .site-header__inner { justify-content: space-between; }
   .site-logo { position: absolute; left: 50%; transform: translateX(-50%); }
+  .site-logo img, .site-logo .logo { width: 84px; height: 49px; }
   .offcanvas .site-logo { position: static; transform: none; }
   .home .hero { grid-template-columns: 1fr; }
   .with-sidebar { grid-template-columns: 1fr; }

@@ -249,7 +249,7 @@
         results.innerHTML = scored.slice((page - 1) * per, page * per).map(function (x) {
           var it = x.it;
           return '<article class="card-v"><div class="card-v__media"><a href="' + it.u + '" tabindex="-1">' +
-            (it.i ? '<img class="card-v__img" src="' + esc(it.i) + '" alt="' + esc(it.t) + '" loading="lazy" width="1169" height="658">' : '<div class="ph"><span>কেয়ারি</span></div>') +
+            (it.i ? '<img class="card-v__img" data-lz src="' + esc(it.i) + '" alt="' + esc(it.t) + '" loading="lazy" width="1169" height="658">' : '<div class="ph"><span>কেয়ারি</span></div>') +
             '</a></div><p class="card__meta"><span class="card__author">' + esc(it.a) + '</span> · ' + esc(it.d) + ' · ' + esc(it.c) + '</p>' +
             '<h2 class="card-v__title"><a href="' + it.u + '">' + esc(it.t) + '</a></h2><p class="card__excerpt clamp-3">' + esc(it.e) + '</p></article>';
         }).join('');
