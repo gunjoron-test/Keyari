@@ -211,7 +211,10 @@ export async function editorView(view, kind, id) {
   const fit = () => {
     if (!ed) return;
     const focus = document.body.classList.contains('focus-mode');
-    const c = ed.getContainer(); if (c) c.style.height = Math.max(420, window.innerHeight - (focus ? 150 : 260)) + 'px';
+    const c = ed.getContainer(); if (!c) return;
+    // "আরও টুল" খুললে টুলবার যতটা জায়গা নেয়, লেখার জায়গা তত বাড়ে — যাতে লেখার অংশ ছোট না হয়
+    const extra = [...c.querySelectorAll('.tox-editor-header .tox-toolbar.k-sub-row')].reduce((s, r) => s + (r.offsetHeight ? r.offsetHeight + 8 : 0), 0);
+    c.style.height = Math.max(420, window.innerHeight - (focus ? 150 : 260)) + extra + 'px';
   };
   const setFocus = (on) => {
     document.body.classList.toggle('focus-mode', on);

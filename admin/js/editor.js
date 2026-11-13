@@ -107,6 +107,67 @@ export function cleanWordHtml(html, { keepFonts = false } = {}) {
   return h;
 }
 
+// প্রতিটি টুলের উপর মাউস নিলে যে ব্যাখ্যা দেখায়: "নাম — কী কাজ করে (শর্টকাট)"
+const TIPS = {
+  undo: 'পূর্বাবস্থা — শেষ কাজটি ফিরিয়ে নেয় (Ctrl+Z)',
+  redo: 'আবার করুন — ফিরিয়ে নেওয়া কাজটি আবার করে (Ctrl+Y)',
+  kparastyle: 'অনুচ্ছেদ স্টাইল — একটি ক্লিকে অনুচ্ছেদের ধরন বসায়, যেমন কবিতা, উদ্ধৃতি, ড্রপ ক্যাপ, স্বাক্ষর',
+  blocks: 'লেখার ধরন — সাধারণ অনুচ্ছেদ, শিরোনাম (২–৬), উদ্ধৃতি ইত্যাদি বাছুন',
+  bold: 'মোটা অক্ষর (Ctrl+B)',
+  italic: 'বাঁকা অক্ষর (Ctrl+I)',
+  underline: 'নিচে দাগ (Ctrl+U)',
+  kalign: 'সারিবদ্ধতা — বাম, মাঝ, ডান, সমপ্রান্তিক ও শেষ লাইনের বিভিন্ন ধরন',
+  alignleft: 'বামে সারিবদ্ধ', aligncenter: 'মাঝখানে সারিবদ্ধ', alignright: 'ডানে সারিবদ্ধ', alignjustify: 'দুই পাশে সমান (জাস্টিফাই)',
+  bullist: 'বুলেট তালিকা — প্রতিটি পয়েন্টের আগে বিন্দু',
+  numlist: 'সংখ্যার তালিকা — ক্রমিক নম্বরসহ (বাংলা সংখ্যাও বাছা যায়)',
+  link: 'লিংক — নির্বাচিত লেখাকে ওয়েব-ঠিকানার সাথে যুক্ত করে (Ctrl+K)',
+  image: 'ছবি — লেখার ভেতরে ছবি বসায়, ক্যাপশনসহ',
+  table: 'টেবিল — ছক বসায়; পরে সারি, কলাম ও স্টাইল বদলানো যায়',
+  kfootnote: 'টীকা / ফুটনোট — লেখার শেষে ক্রমিক নম্বরসহ তথ্যসূত্র হয়ে যায় (Ctrl+Shift+F)',
+  kmore: 'আরও টুল — অক্ষর, অনুচ্ছেদ, বিশেষ ব্লক ও বাংলা টুলের সারিগুলো দেখান বা লুকান',
+  kcharstyle: 'অক্ষর স্টাইল — নির্বাচিত শব্দে সবুজ জোর, হাইলাইট, ঢেউ-দাগ ইত্যাদি বসায়',
+  fontsize: 'লেখার আকার — নির্বাচিত অংশের অক্ষর ছোট বা বড় করে',
+  forecolor: 'লেখার রং — নির্বাচিত অক্ষরের রং বদলায়',
+  backcolor: 'হাইলাইট — লেখার পেছনে রঙিন জমিন দেয়',
+  strikethrough: 'কাটা দাগ — লেখার মাঝ বরাবর দাগ',
+  superscript: 'উপরে ছোট অক্ষর — যেমন x² বা টীকার সংখ্যা',
+  subscript: 'নিচে ছোট অক্ষর — যেমন H₂O',
+  kchar: 'অক্ষর বিন্যাস — ট্র্যাকিং, বেসলাইন, বিভিন্ন আন্ডারলাইন ও আরও (Ctrl+Shift+C)',
+  kpaint: 'ফরম্যাট পেইন্টার — এক অনুচ্ছেদের বিন্যাস কপি করে আরেকটিতে বসায়',
+  removeformat: 'ফরম্যাট মুছুন — নির্বাচিত লেখার সব সাজসজ্জা সরিয়ে সাধারণ করে',
+  outdent: 'ইন্ডেন্ট কমান — অনুচ্ছেদ বাঁয়ে সরায়',
+  indent: 'ইন্ডেন্ট বাড়ান — অনুচ্ছেদ ডানে সরায়',
+  kfirstindent: 'প্রথম লাইন / ঝুলন্ত ইন্ডেন্ট — অনুচ্ছেদের শুরুর লাইনের ফাঁক',
+  lineheight: 'লাইনের উচ্চতা — দুই লাইনের মাঝের ফাঁক',
+  kspacing: 'অনুচ্ছেদের আগে/পরে ফাঁক',
+  kdropcap: 'ড্রপ ক্যাপ — অনুচ্ছেদের প্রথম অক্ষর বড় করে (২–৪ লাইন)',
+  kpara: 'অনুচ্ছেদ বিন্যাস — ইন্ডেন্ট, ফাঁক, রুল, শেডিং, কলাম সব এক জায়গায় (Ctrl+Shift+P)',
+  blockquote: 'উদ্ধৃতি ব্লক — অন্যের কথা বা উদ্ধৃত অংশ আলাদা করে',
+  kpullquote: 'পুল কোট — লেখার গুরুত্বপূর্ণ বাক্য বড় করে মাঝখানে',
+  kpoem: 'কবিতা ব্লক — লাইন ভাঙতে Shift+Enter চাপুন',
+  kscene: 'দৃশ্য-বিরতি (***) — গল্পে দৃশ্য বদলের চিহ্ন (Ctrl+Shift+8)',
+  hr: 'আড়াআড়ি দাগ — অংশ আলাদা করার রেখা',
+  kbox: 'বক্স — সম্পাদকের টীকা বা আলাদা তথ্যের রঙিন ঘর',
+  kcols: 'কলাম — নির্বাচিত লেখা দুই বা তিন কলামে সাজায়',
+  accordion: 'ভাঁজ করা অংশ — ক্লিকে খোলে ও বন্ধ হয়',
+  anchor: 'অ্যাঙ্কর — লেখার ভেতরে একটি স্থানে সরাসরি লিংক দেওয়ার চিহ্ন',
+  media: 'ভিডিও / মিডিয়া — ইউটিউব ইত্যাদির লিংক বসায়',
+  charmap: 'বিশেষ চিহ্ন — ৳ ॥ ঃ ঁ ৎ, ড্যাশ, যুক্তাক্ষর ভাঙা (ZWNJ) ইত্যাদি',
+  emoticons: 'ইমোজি বসান',
+  insertdatetime: 'আজকের তারিখ বা সময় বসায়',
+  kbn: 'বাংলা সংখ্যা — ইংরেজি সংখ্যা (123) বাংলায় (১২৩) বদলায়',
+  kpunct: 'যতিচিহ্ন ঠিক করুন — দাঁড়ির আগের স্পেস, দ্বৈত স্পেস, ... → … ঠিক করে',
+  kquotes: 'বাঁকা উদ্ধৃতিচিহ্ন — " " কে “ ” করে',
+  kclean: 'Word পরিষ্কার — Word থেকে আসা বাড়তি ফন্ট ও ফরম্যাট মুছে ফেলে',
+  searchreplace: 'খুঁজুন ও বদলান — পুরো লেখায় শব্দ খুঁজে বদলায় (Ctrl+F)',
+  visualblocks: 'অনুচ্ছেদের সীমা দেখান — কাঠামো বুঝতে সাহায্য করে',
+  visualchars: 'লুকানো চিহ্ন দেখান — স্পেস ও লাইন-ভাঙা চিহ্ন',
+  code: 'HTML কোড দেখুন ও সম্পাদনা করুন (অভিজ্ঞদের জন্য)',
+  preview: 'প্রিভিউ — লেখাটি কেমন দেখাবে তার নমুনা',
+  ltr: 'বাম থেকে ডানে লেখা (বাংলা/ইংরেজি)',
+  rtl: 'ডান থেকে বামে লেখা (আরবি, ফারসি, উর্দু)',
+};
+
 /**
  * এডিটর চালু করা
  * ctx = { styles, siteCss, pickMedia(type) → Promise<{url,alt}>, resolveImage(src) → Promise<blobUrl>, onChange(), height, mini }
@@ -122,8 +183,13 @@ export async function createEditor(target, ctx) {
   const toolbar = mini ? [
     'undo redo | kparastyle blocks | bold italic underline | kalign | bullist numlist | link image | kfootnote kscene | removeformat code',
   ] : [
-    'undo redo | kparastyle blocks fontsize | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify kalign | bullist numlist | link image table | kfootnote | kfocus kmore',
-    'kcharstyle fontfamily lineheight strikethrough superscript subscript kchar kpaint removeformat | outdent indent kfirstindent kspacing kdropcap kpara | blockquote kpullquote kpoem kscene hr kbox kcols accordion | anchor media charmap emoticons insertdatetime | kbn kpunct kquotes kclean | searchreplace visualblocks visualchars code preview ltr rtl',
+    // মূল সারি — সবচেয়ে বেশি যা লাগে
+    'undo redo | kparastyle blocks | bold italic underline | kalign | bullist numlist | link image table | kfootnote | kmore',
+    // "আরও টুল" খুললে নিচের সারিগুলো (প্রতিটির বাঁয়ে বিষয়ের নাম থাকে)
+    'kcharstyle fontsize forecolor backcolor | strikethrough superscript subscript | kchar kpaint removeformat',
+    'outdent indent kfirstindent | lineheight kspacing | kdropcap kpara',
+    'blockquote kpullquote kpoem kscene hr | kbox kcols accordion | anchor media charmap emoticons insertdatetime',
+    'kbn kpunct kquotes kclean | searchreplace visualblocks visualchars code preview | ltr rtl',
   ];
   const dark = document.documentElement.getAttribute('data-scheme') === 'dark';
 
@@ -235,20 +301,50 @@ function waitTiny() {
 function setupKeyari(ed, ctx, paraStyles, charStyles) {
   Object.entries(ICONS).forEach(([k, v]) => ed.ui.registry.addIcon(k, v));
 
-  // ---------- "আরও টুল" বোতাম: দ্বিতীয় সারি খোলা/বন্ধ ----------
+  // ---------- "আরও টুল": নিচের সারিগুলো খোলা/বন্ধ, বিষয়ের লেবেল ও হোভার-ব্যাখ্যা ----------
   const moreKey = 'keyari-editor-more';
+  const rowsCfg = [].concat(ed.getParam('toolbar') || []);
+  const ROW_LABELS = ['', 'অক্ষর', 'অনুচ্ছেদ', 'ব্লক ও সন্নিবেশ', 'বাংলা ও সম্পাদনা'];
+  const getRows = () => [...ed.getContainer().querySelectorAll('.tox-editor-header .tox-toolbar')];
+  const setTip = (el, tip) => {
+    el.setAttribute('title', tip); el.setAttribute('aria-label', tip);
+  };
+  const applyTips = () => {
+    getRows().forEach((row, ri) => {
+      const tokens = (rowsCfg[ri] || '').split(/\s+/).filter((t) => t && t !== '|');
+      const items = [...row.querySelectorAll(':scope > .tox-toolbar__group > *')];
+      if (items.length !== tokens.length) return;
+      items.forEach((el, i) => { const tip = TIPS[tokens[i]]; if (tip) setTip(el, tip); });
+    });
+  };
+  const decorate = () => {
+    getRows().forEach((row, ri) => {
+      if (ri === 0 || row.querySelector('.k-rowlabel')) return;
+      row.classList.add('k-sub-row');
+      const l = document.createElement('span'); l.className = 'k-rowlabel'; l.textContent = ROW_LABELS[ri] || '';
+      row.insertBefore(l, row.firstChild);
+    });
+  };
   const applyMore = (open) => {
-    const rows = [...ed.getContainer().querySelectorAll('.tox-editor-header .tox-toolbar')];
-    rows.slice(1).forEach((r) => { r.style.display = open ? '' : 'none'; });
+    decorate();
+    getRows().slice(1).forEach((r) => { r.style.display = open ? '' : 'none'; });
     ed.getContainer().classList.toggle('k-more-open', open);
     window.dispatchEvent(new Event('resize'));
   };
-  ed.on('init', () => { let o = false; try { o = !!localStorage.getItem(moreKey); } catch (x) { /* */ } setTimeout(() => applyMore(o), 60); });
-  ed.ui.registry.addButton('kmore', { icon: 'more-drawer', text: 'আরও টুল', tooltip: 'অক্ষর, অনুচ্ছেদ, বিশেষ ব্লক ও বাংলা টুল দেখান/লুকান', onAction: () => {
-    const open = !ed.getContainer().classList.contains('k-more-open');
-    try { localStorage.setItem(moreKey, open ? '1' : ''); } catch (x) { /* */ }
-    applyMore(open);
-  } });
+  ed.on('init', () => {
+    let o = false; try { o = !!localStorage.getItem(moreKey); } catch (x) { /* */ }
+    setTimeout(() => { applyMore(o); applyTips(); }, 80);
+    ed.on('NodeChange', () => applyTips());
+  });
+  ed.ui.registry.addToggleButton('kmore', {
+    icon: 'more-drawer', text: 'আরও টুল', tooltip: TIPS.kmore,
+    onAction: (api) => {
+      const open = !ed.getContainer().classList.contains('k-more-open');
+      try { localStorage.setItem(moreKey, open ? '1' : ''); } catch (x) { /* */ }
+      applyMore(open); api.setActive(open);
+    },
+    onSetup: (api) => { let o = false; try { o = !!localStorage.getItem(moreKey); } catch (x) { /* */ } api.setActive(o); return () => {}; },
+  });
   ed.ui.registry.addButton('kfocus', { icon: 'fullscreen', text: 'ফোকাস মোড', tooltip: 'পুরো পর্দায় মনোযোগ দিয়ে লিখুন', onAction: () => ctx.toggleFocus && ctx.toggleFocus() });
   ed.ui.registry.addMenuItem('kfocusmenu', { icon: 'fullscreen', text: 'ফোকাস মোড (পুরো পর্দা)', onAction: () => ctx.toggleFocus && ctx.toggleFocus() });
 
