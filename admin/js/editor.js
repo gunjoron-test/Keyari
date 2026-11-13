@@ -5,17 +5,9 @@ const TINY = 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3';
 const LANG = 'https://cdn.jsdelivr.net/npm/tinymce-i18n@25.1.27/langs6/bn_BD.js';
 
 export const FONTS = [
-  ['নোটো সেরিফ বাংলা (সাইটের মূল)', "'Noto Serif Bengali', serif"],
-  ['নোটো সান্স বাংলা', "'Noto Sans Bengali', sans-serif"],
-  ['হিন্দ শিলিগুড়ি', "'Hind Siliguri', sans-serif"],
-  ['তিরো বাংলা', "'Tiro Bangla', serif"],
-  ['আনেক বাংলা', "'Anek Bangla', sans-serif"],
-  ['বালু দা', "'Baloo Da 2', sans-serif"],
-  ['গলাদা (ডিসপ্লে)', "'Galada', cursive"],
-  ['আত্মা', "'Atma', cursive"],
-  ['মিনা', "'Mina', sans-serif"],
+  ['নোটো সেরিফ বাই গুঞ্জরণ (সাইটের একমাত্র ফন্ট)', "'Noto Serif by Gunjoron', serif"],
+  // নতুন ফন্ট যোগ করতে এখানে একটি সারি ও static/assets/css/fonts.css-এ @font-face যোগ করুন
 ];
-const GF = 'https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&family=Noto+Sans+Bengali:wght@100..900&family=Hind+Siliguri:wght@300;400;600;700&family=Tiro+Bangla:ital@0;1&family=Anek+Bangla:wght@100..800&family=Baloo+Da+2:wght@400..800&family=Galada&family=Atma:wght@400;600;700&family=Mina:wght@400;700&display=swap';
 
 /** styles.json → CSS (build.py-র style_css()-এর হুবহু অনুরূপ) */
 export function stylesToCss(styles) {
@@ -52,7 +44,7 @@ const ICONS = {
   kbox: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="M8 10h8M8 14h5" stroke-linecap="round"/></svg>',
   kcols: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h6M4 10h6M4 14h6M4 18h6M14 6h6M14 10h6M14 14h6M14 18h6"/></svg>',
   kpaint: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="4" y="4" width="13" height="6" rx="1.5"/><path d="M17 7h3v5h-8v3"/><rect x="10.5" y="15" width="3" height="5" rx="1"/></svg>',
-  kbn: '<svg width="24" height="24" viewBox="0 0 24 24"><text x="12" y="17" text-anchor="middle" font-size="14" font-family="Noto Serif Bengali, serif" font-weight="700" fill="currentColor">১২</text></svg>',
+  kbn: '<svg width="24" height="24" viewBox="0 0 24 24"><text x="12" y="17" text-anchor="middle" font-size="14" font-family="Noto Serif by Gunjoron, serif" font-weight="700" fill="currentColor">১২</text></svg>',
   kdrop: '<svg width="24" height="24" viewBox="0 0 24 24"><text x="3" y="17" font-size="17" font-family="serif" font-weight="700" fill="currentColor">অ</text><path d="M14 6h7M14 10h7M3 20h18M14 14h7" stroke="currentColor" stroke-width="1.6"/></svg>',
   kspace: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 4v16M5 7l3-3 3 3M5 17l3 3 3-3M14 8h6M14 12h6M14 16h6"/></svg>',
   kfirst: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 6h10M4 10h16M4 14h16M4 18h12M4 4v4l3-2z"/></svg>',
@@ -149,10 +141,10 @@ export async function createEditor(target, ctx) {
     },
     plugins: 'advlist anchor autolink charmap code directionality fullscreen help image insertdatetime link lists media nonbreaking pagebreak preview quickbars searchreplace table visualblocks visualchars wordcount accordion emoticons',
     toolbar, toolbar_mode: 'wrap', toolbar_sticky: true, toolbar_sticky_offset: 60,
-    content_css: [GF, ctx.siteCss],
+    content_css: [ctx.fontsCss, ctx.siteCss],
     content_style: `${css}
       html{background:#fff}
-      body.entry-content{max-width:760px;margin:28px auto 80px;padding:0 28px;background:#fff;color:#29294B;font-family:'Noto Serif Bengali',serif}
+      body.entry-content{max-width:760px;margin:28px auto 80px;padding:0 28px;background:#fff;color:#29294B;font-family:'Noto Serif by Gunjoron',serif}
       body.entry-content p{margin:0 0 1.6em}
       .fn-ref{color:#00A664;font-weight:700;cursor:help;border-bottom:1px dotted #00A664}
       .fn-ref::after{content:" ✱";font-size:.7em}

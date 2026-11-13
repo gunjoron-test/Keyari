@@ -28,7 +28,7 @@
   --reading: 680px;
   --header-h: 88px;
   --read-size: 17px;
-  --font: 'Noto Serif Bengali', 'Noto Serif', 'Tiro Bangla', serif;
+  --font: 'Noto Serif by Gunjoron', serif;
   color-scheme: light;
 }
 [data-scheme="dark"] {

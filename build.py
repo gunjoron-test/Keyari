@@ -184,7 +184,6 @@ def is_live(item):
 
 POSTS_ALL = load_dir("posts")
 POSTS = [p for p in POSTS_ALL if is_live(p)]
-WPM = S.get("reading", {}).get("words_per_minute", 180)
 
 
 def post_sort_key(p):
@@ -200,7 +199,6 @@ for p in POSTS:
     p["_url"] = u(p["_path"])
     text = strip_tags(p.get("body", ""))
     p["_words"] = len(text.split())
-    p["_read"] = max(1, math.ceil(p["_words"] / WPM))
     if not p.get("excerpt"):
         p["excerpt"] = truncate(text, 220)
     # কার্ডে ৩ লাইন ভরার মতো লম্বা সারাংশ (CSS তৃতীয় লাইনে "…" বসায়)
@@ -239,17 +237,6 @@ for a in AUTHORS:
     a["_posts"] = [p for p in POSTS if p["_author"].get("slug") == a["slug"]]
 
 # ------------------------------------------------------------------ HTML processing
-FONT_FAMILIES = {
-    "Noto Serif Bengali": "Noto+Serif+Bengali:wght@100..900",
-    "Noto Sans Bengali": "Noto+Sans+Bengali:wght@100..900",
-    "Hind Siliguri": "Hind+Siliguri:wght@300;400;500;600;700",
-    "Tiro Bangla": "Tiro+Bangla:ital@0;1",
-    "Baloo Da 2": "Baloo+Da+2:wght@400..800",
-    "Galada": "Galada",
-    "Atma": "Atma:wght@300;400;500;600;700",
-    "Mina": "Mina:wght@400;700",
-    "Anek Bangla": "Anek+Bangla:wght@100..800",
-}
 
 
 def process_body(body, with_footnotes=True):
@@ -258,6 +245,8 @@ def process_body(body, with_footnotes=True):
     b = re.sub(r"<!--\[if.*?endif\]-->", "", b, flags=re.S)
     b = re.sub(r"</?o:p>", "", b)
     b = re.sub(r"mso-[\w-]+:[^;\"']*;?\s*", "", b)
+    b = re.sub(r"font-family\s*:[^;\"]*;?", "", b)  # শুধু সাইটের একটি ফন্ট
+    b = re.sub(r'\s(?:face)="[^"]*"', "", b)
     b = re.sub(r'\sstyle="\s*"', "", b)
     b = re.sub(r'\s(data-elementor-[\w-]+|data-element_type|data-e-type|data-widget_type|data-id)="[^"]*"', "", b)
     b = re.sub(r"<script\b.*?</script>", "", b, flags=re.S | re.I)
@@ -306,11 +295,7 @@ def toc_from(body):
 
 
 def fonts_in(body):
-    used = []
-    for fam in FONT_FAMILIES:
-        if fam != "Noto Serif Bengali" and fam in (body or ""):
-            used.append(fam)
-    return used
+    return []
 
 
 def style_css():
@@ -399,8 +384,6 @@ def meta_line(p, author=True, date=True, read=True):
         parts.append(f'<a class="meta__author" href="{u("/author/" + a["slug"] + "/")}">{esc(a["name"])}</a>')
     if date:
         parts.append(f'<time class="meta__date" datetime="{p["_date"].isoformat()}">{bn_date(p["_date"])}</time>')
-    if read:
-        parts.append(f'<span class="meta__read">{bn(p["_read"])} মিনিটের পাঠ</span>')
     return '<div class="meta">' + '<span class="meta__dot" aria-hidden="true">·</span>'.join(parts) + "</div>"
 
 
@@ -419,7 +402,7 @@ def card_h(p, eager=False):
     <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
     <div class="card__foot">
       <a class="btn" href="{p["_url"]}">পুরোটা পড়ুন<span class="sr-only">: {esc(p["title"])}</span></a>
-      <span class="card__meta">{bn_date(p["_date"])} · {bn(p["_read"])} মিনিটের পাঠ</span>
+      <span class="card__meta">{bn_date(p["_date"])}</span>
     </div>
   </div>
 </article>'''
@@ -716,7 +699,6 @@ def layout(*, title, description, path, body, active="", og_image="", og_type="w
     img = absu(og_image or S.get("default_og_image") or S.get("logo") or "")
     seo = S.get("seo", {})
     ga = seo.get("google_analytics")
-    font_q = "&".join("family=" + FONT_FAMILIES[f] for f in ["Noto Serif Bengali"] + (fonts or []))
     lds = [{"@context": "https://schema.org", "@graph": [org_ld(), {
         "@type": "WebSite", "@id": SITE_URL + "/#website", "url": SITE_URL + u("/"), "name": SITE, "inLanguage": "bn",
         "description": S.get("description"), "publisher": {"@id": SITE_URL + "/#org"},
@@ -764,9 +746,9 @@ def layout(*, title, description, path, body, active="", og_image="", og_type="w
 <link rel="apple-touch-icon" href="{asset(S.get("favicon") or "/assets/img/favicon.svg")}">
 <link rel="manifest" href="{u("/manifest.webmanifest")}">
 <link rel="alternate" type="application/rss+xml" title="{esc(SITE)} — ফিড" href="{u("/feed.xml")}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?{font_q}&display=swap">
+<link rel="preload" href="{u("/assets/fonts/NotoSerifByGunjoron-Regular.woff")}" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="{u("/assets/fonts/NotoSerifByGunjoron-Bold.woff")}" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="{u("/assets/css/fonts.css")}?v={BUILD_ID}">
 <link rel="stylesheet" href="{u("/assets/css/site.css")}?v={BUILD_ID}">
 <link rel="stylesheet" href="{u("/assets/css/styles.css")}?v={BUILD_ID}">
 <script>(function(){{try{{var s=localStorage.getItem('keyari-scheme');if(!s)s=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-scheme',s);var f=localStorage.getItem('keyari-fs');if(f)document.documentElement.style.setProperty('--read-size',f+'px')}}catch(e){{}}}})();window.KEYARI={{base:"{BASE}"}};</script>
@@ -847,7 +829,7 @@ def build_home():
       <a class="card__author" href="{u("/author/" + main["_author"]["slug"] + "/")}">{esc(main["_author"]["name"])}</a>
       <h2 class="hero__title"><a href="{main["_url"]}">{esc(main["title"])}</a></h2>
       <p class="hero__excerpt clamp-3">{esc(main.get("subtitle") or main["_long"])}</p>
-      <p class="card__meta">{bn_date(main["_date"])} · {bn(main["_read"])} মিনিটের পাঠ</p>
+      <p class="card__meta">{bn_date(main["_date"])}</p>
     </div>
   </article>
   <div class="hero__side">{"".join(card_small(p) for p in side)}</div>
@@ -1047,7 +1029,6 @@ def build_post(p):
     {f'<p class="entry-translator">অনুবাদ : {esc(p["translator"])}</p>' if p.get("translator") else ""}
     <div class="entry-meta">
       <span>{icon("calendar", 16)} <time datetime="{p["_date"].isoformat()}" itemprop="datePublished">{bn_date(p["_date"])}</time></span>
-      <span>{icon("clock", 16)} {bn(p["_read"])} মিনিটের পাঠ</span>
       <span>{bn(p["_words"])} শব্দ</span>
     </div>
     {ay}
@@ -1094,7 +1075,6 @@ def build_post(p):
         "description": seo.get("description") or p["excerpt"], "inLanguage": "bn",
         "image": [absu(img)] if img else None, "datePublished": p["_date"].isoformat(),
         "dateModified": p["_modified"].isoformat(), "wordCount": p["_words"],
-        "timeRequired": f"PT{p['_read']}M",
         "author": {"@type": "Person", "name": a["name"], "url": absu("/author/" + a["slug"] + "/")},
         "publisher": {"@id": SITE_URL + "/#org"}, "mainEntityOfPage": absu(p["_path"]),
         "articleSection": [CAT[c]["name"] for c in p["_cats"]], "keywords": ", ".join(p.get("tags", [])) or None,

@@ -1,0 +1,26 @@
+FONTLOG for Noto Serif by Gunjoron
+==================================
+
+Publisher : Gunjoron | গুঞ্জরণ (https://patheyobygunjoron.github.io/)
+Creator   : Mustafizur Rahman Junayed (মুস্তাফিজুর রহমান জুনায়েদ)
+License   : SIL Open Font License 1.1 (see OFL.txt)
+
+Base font
+---------
+Noto Serif Bengali 3.000, Copyright 2025 The Noto Project Authors
+(https://github.com/notofonts/bengali). Designed by Juan Bruce, Universal Thirst,
+Indian Type Foundry and the Monotype Design Team.
+
+Changelog
+---------
+12 November 2026 - Version 3.100 (Noto Serif by Gunjoron)
+- New Bengali digits U+09E6-U+09EF (০১২৩৪৫৬৭৮৯), drawn for Gunjoron by
+  Mustafizur Rahman Junayed in all 9 weights (Thin to Black). In each weight
+  they are scaled and positioned to match the Noto text, and their spacing is
+  set to Noto's average.
+- Family renamed to "Noto Serif by Gunjoron" (PostScript: NotoSerifByGunjoron-*).
+- Updated the copyright, version, publisher, creator, description and URL
+  metadata, and the vendor ID (GUNJ).
+- Nothing else was changed. Every other glyph, its metrics, the Bengali shaping
+  (GSUB/GPOS/GDEF) and the hinting are byte-for-byte identical to
+  Noto Serif Bengali 3.000.

@@ -141,14 +141,14 @@ function previewHtml(d, kind) {
   const fn = notes.length ? `<section class="footnotes"><h2 class="footnotes__title">টীকা ও তথ্যসূত্র</h2><ol>${notes.map((t, i) => `<li id="fn-${i + 1}">${t}</li>`).join('')}</ol></section>` : '';
   const lay = d.layout || {};
   return `<!doctype html><html lang="bn" data-scheme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>প্রিভিউ: ${title}</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&family=Noto+Sans+Bengali:wght@100..900&family=Hind+Siliguri:wght@300;400;600;700&family=Tiro+Bangla&family=Anek+Bangla:wght@100..800&family=Baloo+Da+2:wght@400..800&family=Galada&family=Atma:wght@400;600;700&family=Mina:wght@400;700&display=swap">
+<link rel="stylesheet" href="${location.origin}${base}/assets/css/fonts.css">
 <link rel="stylesheet" href="${location.origin}${base}/assets/css/site.css"><style>${css}</style>
-<style>.pv-bar{position:sticky;top:0;z-index:9;background:#29294B;color:#fff;padding:8px 16px;font:14px 'Hind Siliguri',sans-serif;display:flex;gap:12px;align-items:center}.pv-bar button{margin-left:auto}</style></head>
+<style>.pv-bar{position:sticky;top:0;z-index:9;background:#29294B;color:#fff;padding:8px 16px;font:14px 'Noto Serif by Gunjoron',serif;display:flex;gap:12px;align-items:center}.pv-bar button{margin-left:auto}</style></head>
 <body class="single"><div class="pv-bar">প্রিভিউ — এখনো প্রকাশিত নয়। <span>প্রস্থ:</span><button onclick="document.body.style.maxWidth='';">ডেস্কটপ</button><button onclick="document.body.style.maxWidth='390px';document.body.style.margin='0 auto'">মোবাইল</button></div>
 <main class="site-main"><article class="entry"><header class="entry-header container">
 ${kind === 'post' ? `<span class="entry-author">${esc(a.name)}</span>` : ''}<h1 class="entry-title">${title}</h1>
 ${d.subtitle ? `<p class="entry-subtitle">${esc(d.subtitle)}</p>` : ''}${d.translator ? `<p class="entry-translator">অনুবাদ : ${esc(d.translator)}</p>` : ''}
-${kind === 'post' ? `<div class="entry-meta"><span>${bnDate(d.date)}</span><span>${bn(Math.max(1, Math.ceil(wordCount(body) / 180)))} মিনিটের পাঠ</span><span>${bn(wordCount(body))} শব্দ</span></div>` : ''}
+${kind === 'post' ? `<div class="entry-meta"><span>${bnDate(d.date)}</span><span>${bn(wordCount(body))} শব্দ</span></div>` : ''}
 ${cover ? `<figure class="entry-cover"><img class="entry-cover__img" src="${esc(/^(https?:|blob:|data:)/.test(cover) ? cover : location.origin + base + cover)}" alt=""></figure>` : ''}
 </header><div class="container entry-layout" style="grid-template-columns:minmax(0,760px);justify-content:center"><div class="entry-main">
 <div class="entry-content${lay.justify === false ? ' no-justify' : ''}${lay.dropcap ? ' has-dropcap' : ''}">${processed}${fn}</div></div></div></article></main></body></html>`;
@@ -251,6 +251,7 @@ export async function editorView(view, kind, id) {
   try {
     ed = await createEditor(ta, {
       styles: S.styles,
+      fontsCss: location.origin + (S.cfg.base || '') + '/assets/css/fonts.css',
       siteCss: location.origin + (S.cfg.base || '') + '/assets/css/site.css',
       justify: d.layout ? d.layout.justify !== false : true,
       mini: false,
@@ -278,7 +279,7 @@ export async function editorView(view, kind, id) {
     const w = wordCount(html);
     const chars = stripTags(html).length;
     const el = $('[data-stats]', view);
-    if (el) el.innerHTML = `<span>${bn(w)} শব্দ</span><span>${bn(chars)} অক্ষর</span><span>পড়তে ~${bn(Math.max(1, Math.ceil(w / (S.settings.reading?.words_per_minute || 180))))} মিনিট</span><span>অনুচ্ছেদ ${bn((html.match(/<p[\s>]/g) || []).length)}টি</span>${(html.match(/class="fn-ref"/g) || []).length ? `<span>টীকা ${bn((html.match(/class="fn-ref"/g) || []).length)}টি</span>` : ''}`;
+    if (el) el.innerHTML = `<span>${bn(w)} শব্দ</span><span>${bn(chars)} অক্ষর</span><span>অনুচ্ছেদ ${bn((html.match(/<p[\s>]/g) || []).length)}টি</span>${(html.match(/class="fn-ref"/g) || []).length ? `<span>টীকা ${bn((html.match(/class="fn-ref"/g) || []).length)}টি</span>` : ''}`;
   }
 
   function collect() {
