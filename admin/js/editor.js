@@ -122,28 +122,32 @@ export async function createEditor(target, ctx) {
   const toolbar = mini ? [
     'undo redo | kparastyle blocks | bold italic underline | kalign | bullist numlist | link image | kfootnote kscene | removeformat code',
   ] : [
-    'undo redo | kparastyle kcharstyle blocks | fontfamily fontsize lineheight | bold italic underline strikethrough | forecolor backcolor | kpaint removeformat',
-    'kalign alignleft aligncenter alignright alignjustify | outdent indent kfirstindent | kspacing kdropcap | kpara kchar | bullist numlist | blockquote kpullquote kpoem kscene hr | kbox kcols accordion',
-    'link anchor image media table | kfootnote charmap emoticons insertdatetime | superscript subscript | kbn kpunct kquotes kclean | searchreplace visualblocks visualchars code preview fullscreen | ltr rtl',
+    'undo redo | kparastyle blocks fontsize | bold italic underline | forecolor backcolor | alignleft aligncenter alignright alignjustify kalign | bullist numlist | link image table | kfootnote | kfocus kmore',
+    'kcharstyle fontfamily lineheight strikethrough superscript subscript kchar kpaint removeformat | outdent indent kfirstindent kspacing kdropcap kpara | blockquote kpullquote kpoem kscene hr kbox kcols accordion | anchor media charmap emoticons insertdatetime | kbn kpunct kquotes kclean | searchreplace visualblocks visualchars code preview ltr rtl',
   ];
+  const dark = document.documentElement.getAttribute('data-scheme') === 'dark';
 
   const [ed] = await tinymce.init({
     target,
     base_url: TINY, suffix: '.min',
     language: 'bn_BD', language_url: LANG,
     promotion: false, branding: false,
-    height: ctx.height || (mini ? 420 : Math.max(560, window.innerHeight - 220)),
+    skin: dark ? 'oxide-dark' : 'oxide',
+    help_accessibility: false,
+    height: ctx.height || (mini ? 420 : Math.max(460, window.innerHeight - 260)),
     min_height: 300,
     resize: true,
-    menubar: mini ? false : 'file edit view insert format table tools kbangla help',
+    menubar: mini ? false : 'file edit kview insert format table tools kbangla help',
     menu: {
+      kview: { title: 'দৃশ্য', items: 'kfocusmenu | visualaid visualchars visualblocks | preview' },
       kbangla: { title: 'বাংলা ও টাইপোগ্রাফি', items: 'kpara kchar | kparastyles kcharstyles | kbnall kpunctall kquotesall | kcleanall | kfootnote kscene kpoem kpullquote kbox' },
     },
-    plugins: 'advlist anchor autolink charmap code directionality fullscreen help image insertdatetime link lists media nonbreaking pagebreak preview quickbars searchreplace table visualblocks visualchars wordcount accordion emoticons',
+    plugins: 'advlist anchor autolink charmap code directionality help image insertdatetime link lists media nonbreaking pagebreak preview quickbars searchreplace table visualblocks visualchars wordcount accordion emoticons',
     toolbar, toolbar_mode: 'wrap', toolbar_sticky: true, toolbar_sticky_offset: 60,
     content_css: [ctx.fontsCss, ctx.siteCss],
     content_style: `${css}
       html{background:#fff}
+      *:focus,*:focus-visible,body.entry-content:focus{outline:none!important;box-shadow:none!important}
       body.entry-content{max-width:760px;margin:28px auto 80px;padding:0 28px;background:#fff;color:#29294B;font-family:'Noto Serif by Gunjoron',serif}
       body.entry-content p{margin:0 0 1.6em}
       .fn-ref{color:#00A664;font-weight:700;cursor:help;border-bottom:1px dotted #00A664}
@@ -230,6 +234,23 @@ function waitTiny() {
 
 function setupKeyari(ed, ctx, paraStyles, charStyles) {
   Object.entries(ICONS).forEach(([k, v]) => ed.ui.registry.addIcon(k, v));
+
+  // ---------- "আরও টুল" বোতাম: দ্বিতীয় সারি খোলা/বন্ধ ----------
+  const moreKey = 'keyari-editor-more';
+  const applyMore = (open) => {
+    const rows = [...ed.getContainer().querySelectorAll('.tox-editor-header .tox-toolbar')];
+    rows.slice(1).forEach((r) => { r.style.display = open ? '' : 'none'; });
+    ed.getContainer().classList.toggle('k-more-open', open);
+    window.dispatchEvent(new Event('resize'));
+  };
+  ed.on('init', () => { let o = false; try { o = !!localStorage.getItem(moreKey); } catch (x) { /* */ } setTimeout(() => applyMore(o), 60); });
+  ed.ui.registry.addButton('kmore', { icon: 'more-drawer', text: 'আরও টুল', tooltip: 'অক্ষর, অনুচ্ছেদ, বিশেষ ব্লক ও বাংলা টুল দেখান/লুকান', onAction: () => {
+    const open = !ed.getContainer().classList.contains('k-more-open');
+    try { localStorage.setItem(moreKey, open ? '1' : ''); } catch (x) { /* */ }
+    applyMore(open);
+  } });
+  ed.ui.registry.addButton('kfocus', { icon: 'fullscreen', text: 'ফোকাস মোড', tooltip: 'পুরো পর্দায় মনোযোগ দিয়ে লিখুন', onAction: () => ctx.toggleFocus && ctx.toggleFocus() });
+  ed.ui.registry.addMenuItem('kfocusmenu', { icon: 'fullscreen', text: 'ফোকাস মোড (পুরো পর্দা)', onAction: () => ctx.toggleFocus && ctx.toggleFocus() });
 
   // ---------- অনুচ্ছেদ স্টাইল (প্যারাগ্রাফ স্টাইল শিট) ----------
   const applyPara = (id) => {

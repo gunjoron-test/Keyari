@@ -79,6 +79,7 @@ const NAV = [
 ];
 
 function shell() {
+  try { document.body.classList.toggle('side-collapsed', !!localStorage.getItem('keyari-side')); } catch (e) { /* */ }
   const role = ROLES[S.role] || ROLES.contributor;
   $('#app').innerHTML = `<div class="shell">
     <aside class="side" data-side><div class="side__brand"><img src="../assets/img/logo.svg" alt="কেয়ারি" width="58" height="34"><small>সম্পাদনা কক্ষ</small></div>
@@ -99,7 +100,10 @@ function shell() {
 export function setTop(html, bind) {
   const top = $('[data-top]'); if (!top) return;
   top.innerHTML = `<button class="btn btn--ghost btn--icon top__menu" data-menu aria-label="মেনু">☰</button>${html}`;
-  $('[data-menu]', top).onclick = () => $('[data-side]').classList.toggle('is-open');
+  $('[data-menu]', top).onclick = () => {
+    if (window.innerWidth > 860) { const on = document.body.classList.toggle('side-collapsed'); try { localStorage.setItem('keyari-side', on ? '1' : ''); } catch (e) { /* */ } }
+    else $('[data-side]').classList.toggle('is-open');
+  };
   bind && bind(top);
 }
 export function go(hash) { if (location.hash === hash) route(); else location.hash = hash; }

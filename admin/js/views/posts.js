@@ -196,15 +196,40 @@ export async function editorView(view, kind, id) {
   const renderTop = () => setTop(`<a class="btn btn--ghost btn--sm" href="#/${COLL[kind]}">← ${LABEL[kind]}সমূহ</a>
     <span class="top__title">${esc(d.title || 'নতুন ' + LABEL[kind])}</span>
     <span class="help" data-dirty></span>${statusBadge(d.status, d.date)}
+    <button class="btn btn--light btn--sm only-focus" data-panel>⚙ প্যানেল</button>
+    <button class="btn btn--light btn--sm" data-focus title="পুরো পর্দায় মনোযোগ দিয়ে লিখুন (বের হতে Esc)">⛶ ফোকাস মোড</button>
     <button class="btn btn--light btn--sm" data-preview>প্রিভিউ</button>
     <button class="btn btn--light btn--sm" data-save-draft>${d.status === 'published' ? 'খসড়া করুন' : 'খসড়া সংরক্ষণ'}</button>
     <button class="btn btn--sm" data-publish>${publishLabel()}</button>`, (top) => {
     $('[data-preview]', top).onclick = preview;
+    $('[data-focus]', top).onclick = () => toggleFocus();
+    $('[data-panel]', top).onclick = () => document.body.classList.toggle('panel-open');
     $('[data-save-draft]', top).onclick = () => save(d.status === 'published' ? 'draft' : d.status === 'review' ? 'review' : 'draft');
     $('[data-publish]', top).onclick = () => save(kind === 'post' && !can('publish') ? 'review' : 'published');
   });
+  // ---------- ফোকাস মোড (পুরো পর্দায় লেখা) ----------
+  const fit = () => {
+    if (!ed) return;
+    const focus = document.body.classList.contains('focus-mode');
+    const c = ed.getContainer(); if (c) c.style.height = Math.max(420, window.innerHeight - (focus ? 150 : 260)) + 'px';
+  };
+  const setFocus = (on) => {
+    document.body.classList.toggle('focus-mode', on);
+    if (!on) document.body.classList.remove('panel-open');
+    const b = $('[data-focus]'); if (b) b.innerHTML = on ? '✕ ফোকাস বন্ধ' : '⛶ ফোকাস মোড';
+    if (on) { try { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {}); } catch (e) { /* */ } window.scrollTo(0, 0); }
+    else if (document.fullscreenElement) { try { document.exitFullscreen().catch(() => {}); } catch (e) { /* */ } }
+    setTimeout(fit, 120);
+  };
+  const toggleFocus = () => setFocus(!document.body.classList.contains('focus-mode'));
+  const onFsChange = () => { if (!document.fullscreenElement && document.body.classList.contains('focus-mode')) setFocus(false); };
+  const onEsc = (e) => { if (e.key === 'Escape' && document.body.classList.contains('focus-mode') && !document.querySelector('.tox-dialog, .modal-back')) setFocus(false); };
+  document.addEventListener('fullscreenchange', onFsChange);
+  document.addEventListener('keydown', onEsc);
+  window.addEventListener('resize', fit);
+
   renderTop();
-  const markDirty = () => { S.dirty = true; const el = $('[data-dirty]'); if (el) el.textContent = '● অসংরক্ষিত'; autosave(); updateStats(); };
+  const markDirty = () => { S.dirty = true; const el = $('[data-dirty]'); if (el) el.textContent = '● অসংরক্ষিত (ব্রাউজারে খসড়া রাখা আছে)'; autosave(); updateStats(); };
   const autosave = debounce(() => { try { localStorage.setItem(autoKey, JSON.stringify({ t: Date.now(), d: collect() })); } catch (e) { /* */ } }, 1500);
 
   // ---------- পারমালিংক ----------
@@ -256,12 +281,14 @@ export async function editorView(view, kind, id) {
       justify: d.layout ? d.layout.justify !== false : true,
       mini: false,
       pickMedia: () => pickMedia(),
+      toggleFocus,
       resolveImage,
       openStyles: () => go('#/styles'),
       onChange: () => { if (ed && ed.isDirty()) markDirty(); },
     });
     $('.ed-loading', view)?.remove();
     ed.setDirty(false);
+    ed.on('keydown', (e) => { if (e.key === 'Escape' && document.body.classList.contains('focus-mode') && !document.fullscreenElement) setFocus(false); });
     S.dirty = false;
     updateStats();
     refreshSeo();
@@ -395,7 +422,7 @@ export async function editorView(view, kind, id) {
   // Ctrl+S
   const keyH = (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); save(d.status === 'published' ? 'published' : d.status || 'draft'); } };
   document.addEventListener('keydown', keyH);
-  view._cleanup = () => { document.removeEventListener('keydown', keyH); if (ed) { ed.remove(); ed = null; } };
+  view._cleanup = () => { document.removeEventListener('keydown', keyH); document.removeEventListener('keydown', onEsc); document.removeEventListener('fullscreenchange', onFsChange); window.removeEventListener('resize', fit); setFocus(false); if (ed) { ed.remove(); ed = null; } };
 }
 
 function showPublished(kind, d) {
