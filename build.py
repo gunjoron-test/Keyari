@@ -574,8 +574,7 @@ def header(active=""):
                 groups = ""
                 for c in cols[k]:
                     subs = "".join(f'<li><a href="{cat_url(s["slug"])}">{esc(s["name"])}</a></li>' for s in c["children"])
-                    groups += (f'<div class="mega__group"><a class="mega__cat" href="{cat_url(c["slug"])}"><span class="mega__icon" aria-hidden="true">{esc(c.get("icon", ""))}</span>{esc(c["name"])}'
-                               f'<span class="mega__count">{bn(cat_count(c["slug"]))}</span></a>'
+                    groups += (f'<div class="mega__group"><a class="mega__cat" href="{cat_url(c["slug"])}">{esc(c["name"])}</a>'
                                + (f'<ul class="mega__subs">{subs}</ul>' if subs else "") + "</div>")
                 col_html += f'<div class="mega__col">{groups}</div>'
             feature = ""
@@ -603,7 +602,7 @@ def header(active=""):
             subs = ""
             for c in TOP_CATS:
                 kids = "".join(f'<li><a href="{cat_url(s["slug"])}">{esc(s["name"])}</a></li>' for s in c["children"])
-                subs += f'<li><a class="m-cat" href="{cat_url(c["slug"])}"><span aria-hidden="true">{esc(c.get("icon", ""))}</span> {esc(c["name"])}</a>' + (f'<ul class="m-kids">{kids}</ul>' if kids else "") + "</li>"
+                subs += f'<li><a class="m-cat" href="{cat_url(c["slug"])}">{esc(c["name"])}</a>' + (f'<ul class="m-kids">{kids}</ul>' if kids else "") + "</li>"
             m_items.append(f'<li class="m-item"><div class="m-row"><a href="{u(it.get("url") or "/বিষয়সূচি/")}">{esc(it["label"])}</a><button class="m-toggle" type="button" aria-expanded="false" aria-label="{esc(it["label"])} খুলুন">{icon("chev", 18)}</button></div><ul class="m-sub">{subs}</ul></li>')
         elif it.get("children"):
             subs = "".join(f'<li><a href="{u(c["url"])}">{esc(c["label"])}</a></li>' for c in it["children"])
