@@ -1052,13 +1052,16 @@ def build_post(p):
       </footer>
       <div class="share share--inline-wrap">{share_bar(p)}</div>
       <section class="author-box" aria-label="লেখক পরিচিতি">
-        {avatar(a, 88)}
-        <div class="author-box__body">
-          <p class="sec-label">লেখক পরিচিতি</p>
-          <h2 class="author-box__name"><a href="{u("/author/" + a["slug"] + "/")}">{esc(a["name"])}</a></h2>
-          {f'<p class="author-box__bio">{esc(a["bio"])}</p>' if a.get("bio") else ""}
-          {f'<p class="sec-label">লেখকের আরও লেখা</p><ul class="author-box__more">{other_html}</ul>' if other_html else ""}
+        <p class="author-box__label">লেখক পরিচিতি</p>
+        <div class="author-box__who">
+          {avatar(a, 84)}
+          <div class="author-box__id">
+            <h2 class="author-box__name"><a href="{u("/author/" + a["slug"] + "/")}">{esc(a["name"])}</a></h2>
+            <a class="author-box__profile" href="{u("/author/" + a["slug"] + "/")}">{bn(len(a.get("_posts", [])))}টি লেখা · প্রোফাইল দেখুন {icon("right", 15)}</a>
+          </div>
         </div>
+        {f'<p class="author-box__bio">{esc(a["bio"])}</p>' if a.get("bio") else ""}
+        {f'<div class="author-box__more-wrap"><p class="author-box__label author-box__label--sm">লেখকের আরও লেখা</p><ul class="author-box__more">{other_html}</ul></div>' if other_html else ""}
       </section>
       {comments_html(p)}
     </div>
