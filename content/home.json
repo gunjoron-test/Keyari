@@ -11,13 +11,51 @@
     "count": 5
   },
   "sections": [
-    { "type": "hero", "enabled": true },
-    { "type": "category_pills", "enabled": true, "title": "পছন্দসই বিষয়ে লেখা পড়ুন" },
-    { "type": "ayojon", "enabled": true },
-    { "type": "feed", "enabled": true, "title": "সর্বশেষ লেখা" },
-    { "type": "category_blocks", "enabled": true, "categories": ["kothasahityo", "kobitapunjo", "rochonaboli", "godyolekha"], "count": 4 },
-    { "type": "series", "enabled": true, "title": "ধারাবাহিক" },
-    { "type": "authors", "enabled": true, "title": "লেখক পরিচিতি", "count": 12 },
-    { "type": "cta", "enabled": true, "title": "আপনার লেখা পাঠান", "text": "কেয়ারির আঙিনায় আপনার অপ্রকাশিত রচনা ও শিল্পকাজ পাঠাতে লেখা পাঠানোর নীতিমালা পড়ে নিন।" }
+    {
+      "type": "hero",
+      "enabled": true
+    },
+    {
+      "type": "category_pills",
+      "enabled": true,
+      "title": "পছন্দসই বিষয়ে লেখা পড়ুন"
+    },
+    {
+      "type": "ayojon",
+      "enabled": true
+    },
+    {
+      "type": "feed",
+      "enabled": true,
+      "title": "সর্বশেষ লেখা"
+    },
+    {
+      "type": "category_blocks",
+      "enabled": true,
+      "categories": [
+        "kothasahityo",
+        "kobitapunjo",
+        "rochonaboli",
+        "godyolekha"
+      ],
+      "count": 4
+    },
+    {
+      "type": "series",
+      "enabled": true,
+      "title": "ধারাবাহিক"
+    },
+    {
+      "type": "authors",
+      "enabled": true,
+      "title": "লেখক পরিচিতি",
+      "count": 12
+    },
+    {
+      "type": "cta",
+      "enabled": false,
+      "title": "আপনার লেখা পাঠান",
+      "text": "কেয়ারির আঙিনায় আপনার অপ্রকাশিত রচনা ও শিল্পকাজ পাঠাতে লেখা পাঠানোর নীতিমালা পড়ে নিন।"
+    }
   ]
 }
