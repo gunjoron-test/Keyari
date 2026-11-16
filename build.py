@@ -1253,6 +1253,20 @@ def build_post(p):
     </div>
     {sidebar(exclude=p, author=a)}
   </div>
+<div class="autoscroll" data-autoscroll>
+  <div class="autoscroll__panel" id="as-panel" role="group" aria-label="অটো-স্ক্রলের গতি" hidden>
+    <button class="autoscroll__btn" type="button" data-as-slower aria-label="গতি কমান" title="গতি কমান"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 12h12"/></svg></button>
+    <span class="autoscroll__speed" aria-live="polite"><b data-as-speed>১×</b><small>গতি</small></span>
+    <button class="autoscroll__btn" type="button" data-as-faster aria-label="গতি বাড়ান" title="গতি বাড়ান"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 12h12M12 6v12"/></svg></button>
+    <span class="autoscroll__sep" aria-hidden="true"></span>
+    <button class="autoscroll__btn" type="button" data-as-close aria-label="অটো-স্ক্রল বন্ধ করুন" title="বন্ধ করুন"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <button class="autoscroll__fab" type="button" data-as-fab aria-controls="as-panel" aria-pressed="false" aria-label="অটো-স্ক্রল চালু করুন" title="অটো-স্ক্রল — নিজে নিজে পড়ে যান">
+    <svg class="as-ico as-ico--play" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6.5l5 5 5-5M7 12.5l5 5 5-5"/></svg>
+    <svg class="as-ico as-ico--pause" viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><rect x="7" y="6" width="3.6" height="12" rx="1.2"/><rect x="13.4" y="6" width="3.6" height="12" rx="1.2"/></svg>
+    <span class="autoscroll__tip" aria-hidden="true">অটো-স্ক্রল</span>
+  </button>
+</div>
   <section class="read-next container" aria-labelledby="rn-h">
     <h2 class="read-next__title" id="rn-h">আরও পড়ুন</h2>
     <div class="grid grid--3">{"".join(card_v(x) for x in related)}</div>

@@ -195,6 +195,65 @@
     });
   });
 
+  // ---------- অটো-স্ক্রল (গতি কম-বেশি করা যায়; চলার সময়ও নিজে স্ক্রল করা যায়) ----------
+  var asBox = $('[data-autoscroll]');
+  if (asBox) {
+    var asFab = $('[data-as-fab]', asBox), asPanel = $('#as-panel'), asSpeedEl = $('[data-as-speed]', asBox);
+    var asSlow = $('[data-as-slower]', asBox), asFast = $('[data-as-faster]', asBox);
+    var LEVELS = [0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3], BASE_PX = 36; // ১× = সেকেন্ডে ৩৬ পিক্সেল
+    var asIdx = parseInt(store.get('keyari-as-speed'), 10);
+    if (!(asIdx >= 0 && asIdx < LEVELS.length)) asIdx = 2;
+    var asRun = false, asLast = 0, asAcc = 0, asHoldUntil = 0, asTouching = false;
+    var asBody = $('.entry-content');
+    var fmtSpeed = function (v) { return bn(String(v).replace(/^0\./, '০.')) + '×'; };
+    var asPaint = function () {
+      asSpeedEl.textContent = fmtSpeed(LEVELS[asIdx]);
+      asSlow.disabled = asIdx === 0; asFast.disabled = asIdx === LEVELS.length - 1;
+      asBox.classList.toggle('is-running', asRun);
+      asFab.setAttribute('aria-pressed', asRun ? 'true' : 'false');
+      asFab.setAttribute('aria-label', asRun ? 'অটো-স্ক্রল থামান' : 'অটো-স্ক্রল চালু করুন');
+      asFab.title = asRun ? 'থামান' : 'অটো-স্ক্রল — নিজে নিজে পড়ে যান';
+    };
+    var atEnd = function () {
+      var docEnd = window.innerHeight + window.scrollY >= doc.documentElement.scrollHeight - 2;
+      var bodyEnd = asBody ? asBody.getBoundingClientRect().bottom < window.innerHeight * 0.55 : false;
+      return docEnd || bodyEnd;
+    };
+    var asFrame = function (t) {
+      if (!asRun) return;
+      if (asLast) {
+        var dt = Math.min(80, t - asLast) / 1000;
+        if (!asTouching && t > asHoldUntil) {
+          asAcc += BASE_PX * LEVELS[asIdx] * dt;
+          var step = Math.floor(asAcc);
+          if (step >= 1) { asAcc -= step; window.scrollBy(0, step); }
+        }
+      }
+      asLast = t;
+      if (atEnd()) { asStop(); toast('লেখার শেষে পৌঁছেছেন'); return; }
+      requestAnimationFrame(asFrame);
+    };
+    var asStart = function () {
+      if (atEnd()) { toast('লেখার শেষে আছেন'); return; }
+      asRun = true; asLast = 0; asAcc = 0;
+      asPanel.hidden = false; asBox.classList.add('has-panel');
+      asPaint(); requestAnimationFrame(asFrame);
+    };
+    function asStop() { asRun = false; asPaint(); }
+    var asClose = function () { asStop(); asPanel.hidden = true; asBox.classList.remove('has-panel'); };
+    asFab.addEventListener('click', function () { if (asRun) asStop(); else asStart(); });
+    asSlow.addEventListener('click', function () { if (asIdx > 0) { asIdx--; store.set('keyari-as-speed', asIdx); asPaint(); } });
+    asFast.addEventListener('click', function () { if (asIdx < LEVELS.length - 1) { asIdx++; store.set('keyari-as-speed', asIdx); asPaint(); } });
+    $('[data-as-close]', asBox).addEventListener('click', asClose);
+    // পাঠক নিজে স্ক্রল করলে: চাকা/কি-বোর্ডে সঙ্গে সঙ্গে মিশে যায়; আঙুলে টানলে টানার সময়টুকু থেমে থাকে
+    window.addEventListener('touchstart', function (e) { if (asRun && !asBox.contains(e.target)) asTouching = true; }, { passive: true });
+    window.addEventListener('touchend', function () { if (asTouching) { asTouching = false; asHoldUntil = performance.now() + 700; } }, { passive: true });
+    window.addEventListener('wheel', function () { if (asRun) asHoldUntil = performance.now() + 250; }, { passive: true });
+    doc.addEventListener('keydown', function (e) { if (asRun && e.key === 'Escape') asStop(); });
+    doc.addEventListener('visibilitychange', function () { if (doc.hidden && asRun) asStop(); });
+    asPaint();
+  }
+
   // ---------- লেখার আকার ----------
   var fsBtns = $$('[data-fs]');
   if (fsBtns.length) {

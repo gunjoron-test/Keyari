@@ -956,3 +956,43 @@ html.hdr-compact { --header-h: var(--header-compact); }
 @media (max-width: 767.98px) {
   .footer__row { padding: 28px 0 24px; gap: 16px; }
 }
+
+/* ---------- অটো-স্ক্রল: "উপরে যান"-এর ঠিক ওপরে, সবসময় চোখের সামনে ---------- */
+.autoscroll { position: fixed; right: 24px; bottom: 84px; z-index: 155; display: flex; align-items: center; gap: 10px; }
+.autoscroll__fab {
+  position: relative; width: 48px; height: 48px; border-radius: 50%; border: 0; display: grid; place-items: center; cursor: pointer;
+  background: var(--surface); color: var(--accent-ink); box-shadow: var(--shadow); transition: background .25s, color .25s, transform .15s, box-shadow .25s;
+}
+.autoscroll__fab:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(41, 41, 75, .16); }
+.autoscroll__fab:active { transform: scale(.94); }
+.autoscroll__fab .as-ico--pause { display: none; }
+.autoscroll.is-running .autoscroll__fab { background: var(--accent); color: #fff; }
+.autoscroll.is-running .autoscroll__fab .as-ico--play { display: none; }
+.autoscroll.is-running .autoscroll__fab .as-ico--pause { display: block; }
+.autoscroll.is-running .autoscroll__fab::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--accent); opacity: .5; animation: as-pulse 1.8s ease-out infinite; }
+@keyframes as-pulse { from { transform: scale(.92); opacity: .55; } to { transform: scale(1.25); opacity: 0; } }
+.autoscroll__tip {
+  position: absolute; right: calc(100% + 10px); top: 50%; transform: translate(6px, -50%); white-space: nowrap; pointer-events: none;
+  padding: 5px 10px; border-radius: 8px; background: var(--text); color: var(--bg-start, #fff); font-size: 12.5px; font-weight: 600; opacity: 0; transition: opacity .2s, transform .2s;
+}
+.autoscroll__fab:hover .autoscroll__tip { opacity: 1; transform: translate(0, -50%); }
+.autoscroll.has-panel .autoscroll__tip { display: none; }
+.autoscroll__panel {
+  display: flex; align-items: center; gap: 2px; height: 48px; padding: 0 6px; border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: saturate(160%) blur(12px); -webkit-backdrop-filter: saturate(160%) blur(12px);
+  border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(41, 41, 75, .16); animation: as-in .28s cubic-bezier(.22,.61,.36,1) both;
+}
+.autoscroll__panel[hidden] { display: none; }
+@keyframes as-in { from { opacity: 0; transform: translateX(10px) scale(.96); } to { opacity: 1; transform: none; } }
+.autoscroll__btn { width: 36px; height: 36px; border-radius: 50%; border: 0; background: transparent; color: var(--text); display: grid; place-items: center; cursor: pointer; transition: background .2s, color .2s; }
+.autoscroll__btn:hover { background: var(--highlight); color: var(--accent-ink); }
+.autoscroll__btn:disabled { opacity: .3; pointer-events: none; }
+.autoscroll__speed { min-width: 46px; display: flex; flex-direction: column; align-items: center; line-height: 1.1; }
+.autoscroll__speed b { font-size: 15px; color: var(--accent-ink); }
+.autoscroll__speed small { font-size: 10.5px; color: var(--text-muted); }
+.autoscroll__sep { width: 1px; height: 22px; background: var(--line); margin: 0 3px; }
+@media (max-width: 767.98px) {
+  .autoscroll { right: 16px; bottom: 74px; }
+  .autoscroll__tip { display: none; }
+}
+@media print { .autoscroll { display: none !important; } }
