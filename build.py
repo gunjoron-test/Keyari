@@ -495,7 +495,15 @@ def slider_posts():
     return picks[:n]
 
 
-def sidebar(exclude=None):
+def sidebar(exclude=None, minimal=False):
+    cta = f'''<div class="widget widget--cta">
+    <h2 class="cta-mini__title">লেখা পাঠান</h2>
+    <p>আপনার অপ্রকাশিত রচনা ও শিল্পকাজ পাঠান কেয়ারির ঠিকানায়।</p>
+    <a class="btn btn--light" href="{u("/বিশেষ-বার্তা/")}">নীতিমালা পড়ুন</a>
+    <a class="cta-mini__mail" href="mailto:{esc(S.get("email"))}">{icon("mail", 16)} {esc(S.get("email"))}</a>
+  </div>'''
+    if minimal:  # মুখপাতা: পাশে শুধু "লেখা পাঠান"
+        return f'<aside class="sidebar" aria-label="লেখা পাঠান">{cta}</aside>'
     sl = slider_posts()
     slides = "".join(f'<div class="slide" role="group" aria-roledescription="স্লাইড" aria-label="{bn(i + 1)} / {bn(len(sl))}">{card_overlay(p)}</div>' for i, p in enumerate(sl))
     dots = "".join(f'<button class="slider__dot" type="button" aria-label="স্লাইড {bn(i + 1)}"></button>' for i in range(len(sl)))
@@ -530,12 +538,7 @@ def sidebar(exclude=None):
   <div class="widget"><h2 class="sec-label">সম্পাদকের বাছাই</h2><ul class="mini-list">{feat_html}</ul></div>
   {ay}
   <div class="widget"><h2 class="sec-label">বিভাগসমূহ</h2><ul class="cat-list">{cat_list}</ul></div>
-  <div class="widget widget--cta">
-    <h2 class="cta-mini__title">লেখা পাঠান</h2>
-    <p>আপনার অপ্রকাশিত রচনা ও শিল্পকাজ পাঠান কেয়ারির ঠিকানায়।</p>
-    <a class="btn btn--light" href="{u("/বিশেষ-বার্তা/")}">নীতিমালা পড়ুন</a>
-    <a class="cta-mini__mail" href="mailto:{esc(S.get("email"))}">{icon("mail", 16)} {esc(S.get("email"))}</a>
-  </div>
+  {cta}
 </aside>'''
 
 
@@ -925,7 +928,7 @@ def build_home():
     <div class="feed__list">{"".join(card_g(p) for p in chunk)}</div>
     {pagination(page, total, "/")}
   </section>
-  {sidebar()}
+  {sidebar(minimal=True)}
 </div>''')
         if page == 1 and on("category_blocks"):
             cb = sections.get("category_blocks", {})
