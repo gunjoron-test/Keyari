@@ -978,7 +978,7 @@ def build_home():
         feed_title = sections.get("feed", {}).get("title", "সর্বশেষ লেখা")
         parts.append(f'''<div class="container feed-wrap{" feed-wrap--top" if page > 1 else ""}">
   <section class="feed" aria-labelledby="feed-h">
-    {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), u("/page/2/") if (page == 1 and total > 1) else None, "আরও দেখুন", h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
+    {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), u("/page/2/") if (page == 1 and total > 1) else None, "সব দেখুন", h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
     {more_grid("".join(card_g(p) for p in chunk), len(chunk), "feed__list more-grid")}
     {pagination(page, total, "/") if page > 1 else ""}
   </section>
