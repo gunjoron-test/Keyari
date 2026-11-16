@@ -853,3 +853,14 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .more-by__title:hover { color: var(--accent-ink); }
 .more-by__meta { font-size: 12.5px; color: var(--text-muted); }
 .more-by__all { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 14px; font-weight: 700; color: var(--accent-ink); }
+
+/* ---------- মিনিমাল লেখার-আকার বোতাম (শেয়ার বোতামের মতোই) ---------- */
+.entry-rail .font-tools { flex-direction: column; gap: 8px; width: auto; padding: 0; background: none; border: 0; box-shadow: none; border-radius: 0; align-items: center; }
+.entry-rail .font-tools button { width: 44px; height: 44px; border-radius: 50%; background: var(--surface); box-shadow: var(--shadow); border: 0; color: var(--text); display: grid; place-items: center; transition: transform .15s, color .2s; }
+.entry-rail .font-tools button:hover { color: var(--accent); transform: translateY(-2px); background: var(--surface); }
+.entry-rail .font-tools button:disabled { opacity: .3; transform: none; }
+.entry-rail .font-tools .font-tools__val { width: auto; height: auto; padding: 2px 8px; border-radius: 999px; background: none; box-shadow: none; font-size: 12px; font-weight: 700; color: var(--accent-ink); }
+.entry-rail .font-tools .font-tools__val:hover { background: var(--highlight); color: var(--accent-ink); transform: none; }
+.entry-rail .font-tools .font-tools__val[hidden] { display: none; }
+@media (max-width: 991.98px) { .entry-rail .font-tools { flex-direction: row; } }
+.cm__demo { font-size: 13px; color: #8a6d00; background: #fff6d6; border-radius: var(--radius-md); padding: 8px 12px; line-height: 1.7; }

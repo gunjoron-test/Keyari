@@ -1092,9 +1092,9 @@ def comments_html(p):
     prov = c.get("provider", "none")
     url = absu(p["_path"])
     endpoint = ((c.get("native") or {}).get("endpoint") or "").strip().rstrip("/")
-    if prov == "native" and endpoint:
+    if prov == "native":
         pid = re.sub(r"[^A-Za-z0-9_-]", "_", str(p["id"]))
-        return f'''<section class="comments cm" id="comments" aria-label="মন্তব্য" data-cm data-endpoint="{esc(endpoint)}" data-post="{esc(pid)}" data-title="{esc(p["title"])}" data-url="{esc(url)}">
+        return f'''<section class="comments cm" id="comments" aria-label="মন্তব্য" data-cm{" data-demo" if not endpoint else ""} data-endpoint="{esc(endpoint)}" data-post="{esc(pid)}" data-title="{esc(p["title"])}" data-url="{esc(url)}">
   <h2 class="cm__title">মন্তব্য <span class="cm__count" data-cm-count></span></h2>
   <form class="cm__form" data-cm-form novalidate>
     <label class="cm__label" for="cm-text">আপনার মতামত</label>
@@ -1106,6 +1106,7 @@ def comments_html(p):
     <input class="cm__hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
     <p class="cm__hint">নাম না দিলে মন্তব্যে "নাম প্রকাশে অনিচ্ছুক" দেখাবে। সম্পাদক অনুমোদন দিলে তবেই মন্তব্য সবার কাছে দেখা যাবে।</p>
     <p class="cm__msg" role="status" aria-live="polite" data-cm-msg></p>
+    {'<p class="cm__demo">পরীক্ষামূলক অবস্থা: মন্তব্য-সার্ভার এখনো যুক্ত হয়নি, তাই এখন পাঠালে মন্তব্য কেবল আপনার ব্রাউজারে থাকবে।</p>' if not endpoint else ""}
   </form>
   <div class="cm__list" data-cm-list></div>
   <noscript><p class="cm__hint">মন্তব্য করতে জাভাস্ক্রিপ্ট চালু থাকতে হবে।</p></noscript>
@@ -1205,10 +1206,9 @@ def build_post(p):
   <div class="container entry-layout">
     <div class="entry-rail">{share_bar(p)}
       <div class="font-tools" role="group" aria-label="লেখার আকার">
-        <span class="font-tools__label">আকার</span>
-        <button type="button" data-fs="1" aria-label="লেখা বড় করুন" title="লেখা বড় করুন"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.9-4.9M10.5 7.8v5.4M7.8 10.5h5.4"/></svg></button>
-        <button type="button" class="font-tools__val" data-fs="0" aria-label="স্বাভাবিক আকারে ফিরুন" title="স্বাভাবিক আকারে ফিরুন"><span data-fs-val>১০০%</span></button>
-        <button type="button" data-fs="-1" aria-label="লেখা ছোট করুন" title="লেখা ছোট করুন"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.9-4.9M7.8 10.5h5.4"/></svg></button>
+        <button type="button" data-fs="1" aria-label="লেখা বড় করুন" title="লেখা বড় করুন"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 8 6l5 13M5 14.5h6"/><path d="M18 4v6M15 7h6"/></svg></button>
+        <button type="button" data-fs="-1" aria-label="লেখা ছোট করুন" title="লেখা ছোট করুন"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 8 6l5 13M5 14.5h6"/><path d="M15 7h6"/></svg></button>
+        <button type="button" class="font-tools__val" data-fs="0" aria-label="স্বাভাবিক আকারে ফিরুন" title="স্বাভাবিক আকারে ফিরুন" hidden><span data-fs-val>১০০%</span></button>
       </div>
     </div>
     <div class="entry-main">

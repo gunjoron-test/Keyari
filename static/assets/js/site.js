@@ -186,7 +186,7 @@
     var fsBase = 17, fsMin = 14, fsMax = 24;
     var fsPaint = function () {
       var cur = parseFloat(getComputedStyle(root).getPropertyValue('--read-size')) || fsBase;
-      if (fsVal) fsVal.textContent = bn(Math.round(cur / fsBase * 100)) + '%';
+      if (fsVal) { fsVal.textContent = bn(Math.round(cur / fsBase * 100)) + '%'; fsVal.parentNode.hidden = Math.round(cur) === fsBase; }
       fsBtns.forEach(function (b) {
         var d = +b.getAttribute('data-fs');
         b.disabled = (d > 0 && cur >= fsMax) || (d < 0 && cur <= fsMin);
@@ -208,6 +208,7 @@
   var cm = $('[data-cm]');
   if (cm) {
     var cmEnd = cm.getAttribute('data-endpoint'), cmPost = cm.getAttribute('data-post');
+    var cmDemo = cm.hasAttribute('data-demo');
     var cmForm = $('[data-cm-form]', cm), cmList = $('[data-cm-list]', cm), cmMsg = $('[data-cm-msg]', cm), cmCount = $('[data-cm-count]', cm);
     var PKEY = 'keyari-pending-comments';
     var readP = function () { try { return JSON.parse(localStorage.getItem(PKEY) || '{}'); } catch (e) { return {}; } };
@@ -251,6 +252,7 @@
       if (!approved.length && !still.length) cmList.appendChild(el('p', 'cm__empty', 'এখনো কোনো মন্তব্য নেই — প্রথম মন্তব্যটি আপনিই করুন।'));
     };
     var fetchList = function () {
+      if (cmDemo) { render([]); return; }
       fetch(cmEnd + '/comments?post=' + encodeURIComponent(cmPost)).then(function (r) { return r.json(); })
         .then(function (d) { render(d.comments || []); })
         .catch(function () { render([]); });
@@ -265,6 +267,12 @@
       if (text.length < 2) { cmMsg.textContent = 'আগে মন্তব্য লিখুন।'; cmMsg.className = 'cm__msg is-err'; f.text.focus(); return; }
       var btn = $('.cm__send', cmForm); btn.disabled = true; btn.textContent = 'পাঠানো হচ্ছে…';
       var name = f.name.value.trim();
+      if (cmDemo) {
+        var pd = readP(); (pd[cmPost] = pd[cmPost] || []).push({ id: 'demo' + Date.now(), name: name, text: text, ts: Date.now() }); writeP(pd);
+        f.text.value = '';
+        cmMsg.textContent = 'পরীক্ষামূলক: মন্তব্যটি শুধু আপনার ব্রাউজারে দেখানো হচ্ছে — সার্ভার যুক্ত হলে এটি সম্পাদকের কাছে যাবে।';
+        cmMsg.className = 'cm__msg is-ok'; btn.disabled = false; btn.textContent = 'মন্তব্য পাঠান'; fetchList(); return;
+      }
       fetch(cmEnd + '/comments', {
         method: 'POST', headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ post: cmPost, title: cm.getAttribute('data-title'), url: cm.getAttribute('data-url'), name: name, text: text, website: f.website.value })
