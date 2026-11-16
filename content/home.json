@@ -13,7 +13,7 @@
   "sections": [
     {
       "type": "hero",
-      "enabled": false
+      "enabled": true
     },
     {
       "type": "category_pills",
