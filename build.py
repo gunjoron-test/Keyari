@@ -965,11 +965,11 @@ def build_home():
 
 
 def author_sub(a):
-    """নামের নিচের লাইন: পরিচয় • শহর (দুটোই না থাকলে লেখার সংখ্যা)"""
+    """নামের নিচের লাইন: পরিচয় • শহর (দুটোই না থাকলে শুধু "লেখক")"""
     parts = [esc(x.strip()) for x in (a.get("role") or "", a.get("city") or "") if x and x.strip()]
     if parts:
         return '<span class="author-chip__dot" aria-hidden="true">•</span>'.join(parts)
-    return bn(len(a.get("_posts", []))) + "টি লেখা"
+    return "লেখক"
 
 
 def avatar(a, size=64):

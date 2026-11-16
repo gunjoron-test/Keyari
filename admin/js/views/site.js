@@ -65,8 +65,9 @@ export function authorModal(author, onSaved) {
       <div><div class="cover-box" style="aspect-ratio:1;border-radius:50%" data-photo>${a.photo ? `<img src="${esc(imgUrl(a.photo))}" alt="">` : '<span>＋ ছবি</span>'}</div><p class="help" style="text-align:center">বর্গাকার ছবি</p></div>
       <div><div class="field"><label>নাম</label><input class="input" data-k="name" value="${esc(a.name)}"></div>
       <div class="field"><label>স্লাগ (ইংরেজিতে, ঠিকানায় যাবে: /author/…)</label><input class="input input--mono" data-k="slug" value="${esc(a.slug)}" ${isNew ? '' : 'readonly'} placeholder="যেমন: saif-siraj"></div></div></div>
-      <div class="grid2"><div class="field"><label>পরিচয় (মুখপাতায় নামের নিচে)</label><input class="input" data-k="role" value="${esc(a.role || '')}" placeholder="যেমন: গল্পকার, কবি, প্রাবন্ধিক, অনুবাদক"></div>
-      <div class="field"><label>শহর / জেলা</label><input class="input" data-k="city" value="${esc(a.city || '')}" placeholder="যেমন: ঢাকা, ময়মনসিংহ"></div></div>
+      <div class="grid2"><div class="field"><label>পরিচয় (মুখপাতায় নামের নিচে)</label><input class="input" data-k="role" list="role-list2" value="${esc(a.role || '')}" placeholder="যেমন: গল্পকার, কবি, প্রাবন্ধিক, অনুবাদক"></div>
+      <datalist id="role-list2">${ROLE_SUGGEST.map((r) => `<option value="${r}">`).join('')}</datalist><datalist id="city-list2">${CITY_SUGGEST.map((r) => `<option value="${r}">`).join('')}</datalist>
+      <div class="field"><label>শহর / জেলা</label><input class="input" data-k="city" list="city-list2" value="${esc(a.city || '')}" placeholder="যেমন: ঢাকা, ময়মনসিংহ"></div></div>
       <div class="field"><label>পরিচিতি (৮০ শব্দের মধ্যে)</label><textarea class="textarea" data-k="bio">${esc(a.bio || '')}</textarea></div>
       <div class="grid3"><div class="field"><label>ইমেইল (প্রকাশ্য)</label><input class="input" data-k="email" value="${esc(a.email || '')}"></div>
       <div class="field"><label>ফেসবুক</label><input class="input" data-k="facebook" value="${esc(a.facebook || '')}"></div>
@@ -88,6 +89,9 @@ export function authorModal(author, onSaved) {
   };
 }
 
+const ROLE_SUGGEST = ['গল্পকার', 'কবি', 'প্রাবন্ধিক', 'ঔপন্যাসিক', 'অনুবাদক', 'গবেষক', 'সাংবাদিক', 'কলাম লেখক', 'ভ্রমণ লেখক', 'শিল্পী', 'সমালোচক', 'সম্পাদক', 'শিক্ষক', 'লেখক'];
+const CITY_SUGGEST = ['ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'বরিশাল', 'সিলেট', 'রংপুর', 'ময়মনসিংহ', 'কুমিল্লা', 'নারায়ণগঞ্জ', 'গাজীপুর', 'টাঙ্গাইল', 'পাবনা', 'বগুড়া', 'যশোর', 'কলকাতা'];
+
 export function authorsView(view) {
   const counts = {}; S.posts.forEach((p) => { if (p.status !== 'trash') counts[p.author] = (counts[p.author] || 0) + 1; });
   let q = '';
@@ -95,16 +99,24 @@ export function authorsView(view) {
     const list = [...S.authors].filter((a) => !q || (a.name + a.slug).toLowerCase().includes(q)).sort((a, b) => (counts[b.slug] || 0) - (counts[a.slug] || 0) || a.name.localeCompare(b.name, 'bn'));
     $('[data-body]', view).innerHTML = list.map((a) => `<tr><td>${a.photo ? `<img class="thumb" style="width:44px;aspect-ratio:1;border-radius:50%" src="${esc(imgUrl(a.photo))}" alt="">` : '<span class="thumb" style="width:44px;aspect-ratio:1;border-radius:50%"></span>'}</td>
       <td><a class="t-title" href="#" data-ed="${esc(a.slug)}">${esc(a.name)}</a><div class="help">${esc((a.bio || '').slice(0, 90))}</div></td><td class="help input--mono">${esc(a.slug)}</td>
+      <td><input class="input" list="role-list" data-role="${esc(a.slug)}" value="${esc(a.role || '')}" placeholder="যেমন: গল্পকার" style="min-width:140px"></td>
+      <td><input class="input" list="city-list" data-city="${esc(a.slug)}" value="${esc(a.city || '')}" placeholder="যেমন: ঢাকা" style="min-width:120px"></td>
       <td><a href="#/posts?author=${encodeURIComponent(a.slug)}">${bn(counts[a.slug] || 0)}টি</a></td>
       <td><button class="btn btn--ghost btn--sm" data-ed="${esc(a.slug)}">সম্পাদনা</button>${!counts[a.slug] ? `<button class="btn btn--ghost btn--sm" data-del="${esc(a.slug)}">✕</button>` : ''}</td></tr>`).join('');
     $$('[data-body] img', view).forEach(imgFallback);
+    const mark = () => { const b = $('[data-save-auth]', view); if (b) { b.disabled = false; b.textContent = 'পরিবর্তন সংরক্ষণ করুন'; } };
+    $$('[data-role]', view).forEach((i) => i.addEventListener('input', () => { const a = S.authors.find((x) => x.slug === i.dataset.role); if (a) { a.role = i.value.trim(); mark(); } }));
+    $$('[data-city]', view).forEach((i) => i.addEventListener('input', () => { const a = S.authors.find((x) => x.slug === i.dataset.city); if (a) { a.city = i.value.trim(); mark(); } }));
     $$('[data-ed]', view).forEach((b) => (b.onclick = (e) => { e.preventDefault(); authorModal(S.authors.find((x) => x.slug === b.dataset.ed), draw); }));
     $$('[data-del]', view).forEach((b) => (b.onclick = async () => { if (!(await confirmBox('লেখককে তালিকা থেকে মুছবেন?', { danger: true, ok: 'মুছুন' }))) return; S.authors = S.authors.filter((x) => x.slug !== b.dataset.del); await saveSingle('authors', 'লেখক মুছে ফেলা'); draw(); }));
   };
-  view.innerHTML = `<div class="page-head"><div><h1>লেখক</h1><p>${bn(S.authors.length)} জন লেখক · ছবি ও পরিচিতি দিলে লেখক পাতা ও লেখার শেষে "লেখক পরিচিতি" সমৃদ্ধ হয়</p></div><button class="btn" data-new>＋ নতুন লেখক</button></div>
+  view.innerHTML = `<div class="page-head"><div><h1>লেখক</h1><p>${bn(S.authors.length)} জন লেখক · ছবি ও পরিচিতি দিলে লেখক পাতা ও লেখার শেষে "লেখক পরিচিতি" সমৃদ্ধ হয়</p></div><div class="btn-row"><button class="btn btn--light" data-save-auth disabled>পরিবর্তন সংরক্ষণ</button><button class="btn" data-new>＋ নতুন লেখক</button></div></div>
+    <div class="notice">প্রতিটি লেখকের <b>পরিচয়</b> (গল্পকার, কবি…) ও <b>শহর</b> সরাসরি নিচের ঘরে লিখুন — মুখপাতায় নামের নিচে "গল্পকার • ঢাকা" দেখাবে। শেষে একবার "পরিবর্তন সংরক্ষণ" চাপুন।</div>
+    <datalist id="role-list">${ROLE_SUGGEST.map((r) => `<option value="${r}">`).join('')}</datalist><datalist id="city-list">${CITY_SUGGEST.map((r) => `<option value="${r}">`).join('')}</datalist>
     <div class="toolbar"><input class="input grow" placeholder="লেখক খুঁজুন…" data-q></div>
-    <div class="card" style="padding:0"><table class="table"><thead><tr><th></th><th>নাম</th><th>স্লাগ</th><th>লেখা</th><th></th></tr></thead><tbody data-body></tbody></table></div>`;
+    <div class="card" style="padding:0"><table class="table"><thead><tr><th></th><th>নাম</th><th>স্লাগ</th><th>পরিচয়</th><th>শহর</th><th>লেখা</th><th></th></tr></thead><tbody data-body></tbody></table></div>`;
   $('[data-new]', view).onclick = () => authorModal(null, draw);
+  $('[data-save-auth]', view).onclick = async (e) => { e.target.disabled = true; await saveSingle('authors', 'লেখকের পরিচয় ও শহর হালনাগাদ'); e.target.textContent = 'সংরক্ষিত ✓'; };
   $('[data-q]', view).oninput = (e) => { q = e.target.value.toLowerCase(); draw(); };
   draw();
 }
