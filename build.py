@@ -495,14 +495,14 @@ def slider_posts():
     return picks[:n]
 
 
-def sidebar(exclude=None, minimal=False):
+def sidebar(exclude=None, minimal=True):
     cta = f'''<div class="widget widget--cta">
     <h2 class="cta-mini__title">লেখা পাঠান</h2>
     <p>আপনার অপ্রকাশিত রচনা ও শিল্পকাজ পাঠান কেয়ারির ঠিকানায়।</p>
     <a class="btn btn--light" href="{u("/বিশেষ-বার্তা/")}">নীতিমালা পড়ুন</a>
     <a class="cta-mini__mail" href="mailto:{esc(S.get("email"))}">{icon("mail", 16)} {esc(S.get("email"))}</a>
   </div>'''
-    if minimal:  # মুখপাতা: পাশে শুধু "লেখা পাঠান"
+    if minimal:  # সব জায়গায় পাশে শুধু "লেখা পাঠান" (পূর্ণ সাইডবার চাইলে minimal=False)
         return f'<aside class="sidebar" aria-label="লেখা পাঠান">{cta}</aside>'
     sl = slider_posts()
     slides = "".join(f'<div class="slide" role="group" aria-roledescription="স্লাইড" aria-label="{bn(i + 1)} / {bn(len(sl))}">{card_overlay(p)}</div>' for i, p in enumerate(sl))
