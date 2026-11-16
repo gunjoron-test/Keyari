@@ -694,7 +694,7 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .banner-slider + .hero { margin-top: 40px; }
 @media (max-width: 640px) {
   .banner-slider { margin-top: 16px; }
-  .banner-slider .slider__track { aspect-ratio: var(--bn-m, var(--bn-d, 2244/592)); border-radius: 12px; }
+  .banner-slider .slider__track { border-radius: 12px; }
   .banner-slider .slider__arrow { display: none; }
   .banner-slider .slider__dots { bottom: 10px; padding: 5px 10px; }
 }

@@ -6,7 +6,6 @@
     {
       "id": "s-apon",
       "image": "/uploads/banners/slide-apon.webp",
-      "mobile_image": "/uploads/banners/slide-apon-m.webp",
       "alt": "কেয়ারি — মনন ও চিন্তনের এক নিবিড় ঠিকানা। শিল্পের সুষমা, সাহিত্যের ব্যঞ্জনা, চিন্তার উদ্ভাস, ঐতিহ্যের আকর।",
       "link": "/আপনকথা/",
       "new_tab": false,
@@ -17,7 +16,6 @@
     {
       "id": "s-lekha",
       "image": "/uploads/banners/slide-lekha.webp",
-      "mobile_image": "/uploads/banners/slide-lekha-m.webp",
       "alt": "আপনার লেখা পাঠান — অপ্রকাশিত রচনা ও শিল্পকাজ পাঠানোর আগে বিশেষ বার্তা পড়ে নিন।",
       "link": "/বিশেষ-বার্তা/",
       "new_tab": false,
@@ -28,7 +26,6 @@
     {
       "id": "s-ayojon",
       "image": "/uploads/banners/slide-ayojon.webp",
-      "mobile_image": "/uploads/banners/slide-ayojon-m.webp",
       "alt": "চলমান আয়োজন: রাজা যায় রাজা আসে — দশ লেখকের দশটি গদ্য-কলাম।",
       "link": "/আয়োজন/",
       "new_tab": false,

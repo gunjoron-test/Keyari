@@ -871,15 +871,11 @@ def banner_slider(fname="slides.json", kind="banner"):
         items.append(sl)
     if not items:
         return ""
-    all_mobile = all(sl.get("mobile_image") for sl in items)
     slides = ""
     for i, sl in enumerate(items):
         alt = esc(sl.get("alt") or SITE)
-        src_m = ""
-        if sl.get("mobile_image"):
-            src_m = '<source media="(max-width: 640px)" srcset="' + asset(sl["mobile_image"]) + '">'
         loading = 'fetchpriority="high" decoding="async"' if i == 0 else 'loading="lazy" decoding="async"'
-        pic = "<picture>" + src_m + '<img src="' + asset(sl["image"]) + '" alt="' + alt + '" width="' + ("1880" if kind == "ad" else "2244") + '" height="' + ("496" if kind == "ad" else "592") + '" ' + loading + "></picture>"
+        pic = "<picture>" + '<img src="' + asset(sl["image"]) + '" alt="' + alt + '" width="' + ("1880" if kind == "ad" else "2244") + '" height="' + ("496" if kind == "ad" else "592") + '" ' + loading + "></picture>"
         link = sl.get("link") or ""
         if link:
             href = u(link) if link.startswith("/") else link
@@ -898,7 +894,7 @@ def banner_slider(fname="slides.json", kind="banner"):
         controls += ('<button class="slider__arrow slider__arrow--prev" type="button" aria-label="আগের স্লাইড">' + icon("left", 20) + "</button>"
                      '<button class="slider__arrow slider__arrow--next" type="button" aria-label="পরের স্লাইড">' + icon("right", 20) + "</button>")
     interval = int(float(cfg.get("interval", 6) or 6) * 1000) if (cfg.get("autoplay", True) and len(items) > 1) else 0
-    style = ("--bn-d:1880/496;" if kind == "ad" else "--bn-d:2244/592;") + ("--bn-m:1200/900;" if all_mobile else "")
+    style = ("--bn-d:1880/496;" if kind == "ad" else "--bn-d:2244/592;")
     tag = '<span class="ad-slider__tag">' + esc(cfg.get("label") or "বিজ্ঞাপন") + "</span>" if (kind == "ad" and cfg.get("show_label", True)) else ""
     cls = "ad-slider banner-slider container" if kind == "ad" else "banner-slider container"
     aria = "বিজ্ঞাপন" if kind == "ad" else "প্রধান ব্যানার"

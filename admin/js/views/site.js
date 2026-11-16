@@ -364,7 +364,7 @@ function bannerEditor(view, kind) {
         return `<div class="card slide-row" data-i="${i}" style="display:grid;grid-template-columns:auto 240px 1fr auto;gap:16px;align-items:center;padding:14px">
           <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><button class="btn btn--ghost btn--sm" data-top="${i}" title="সবার আগে আনুন">⤒</button><button class="btn btn--ghost btn--sm" data-up="${i}" title="এক ধাপ আগে">↑</button><b>${bn(i + 1)}</b><button class="btn btn--ghost btn--sm" data-down="${i}" title="এক ধাপ পরে">↓</button></div>
           <div>${it.image ? `<img src="${esc(imgUrl(it.image))}" alt="" style="width:100%;aspect-ratio:${B.ratio};object-fit:cover;border-radius:10px;background:var(--highlight)">` : '<div class="empty" style="padding:20px">ছবি নেই</div>'}</div>
-          <div style="min-width:0"><div class="btn-row" style="margin-bottom:6px"><span class="badge ${k === 'on' ? 'badge--published' : k === 'sched' ? 'badge--scheduled' : 'badge--draft'}">${label}</span>${it.mobile_image ? '<span class="badge">ফোনের ছবি আছে</span>' : ''}</div>
+          <div style="min-width:0"><div class="btn-row" style="margin-bottom:6px"><span class="badge ${k === 'on' ? 'badge--published' : k === 'sched' ? 'badge--scheduled' : 'badge--draft'}">${label}</span></div>
             <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(it.alt || '(বিকল্প লেখা নেই)')}</div>
             <div class="help" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.link ? 'লিংক: ' + esc(it.link) : 'লিংক নেই'}${it.start ? ' · শুরু ' + bnDate(it.start, true) : ''}${it.end ? ' · শেষ ' + bnDate(it.end, true) : ''}</div></div>
           <div class="btn-row"><label class="check" title="চালু / বন্ধ"><input type="checkbox" data-act="${i}" ${it.active !== false ? 'checked' : ''}> চালু</label><button class="btn btn--light btn--sm" data-edit="${i}">সম্পাদনা</button><button class="btn btn--ghost btn--sm" data-dup="${i}">অনুলিপি</button><button class="btn btn--ghost btn--sm" data-del="${i}" style="color:var(--danger)">মুছুন</button></div></div>`;
@@ -388,14 +388,13 @@ function bannerEditor(view, kind) {
 
   function editSlide(idx) {
     const isNew = idx < 0;
-    const it = isNew ? { id: uid('s'), image: '', mobile_image: '', alt: '', link: '', new_tab: false, active: true, start: '', end: '' } : clone(cfg.items[idx]);
+    const it = isNew ? { id: uid('s'), image: '', alt: '', link: '', new_tab: false, active: true, start: '', end: '' } : clone(cfg.items[idx]);
     const m = modal({
       title: isNew ? 'নতুন স্লাইড' : 'স্লাইড সম্পাদনা', wide: true,
-      body: `<div class="grid2"><div>
-          <p class="label">কম্পিউটারের ছবি (${B.sizeD.split(" ")[0]})</p><div class="cover-box" data-box="image" style="aspect-ratio:${B.ratio}" tabindex="0" role="button"></div>
+      body: `<div><div>
+          <p class="label">ছবি (${B.sizeD.split(" ")[0]}) — মোবাইলেও এই ছবিটাই একই অনুপাতে দেখাবে, আলাদা ছবি লাগবে না</p><div class="cover-box" data-box="image" style="aspect-ratio:${B.ratio}" tabindex="0" role="button"></div>
           <div class="btn-row" style="margin:8px 0 16px"><label class="btn btn--light btn--sm" style="cursor:pointer">কম্পিউটার থেকে আপলোড<input type="file" accept="image/*" data-up-d hidden></label><button class="btn btn--light btn--sm" data-lib-d type="button">মিডিয়া থেকে বাছুন</button></div></div>
-        <div><p class="label">ফোনের ছবি (১২০০×৯০০, ঐচ্ছিক)</p><div class="cover-box" data-box="mobile_image" style="aspect-ratio:4/3;max-width:260px" tabindex="0" role="button"></div>
-          <div class="btn-row" style="margin:8px 0 16px"><label class="btn btn--light btn--sm" style="cursor:pointer">আপলোড<input type="file" accept="image/*" data-up-m hidden></label><button class="btn btn--light btn--sm" data-lib-m type="button">মিডিয়া থেকে</button><button class="btn btn--ghost btn--sm" data-rm-m type="button">সরান</button></div></div></div>
+      </div>
         <div class="field"><label>বিকল্প লেখা (alt) — ছবিতে যা লেখা আছে তা এখানে লিখুন</label><input class="input" data-k="alt" value="${esc(it.alt || '')}" placeholder="যেমন: আপনার লেখা পাঠান — বিশেষ বার্তা পড়ে নিন"></div>
         <div class="grid2"><div class="field"><label>ক্লিক করলে কোথায় যাবে (ঐচ্ছিক)</label><input class="input input--mono" data-k="link" value="${esc(it.link || '')}" placeholder="/আয়োজন/ অথবা https://…"></div>
           <div class="field"><label>&nbsp;</label><label class="check"><input type="checkbox" data-k="new_tab" ${it.new_tab ? 'checked' : ''}> নতুন ট্যাবে খুলবে</label><label class="check"><input type="checkbox" data-k="active" ${it.active !== false ? 'checked' : ''}> চালু আছে</label></div></div>
@@ -404,22 +403,19 @@ function bannerEditor(view, kind) {
         <p class="help">শুরু ও শেষের সময় দিলে স্লাইডটি ঐ সময়ের মধ্যেই দেখাবে (সাইট প্রতি ঘণ্টায় হালনাগাদ হয়)।</p>`,
       foot: '<button class="btn btn--light" data-no>বাতিল</button><button class="btn" data-ok>ঠিক আছে</button>',
     });
-    const paint = () => ['image', 'mobile_image'].forEach((k) => { const b = $(`[data-box="${k}"]`, m.el); b.innerHTML = it[k] ? `<img src="${esc(imgUrl(it[k]))}" alt="">` : '<span>ছবি নেই</span>'; const im = $('img', b); im && imgFallback(im); });
+    const paint = () => ['image'].forEach((k) => { const b = $(`[data-box="${k}"]`, m.el); b.innerHTML = it[k] ? `<img src="${esc(imgUrl(it[k]))}" alt="">` : '<span>ছবি নেই</span>'; const im = $('img', b); im && imgFallback(im); });
     paint();
     const upload = async (file, key) => {
       if (!file) return;
       try { toast('ছবি আপলোড হচ্ছে…'); const r = await imageChanges(file, 'slide', 2400); await commit('স্লাইডারের ছবি আপলোড', r.changes); it[key] = r.url; paint(); } catch (e) { toast('আপলোড ব্যর্থ: ' + e.message, 'err'); }
     };
     $('[data-up-d]', m.el).onchange = (e) => upload(e.target.files[0], 'image');
-    $('[data-up-m]', m.el).onchange = (e) => upload(e.target.files[0], 'mobile_image');
-    $('[data-lib-d]', m.el).onclick = async () => { const r = await pickMedia({ title: 'কম্পিউটারের ছবি' }); if (r && r.url) { it.image = r.url; paint(); } };
-    $('[data-lib-m]', m.el).onclick = async () => { const r = await pickMedia({ title: 'ফোনের ছবি' }); if (r && r.url) { it.mobile_image = r.url; paint(); } };
-    $('[data-rm-m]', m.el).onclick = () => { it.mobile_image = ''; paint(); };
+    $('[data-lib-d]', m.el).onclick = async () => { const r = await pickMedia({ title: 'ছবি বাছুন' }); if (r && r.url) { it.image = r.url; paint(); } };
     $$('[data-k]', m.el).forEach((el) => el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => { it[el.dataset.k] = el.type === 'checkbox' ? el.checked : el.value; }));
     $$('[data-s]', m.el).forEach((el) => el.addEventListener('input', () => { it[el.dataset.s] = el.value ? fromLocalInput(el.value) : ''; }));
     $('[data-no]', m.el).onclick = () => m.close();
     $('[data-ok]', m.el).onclick = () => {
-      if (!it.image) { toast('কম্পিউটারের ছবি দিন', 'err'); return; }
+      if (!it.image) { toast('ছবি দিন', 'err'); return; }
       if (isNew) cfg.items.push(it); else cfg.items[idx] = it;
       m.close(); draw();
     };
