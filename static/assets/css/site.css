@@ -996,3 +996,31 @@ html.hdr-compact { --header-h: var(--header-compact); }
   .autoscroll__tip { display: none; }
 }
 @media print { .autoscroll { display: none !important; } }
+
+/* ---------- মোবাইলে অটো-স্ক্রল: ডান কিনারায় সরু খাড়া প্যানেল, কিছুক্ষণ পর আবছা হয়ে যায় ---------- */
+@media (max-width: 767.98px) {
+  .autoscroll { flex-direction: column; gap: 8px; right: 18px; bottom: 74px; }
+  .autoscroll__fab { width: 44px; height: 44px; }
+  .autoscroll__panel { flex-direction: column; height: auto; width: 44px; padding: 4px 0; gap: 0; border-radius: 22px; animation-name: as-in-v; }
+  .autoscroll__btn { width: 38px; height: 34px; }
+  .autoscroll__speed { min-width: 0; padding: 2px 0; }
+  .autoscroll__speed b { font-size: 13px; }
+  .autoscroll__speed small { font-size: 9.5px; }
+  .autoscroll__sep { width: 22px; height: 1px; margin: 2px 0; }
+  .autoscroll [data-as-close] { order: 0; }
+  .autoscroll .autoscroll__sep { order: 1; }
+  .autoscroll [data-as-faster] { order: 2; }
+  .autoscroll .autoscroll__speed { order: 3; }
+  .autoscroll [data-as-slower] { order: 4; }
+  .autoscroll__panel, .autoscroll__fab { transition: opacity .4s, background .25s, color .25s, transform .15s; }
+  .autoscroll.is-idle .autoscroll__panel { opacity: .3; }
+  .autoscroll.is-idle .autoscroll__fab { opacity: .7; }
+  .autoscroll.is-idle .autoscroll__fab::after { display: none; }
+}
+@keyframes as-in-v { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
+
+/* ---------- মোবাইলে হেডার: নিচে স্ক্রলে পুরো লুকায়, ওপরে স্ক্রলে বা পর্দা ছুঁলে ফেরে ---------- */
+@media (max-width: 991.98px) {
+  .site-header { transition: transform .3s ease, box-shadow .3s; }
+  .site-header.is-hidden { transform: translateY(-100%); }
+}

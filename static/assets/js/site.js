@@ -61,14 +61,36 @@
     root.classList.toggle('hdr-compact', v);
     if (v && typeof closeSearch === 'function') closeSearch();
   }
+  var hidden = false;
+  function setHidden(v) {
+    if (v === hidden) return;
+    hidden = v;
+    header.classList.toggle('is-hidden', v);
+    if (v && typeof closeSearch === 'function') closeSearch();
+  }
+  // মোবাইলে পড়ার মাঝে পর্দা ছুঁলে (লিংক/বোতাম ছাড়া) হেডার ফিরে আসে
+  doc.addEventListener('click', function (e) {
+    if (!header || !hidden || window.innerWidth >= 992) return;
+    if (e.target.closest('a, button, input, textarea, select, label, [data-autoscroll], .offcanvas')) return;
+    setHidden(false); lastY = window.scrollY;
+  });
   function onScroll() {
     var y = window.scrollY, h = doc.documentElement.scrollHeight - window.innerHeight;
     if (header) {
       var menuOpen = $('.nav__item.is-open') || ($('#search-pop') && !$('#search-pop').hidden);
       var dy = y - lastY;
-      if (y < 140) setCompact(false);
-      else if (dy > 6 && !menuOpen) setCompact(true);
-      else if (dy < -6) setCompact(false);
+      if (window.innerWidth < 992) {
+        // মোবাইল: নিচে গেলে হেডার পুরো লুকায়, ওপরে গেলে ফেরে
+        setCompact(false);
+        if (y < 140) setHidden(false);
+        else if (dy > 6 && !menuOpen) setHidden(true);
+        else if (dy < -6) setHidden(false);
+      } else {
+        setHidden(false);
+        if (y < 140) setCompact(false);
+        else if (dy > 6 && !menuOpen) setCompact(true);
+        else if (dy < -6) setCompact(false);
+      }
       if (Math.abs(dy) > 6 || y < 140) lastY = y;
     } else lastY = y;
     var p = h > 0 ? Math.min(1, y / h) : 0;
@@ -233,13 +255,19 @@
       if (atEnd()) { asStop(); toast('লেখার শেষে পৌঁছেছেন'); return; }
       requestAnimationFrame(asFrame);
     };
+    var asIdleT;
+    var asWake = function () {
+      asBox.classList.remove('is-idle'); clearTimeout(asIdleT);
+      if (asRun) asIdleT = setTimeout(function () { asBox.classList.add('is-idle'); }, 2500);
+    };
+    asBox.addEventListener('pointerdown', asWake);
     var asStart = function () {
       if (atEnd()) { toast('লেখার শেষে আছেন'); return; }
       asRun = true; asLast = 0; asAcc = 0;
       asPanel.hidden = false; asBox.classList.add('has-panel');
-      asPaint(); requestAnimationFrame(asFrame);
+      asPaint(); asWake(); requestAnimationFrame(asFrame);
     };
-    function asStop() { asRun = false; asPaint(); }
+    function asStop() { asRun = false; asPaint(); asWake(); }
     var asClose = function () { asStop(); asPanel.hidden = true; asBox.classList.remove('has-panel'); };
     asFab.addEventListener('click', function () { if (asRun) asStop(); else asStart(); });
     asSlow.addEventListener('click', function () { if (asIdx > 0) { asIdx--; store.set('keyari-as-speed', asIdx); asPaint(); } });
