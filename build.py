@@ -408,6 +408,14 @@ def card_h(p, eager=False):
 </article>'''
 
 
+def more_grid(items_html, n, cls="more-grid"):
+    """৩ কলামের গ্রিড: কম্পিউটারে প্রথম ৬টি (২ সারি), মোবাইলে প্রথম ৩টি; বাকিগুলো 'আরও দেখুন'-এ একই পাতায় খোলে"""
+    btn = ""
+    if n > 3:
+        btn = '<div class="more-wrap' + (" more-wrap--m" if n <= 6 else "") + '"><button class="btn btn--ghost more-btn" type="button" data-more aria-expanded="false">আরও দেখুন</button></div>'
+    return '<div class="' + cls + '" data-more-grid>' + items_html + "</div>" + btn
+
+
 def card_g(p):
     """সর্বশেষ লেখার গ্রিড-কার্ড: ওপরে ছবি, নিচে বিভাগ, শিরোনাম, সারাংশ, শেষে লেখক ও তারিখ"""
     cat = p["_sub"] or p["_top"]
@@ -882,6 +890,7 @@ def build_home():
         chunk = feed[(page - 1) * per: page * per]
         parts = []
         if page == 1:
+            parts.append("<noscript><style>.more-grid>*{display:block!important}.feed__list>*{display:flex!important}.more-wrap{display:none!important}</style></noscript>")
             parts.append(banner_slider())
         if page == 1 and on("hero") and main:
             parts.append(f'''<section class="hero container" aria-label="প্রধান লেখা">
@@ -923,13 +932,12 @@ def build_home():
   <div class="container"><div class="hscroll" tabindex="0" aria-label="আয়োজনের লেখাসমূহ">{cards}</div></div>
 </section>''')
         feed_title = sections.get("feed", {}).get("title", "সর্বশেষ লেখা")
-        parts.append(f'''<div class="container with-sidebar{" with-sidebar--top" if page > 1 else ""}">
+        parts.append(f'''<div class="container feed-wrap{" feed-wrap--top" if page > 1 else ""}">
   <section class="feed" aria-labelledby="feed-h">
     {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
-    <div class="feed__list">{"".join(card_g(p) for p in chunk)}</div>
+    {more_grid("".join(card_g(p) for p in chunk), len(chunk), "feed__list more-grid")}
     {pagination(page, total, "/")}
   </section>
-  {sidebar(minimal=True)}
 </div>''')
         if page == 1 and on("category_blocks"):
             cb = sections.get("category_blocks", {})
@@ -937,23 +945,23 @@ def build_home():
             for slug in cb.get("categories", []):
                 if slug not in CAT:
                     continue
-                ps = cat_posts(slug)[: cb.get("count", 4)]
+                ps = cat_posts(slug)[: max(6, cb.get("count", 12))]
                 if not ps:
                     continue
                 blocks += f'''<section class="cat-block container" aria-label="{esc(CAT[slug]["name"])}">
   {section_head(CAT[slug]["name"], cat_url(slug))}
-  <div class="grid grid--4">{"".join(card_v(p, show_date=False) for p in ps)}</div>
+  {more_grid("".join(card_g(p) for p in ps), len(ps), "feed__list more-grid")}
 </section>'''
             parts.append(blocks)
         if page == 1 and on("series") and SERIES:
-            ser = sorted(SERIES.values(), key=lambda s: max(p["_date"] for p in s["posts"]), reverse=True)[:6]
+            ser = sorted(SERIES.values(), key=lambda s: max(p["_date"] for p in s["posts"]), reverse=True)[:12]
             items = "".join(f'''<a class="series-card" href="{u("/ধারাবাহিক/" + s["slug"] + "/")}">
   {img_tag(s["posts"][-1]["cover"].get("src"), s["name"], "series-card__img", sizes="300px")}
   <span class="series-card__body"><span class="series-card__name">{esc(s["name"])}</span>
   <span class="series-card__count">{bn(len(s["posts"]))}টি পর্ব · {esc(s["posts"][0]["_author"]["name"])}</span></span></a>''' for s in ser)
             parts.append(f'''<section class="series-block container" aria-label="ধারাবাহিক">
   {section_head(sections.get("series", {}).get("title", "ধারাবাহিক"), u("/ধারাবাহিক/"))}
-  <div class="grid grid--3">{items}</div></section>''')
+  {more_grid(items, len(ser), "grid grid--3 more-grid")}</section>''')
         if page == 1 and on("authors"):
             n = sections.get("authors", {}).get("count", 12)
             top_authors = sorted([a for a in AUTHORS if a["_posts"]], key=lambda a: (-len(a["_posts"]), a["name"]))[:n]

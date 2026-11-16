@@ -253,7 +253,7 @@ ul, ol { margin: 0; padding: 0; }
 /* ---------- feed + sidebar ---------- */
 .with-sidebar { display: grid; grid-template-columns: minmax(0, 1fr) 370px; gap: 56px; align-items: start; margin-bottom: 80px; }
 .with-sidebar--top { margin-top: 48px; }
-.feed__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 44px 26px; }
+.feed__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 28px; }
 .card-h { position: relative; display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 24px; padding-bottom: 40px; margin-bottom: 40px; border-bottom: 1px solid var(--line); }
 .card-h:last-child { border-bottom: 0; }
 .card-h__media img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius-lg); transition: transform .4s; }
@@ -741,3 +741,17 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 
 .footer__copy { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
 .footer__copy-logo { height: 22px; width: auto; aspect-ratio: 824 / 484; display: inline-block; }
+
+/* ---------- ৩ কলামের সেকশন + 'আরও দেখুন' ---------- */
+.feed-wrap { margin-bottom: 80px; }
+.feed-wrap--top { margin-top: 48px; }
+.cat-block .feed__list { margin-top: 4px; }
+.more-grid:not(.is-open) > :nth-child(n+7) { display: none; }
+.more-wrap { display: flex; justify-content: center; margin-top: 36px; }
+@media (max-width: 767.98px) {
+  .feed__list.more-grid, .grid--3.more-grid { grid-template-columns: 1fr; }
+  .more-grid:not(.is-open) > :nth-child(n+4) { display: none; }
+  .more-wrap--m { display: flex; }
+}
+@media (min-width: 768px) { .more-wrap--m { display: none; } }
+@media (min-width: 576px) and (max-width: 767.98px) { .feed__list.more-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

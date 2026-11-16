@@ -2,6 +2,13 @@
 (function () {
   'use strict';
   var doc = document, root = doc.documentElement;
+  doc.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-more]');
+    if (!b) return;
+    var wrap = b.parentNode, grid = wrap.previousElementSibling;
+    if (grid) grid.classList.add('is-open');
+    wrap.parentNode.removeChild(wrap);
+  });
   var BASE = (window.KEYARI && window.KEYARI.base) || '';
   var $ = function (s, c) { return (c || doc).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || doc).querySelectorAll(s)); };
