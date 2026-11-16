@@ -420,12 +420,14 @@ def series_card(s):
     """ধারাবাহিকের কার্ড: অন্য সেকশনের মতোই ওপরে ছবি, নিচে শিরোনাম ও লেখক"""
     url = u("/ধারাবাহিক/" + s["slug"] + "/")
     first = s["posts"][0]
+    last = max(s["posts"], key=lambda x: x["_date"])
     return f'''<article class="card-g">
   <a class="card-g__media" href="{url}" tabindex="-1" aria-hidden="true">{img_tag(s["posts"][-1]["cover"].get("src"), s["name"], "card-g__img", sizes="(max-width: 575px) 100vw, 280px")}</a>
   <div class="card-g__body">
     <p class="card-g__cat">ধারাবাহিক · {bn(len(s["posts"]))}টি পর্ব</p>
     <h3 class="card-g__title"><a href="{url}">{esc(s["name"])}</a></h3>
-    <p class="card-g__by"><a class="card__author" href="{u("/author/" + first["_author"]["slug"] + "/")}">{esc(first["_author"]["name"])}</a></p>
+    <p class="card__excerpt clamp-3">{esc(first["_long"])}</p>
+    <p class="card-g__by"><a class="card__author" href="{u("/author/" + first["_author"]["slug"] + "/")}">{esc(first["_author"]["name"])}</a><span aria-hidden="true"> · </span><time datetime="{last["_date"].isoformat()}">{bn_date(last["_date"])}</time></p>
   </div>
 </article>'''
 
