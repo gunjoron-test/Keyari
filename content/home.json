@@ -22,7 +22,7 @@
     },
     {
       "type": "ayojon",
-      "enabled": true
+      "enabled": false
     },
     {
       "type": "feed",
