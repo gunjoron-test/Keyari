@@ -1197,7 +1197,6 @@ def build_post(p):
     {f'<p class="entry-translator">অনুবাদ : {esc(p["translator"])}</p>' if p.get("translator") else ""}
     <div class="entry-meta">
       <span>{icon("calendar", 16)} <time datetime="{p["_date"].isoformat()}" itemprop="datePublished">{bn_date(p["_date"])}</time></span>
-      <span>{bn(p["_words"])} শব্দ</span>
     </div>
     {ay}
     <figure class="entry-cover">{img_tag(cover.get("src"), cover.get("alt") or p["title"], "entry-cover__img", eager=True, sizes="(max-width: 1296px) 100vw, 1248px")}
