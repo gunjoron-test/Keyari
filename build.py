@@ -643,36 +643,25 @@ def footer():
     year = NOW.year
     start = S.get("copyright_start", year)
     yr = bn(year) if start == year else f"{bn(start)}–{bn(year)}"
-    cats = "".join(f'<li><a href="{cat_url(c["slug"])}">{esc(c["name"])}</a></li>' for c in TOP_CATS)
-    cols = ""
+    # অ্যাডমিনের মেনু → ফুটার কলামে লিংক দিলে নিচে ছোট লিংক-সারি আসে; না দিলে ফুটার একদম পরিষ্কার থাকে
+    links = []
     for col in MENU.get("footer", []):
-        links = "".join(f'<li><a href="{u(l["url"])}">{esc(l["label"])}</a></li>' for l in col.get("links", []))
-        cols += f'<div class="footer__col"><h2 class="footer__title">{esc(col["title"])}</h2><ul>{links}</ul></div>'
-    social = [f'<a class="social" href="{esc(S.get("facebook"))}" target="_blank" rel="noopener" aria-label="ফেসবুক">{icon("facebook", 18)}</a>']
-    for k, ic, label in [("x", "x", "এক্স"), ("youtube", "youtube", "ইউটিউব"), ("instagram", "instagram", "ইনস্টাগ্রাম")]:
-        if S.get("social", {}).get(k):
-            social.append(f'<a class="social" href="{esc(S["social"][k])}" target="_blank" rel="noopener" aria-label="{label}">{icon(ic, 18)}</a>')
-    social.append(f'<a class="social" href="{u("/feed.xml")}" aria-label="আরএসএস ফিড">{icon("rss", 18)}</a>')
+        for l in col.get("links", []):
+            links.append('<a href="' + u(l["url"]) + '">' + esc(l["label"]) + "</a>")
+    link_row = ('<nav class="footer__links" aria-label="ফুটার লিংক">' + "".join(links) + "</nav>") if links else ""
+    editor = esc(S.get("editor_name") or "")
+    editor_name = ('<span class="footer__editor-name">' + editor + "</span>") if editor else ""
     return f'''<footer class="site-footer">
   <div class="container">
-    <div class="footer__grid">
-      <div class="footer__col footer__brand">
-        <a href="{u("/")}" class="site-logo">{logo_img()}</a>
-        <p class="footer__desc">{esc(S.get("tagline"))} — {esc(S.get("description", "").split("—")[-1].strip()[:140])}</p>
-        <div class="footer__social">{"".join(social)}</div>
+    <div class="footer__row">
+      <a href="{u("/")}" class="site-logo footer__logo" aria-label="{esc(SITE)} — মুখপাতা">{logo_img()}</a>
+      <div class="footer__notice">
+        <p>{esc(S.get("footer_notice"))}</p>
+        <p class="footer__copy">স্বত্ব © {yr} — {esc(SITE)}</p>
       </div>
-      <div class="footer__col"><h2 class="footer__title">বিভাগসমূহ</h2><ul class="footer__cats">{cats}</ul></div>
-      {cols}
-      <div class="footer__col"><h2 class="footer__title">লেখা পাঠান</h2>
-        <p class="footer__desc">অপ্রকাশিত রচনা ও শিল্পকাজ পাঠানোর আগে <a href="{u("/বিশেষ-বার্তা/")}">বিশেষ বার্তা</a> পড়ে নিন।</p>
-        <a class="footer__mail" href="mailto:{esc(S.get("email"))}">{icon("mail", 16)} {esc(S.get("email"))}</a>
-        <p class="footer__desc">সম্পাদক : {esc(S.get("editor_name"))}</p>
-      </div>
+      <div class="footer__editor"><span class="footer__editor-label">সম্পাদক</span>{editor_name}</div>
     </div>
-    <div class="footer__bottom">
-      <p>{esc(S.get("footer_notice"))}</p>
-      <p>স্বত্ব © {yr} — {esc(SITE)} · সকল বিষয় সংরক্ষিত</p>
-    </div>
+    {link_row}
   </div>
 </footer>
 <button class="to-top" type="button" data-to-top aria-label="উপরে যান">

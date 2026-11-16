@@ -704,3 +704,21 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 [data-scheme="dark"] .ad-slider__tag { background: rgba(0, 0, 0, .55); color: #ddd; }
 .ad-slider .slider__arrow { width: 38px; height: 38px; }
 @media (max-width: 640px) { .ad-slider { margin: 40px auto 48px; } }
+
+/* ---------- পরিচ্ছন্ন ফুটার: লোগো | স্বত্ব-বার্তা | সম্পাদক ---------- */
+.site-footer { margin-top: 24px; }
+.site-footer > .container { border-top: 1px solid var(--line); padding-top: 0; }
+.footer__row { display: grid; grid-template-columns: 1fr minmax(0, 1.6fr) 1fr; gap: 40px; align-items: center; padding: 44px 0 40px; }
+.footer__logo img { width: 100px; height: auto; aspect-ratio: 824 / 484; }
+.footer__notice { text-align: center; font-size: 14.5px; line-height: 1.8; color: var(--text); padding: 18px 22px; border-radius: var(--radius-md); background: color-mix(in srgb, var(--highlight) 70%, transparent); }
+.footer__copy { margin-top: 6px; font-size: 13px; color: var(--text-muted); }
+.footer__editor { display: flex; flex-direction: column; align-items: flex-end; text-align: right; gap: 2px; }
+.footer__editor-label { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; }
+.footer__editor-name { font-size: 14.5px; color: var(--text-muted); }
+.footer__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 26px; padding: 0 0 36px; font-size: 14.5px; color: var(--text-muted); }
+.footer__links a:hover { color: var(--accent-ink); }
+@media (max-width: 767.98px) {
+  .footer__row { grid-template-columns: 1fr; gap: 22px; padding: 36px 0 32px; justify-items: center; text-align: center; }
+  .footer__editor { align-items: center; text-align: center; }
+  .footer__editor-label { font-size: 22px; }
+}
