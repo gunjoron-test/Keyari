@@ -408,6 +408,21 @@ def card_h(p, eager=False):
 </article>'''
 
 
+def card_g(p):
+    """সর্বশেষ লেখার গ্রিড-কার্ড: ওপরে ছবি, নিচে বিভাগ, শিরোনাম, সারাংশ, শেষে লেখক ও তারিখ"""
+    cat = p["_sub"] or p["_top"]
+    cat_html = ('<p class="card-g__cat"><a href="' + cat_url(cat) + '">' + esc(CAT[cat]["name"]) + "</a></p>") if cat else ""
+    return f'''<article class="card-g">
+  <a class="card-g__media" href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["cover"].get("alt") or p["title"], "card-g__img", sizes="(max-width: 575px) 100vw, 280px")}</a>
+  <div class="card-g__body">
+    {cat_html}
+    <h3 class="card-g__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
+    <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
+    <p class="card-g__by"><a class="card__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{esc(p["_author"]["name"])}</a><span aria-hidden="true"> · </span><time datetime="{p["_date"].isoformat()}">{bn_date(p["_date"])}</time></p>
+  </div>
+</article>'''
+
+
 def card_v(p, show_date=True, heading="h3"):
     return f'''<article class="card-v">
   <div class="card-v__media"><a href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["cover"].get("alt") or p["title"], "card-v__img", sizes="(max-width: 767px) 100vw, 400px")}</a>
@@ -836,7 +851,8 @@ def banner_slider(fname="slides.json", kind="banner"):
 
 
 def build_home():
-    per = S.get("posts_per_page", 10)
+    per = S.get("posts_per_page", 12)
+    per = max(3, round(per / 3) * 3)  # ৩ কলামের গ্রিডে পুরো সারি ভরতে ৩-এর গুণিতক
     hero_cfg = HOME.get("hero", {})
     main = None
     if hero_cfg.get("mode") == "manual" and hero_cfg.get("main") in POST_BY_ID:
@@ -906,7 +922,7 @@ def build_home():
         parts.append(f'''<div class="container with-sidebar{" with-sidebar--top" if page > 1 else ""}">
   <section class="feed" aria-labelledby="feed-h">
     {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
-    <div class="feed__list">{"".join(card_h(p) for p in chunk)}</div>
+    <div class="feed__list">{"".join(card_g(p) for p in chunk)}</div>
     {pagination(page, total, "/")}
   </section>
   {sidebar()}
