@@ -220,6 +220,8 @@ ul, ol { margin: 0; padding: 0; }
 .card-s:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
 .card-s__body { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .card-s__title { font-size: 20px; line-height: 1.3; }
+.card-s__author { align-self: flex-start; font-size: 13.5px; font-weight: 600; color: var(--accent-ink); line-height: 1.3; margin-bottom: -2px; }
+.card-s__author:hover { text-decoration: underline; text-underline-offset: 3px; }
 .card-s__media { flex: none; }
 .card-s__img { width: 150px; height: 150px; object-fit: cover; border-radius: var(--radius-md); }
 .card-s__pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 4px; }

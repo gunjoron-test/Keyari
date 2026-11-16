@@ -436,6 +436,7 @@ def card_v(p, show_date=True, heading="h3"):
 def card_small(p):
     return f'''<article class="card-s">
   <div class="card-s__body">
+    <a class="card-s__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{esc(p["_author"]["name"])}</a>
     <h3 class="card-s__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
     <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
     <div class="card-s__pills">{pills(p, "pill pill--soft")}</div>
