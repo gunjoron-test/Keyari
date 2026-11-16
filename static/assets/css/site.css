@@ -777,3 +777,17 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 
 .card-g__img { transition: transform .6s cubic-bezier(.22,.61,.36,1); will-change: transform; }
 .card-g:hover .card-g__img { transform: scale(1.06); }
+
+/* ---------- মোবাইলে লেখক পরিচিতি: এক লাইনে, আঙুলে স্মুথ টানা (যেখানে ছাড়বেন সেখানেই থাকবে) ---------- */
+@media (max-width: 767.98px) {
+  .authors-strip__list {
+    display: flex; grid-template-columns: none; gap: 6px;
+    overflow-x: auto; overflow-y: hidden; scroll-snap-type: none;
+    -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; touch-action: pan-x pan-y;
+    margin: 0 calc(var(--gutter, 20px) * -1); padding: 4px var(--gutter, 20px) 10px;
+    scrollbar-width: none;
+  }
+  .authors-strip__list::-webkit-scrollbar { display: none; }
+  .authors-strip__list .author-chip { flex: 0 0 132px; min-width: 0; }
+  .author-chip__ring .avatar { width: 96px; height: 96px; }
+}
