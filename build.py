@@ -948,7 +948,10 @@ def build_home():
         if page == 1 and on("authors"):
             n = sections.get("authors", {}).get("count", 12)
             top_authors = sorted([a for a in AUTHORS if a["_posts"]], key=lambda a: (-len(a["_posts"]), a["name"]))[:n]
-            items = "".join(f'<a class="author-chip" href="{u("/author/" + a["slug"] + "/")}">{avatar(a, 64)}<span class="author-chip__name">{esc(a["name"])}</span><span class="author-chip__count">{bn(len(a["_posts"]))}টি লেখা</span></a>' for a in top_authors)
+            items = "".join(
+                '<a class="author-chip" href="' + u("/author/" + a["slug"] + "/") + '"><span class="author-chip__ring">' + avatar(a, 120) + '</span>'
+                '<span class="author-chip__name">' + esc(a["name"]) + '</span>'
+                '<span class="author-chip__sub">' + author_sub(a) + '</span></a>' for a in top_authors)
             parts.append(f'''<section class="authors-strip container" aria-label="লেখক পরিচিতি">
   {section_head(sections.get("authors", {}).get("title", "লেখক পরিচিতি"), u("/লেখক-তালিকা/"), "সব লেখক")}
   <div class="authors-strip__list">{items}</div></section>''')
@@ -970,6 +973,14 @@ def build_home():
             og_image=(main["cover"].get("src") if (page == 1 and main) else ""), body_class="home",
             ld=[{"@type": "CollectionPage", "url": absu(path), "name": SITE, "inLanguage": "bn",
                  "isPartOf": {"@id": SITE_URL + "/#website"}}], prev_next=(prev_p, next_p)))
+
+
+def author_sub(a):
+    """নামের নিচের লাইন: পরিচয় • শহর (দুটোই না থাকলে লেখার সংখ্যা)"""
+    parts = [esc(x.strip()) for x in (a.get("role") or "", a.get("city") or "") if x and x.strip()]
+    if parts:
+        return '<span class="author-chip__dot" aria-hidden="true">•</span>'.join(parts)
+    return bn(len(a.get("_posts", []))) + "টি লেখা"
 
 
 def avatar(a, size=64):

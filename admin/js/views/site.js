@@ -57,7 +57,7 @@ export function categoriesView(view) {
 
 // ==================================================================== লেখক
 export function authorModal(author, onSaved) {
-  const a = author ? clone(author) : { slug: '', name: '', bio: '', photo: '', email: '', facebook: '', website: '' };
+  const a = author ? clone(author) : { slug: '', name: '', bio: '', photo: '', role: '', city: '', email: '', facebook: '', website: '' };
   const isNew = !author;
   const m = modal({
     title: isNew ? 'নতুন লেখক' : 'লেখক সম্পাদনা',
@@ -65,6 +65,8 @@ export function authorModal(author, onSaved) {
       <div><div class="cover-box" style="aspect-ratio:1;border-radius:50%" data-photo>${a.photo ? `<img src="${esc(imgUrl(a.photo))}" alt="">` : '<span>＋ ছবি</span>'}</div><p class="help" style="text-align:center">বর্গাকার ছবি</p></div>
       <div><div class="field"><label>নাম</label><input class="input" data-k="name" value="${esc(a.name)}"></div>
       <div class="field"><label>স্লাগ (ইংরেজিতে, ঠিকানায় যাবে: /author/…)</label><input class="input input--mono" data-k="slug" value="${esc(a.slug)}" ${isNew ? '' : 'readonly'} placeholder="যেমন: saif-siraj"></div></div></div>
+      <div class="grid2"><div class="field"><label>পরিচয় (মুখপাতায় নামের নিচে)</label><input class="input" data-k="role" value="${esc(a.role || '')}" placeholder="যেমন: গল্পকার, কবি, প্রাবন্ধিক, অনুবাদক"></div>
+      <div class="field"><label>শহর / জেলা</label><input class="input" data-k="city" value="${esc(a.city || '')}" placeholder="যেমন: ঢাকা, ময়মনসিংহ"></div></div>
       <div class="field"><label>পরিচিতি (৮০ শব্দের মধ্যে)</label><textarea class="textarea" data-k="bio">${esc(a.bio || '')}</textarea></div>
       <div class="grid3"><div class="field"><label>ইমেইল (প্রকাশ্য)</label><input class="input" data-k="email" value="${esc(a.email || '')}"></div>
       <div class="field"><label>ফেসবুক</label><input class="input" data-k="facebook" value="${esc(a.facebook || '')}"></div>

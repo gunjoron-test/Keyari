@@ -331,10 +331,13 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .series-card__name { font-size: 20px; font-weight: 700; }
 .series-card__count { font-size: 14px; opacity: .9; }
 .authors-strip__list { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px 16px; }
-.author-chip { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 16px 8px; border-radius: var(--radius-lg); transition: background .2s; }
+.author-chip { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 18px 8px 16px; border-radius: var(--radius-lg); transition: background .2s, box-shadow .2s; }
 .author-chip:hover { background: var(--surface); box-shadow: var(--shadow); }
-.author-chip__name { font-weight: 700; line-height: 1.3; }
-.author-chip__count { font-size: 13px; color: var(--text-muted); }
+.author-chip__ring { display: grid; padding: 4px; border-radius: 50%; background: linear-gradient(160deg, var(--accent), #29294B 85%); margin-bottom: 6px; }
+.author-chip__ring .avatar { width: 112px; height: 112px; border: 4px solid var(--bg-start); }
+.author-chip__name { font-size: 17px; font-weight: 700; line-height: 1.3; }
+.author-chip__sub { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2px 8px; font-size: 13.5px; color: var(--text-muted); line-height: 1.4; }
+.author-chip__dot { font-size: 10px; opacity: .7; }
 .avatar { border-radius: 50%; object-fit: cover; flex: none; aspect-ratio: 1 / 1; }
 .avatar--ph { display: inline-grid; place-items: center; background: linear-gradient(135deg, hsl(var(--h) 60% 93%), hsl(var(--h) 45% 82%)); color: hsl(var(--h) 40% 26%); font-weight: 600; }
 [data-scheme="dark"] .avatar--ph { background: linear-gradient(135deg, hsl(var(--h) 28% 30%), hsl(var(--h) 24% 20%)); color: hsl(var(--h) 60% 88%); }
