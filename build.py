@@ -675,7 +675,7 @@ def footer():
       <a href="{u("/")}" class="site-logo footer__logo" aria-label="{esc(SITE)} — মুখপাতা">{logo_img()}</a>
       <div class="footer__notice">
         <p>{esc(S.get("footer_notice"))}</p>
-        <p class="footer__copy">স্বত্ব © {yr} — {esc(SITE)}</p>
+        <p class="footer__copy"><span>স্বত্ব © {yr} —</span> <img class="footer__copy-logo" src="{asset(S.get("logo") or "/assets/img/logo.svg")}" alt="{esc(SITE)}" width="34" height="20" loading="lazy"></p>
       </div>
       <div class="footer__editor"><span class="footer__editor-label">সম্পাদক</span>{editor_name}</div>
     </div>

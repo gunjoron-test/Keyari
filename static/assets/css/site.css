@@ -736,3 +736,6 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .card-g__by { margin-top: auto; padding-top: 6px; font-size: 13.5px; color: var(--text-muted); }
 .card-g__by .card__author { font-size: 13.5px; }
 @media (max-width: 575.98px) { .feed__list { grid-template-columns: 1fr; gap: 36px; } }
+
+.footer__copy { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+.footer__copy-logo { height: 22px; width: auto; aspect-ratio: 824 / 484; display: inline-block; }
