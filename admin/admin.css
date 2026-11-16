@@ -364,3 +364,14 @@ body.focus-mode .top__title { display: none; }
 /* ---------- লোগোর জন্য পর্যাপ্ত জায়গা: কখনো কাটবে না, সঙ্কুচিত হবে না ---------- */
 .side__brand { flex: none; position: sticky; top: 0; z-index: 3; height: var(--top); min-height: var(--top); padding: 0 30px; background: var(--surface); overflow: visible; }
 .side__brand img { flex: none; width: 92px; height: auto; max-width: none; max-height: none; aspect-ratio: 824 / 484; object-fit: contain; }
+
+/* ---------- পুরো পর্দার এডিটর: Microsoft Word-এর মতো অনুভূতি ---------- */
+.tox.tox-fullscreen { border-radius: 0 !important; border: 0 !important; }
+.tox.tox-fullscreen .tox-editor-header { box-shadow: 0 2px 10px rgba(0, 0, 0, .12) !important; z-index: 2; }
+.tox.tox-fullscreen .tox-menubar { padding: 2px 12px !important; }
+.tox.tox-fullscreen .tox-toolbar, .tox.tox-fullscreen .tox-toolbar__primary { justify-content: center; }
+.tox.tox-fullscreen .tox-edit-area { background: #E7E9EC; }
+.tox.tox-fullscreen .tox-statusbar { height: 30px !important; padding: 0 16px !important; font-size: 12.5px; }
+body.ed-fullscreen .top, body.ed-fullscreen .side, body.ed-fullscreen .ed__side, body.ed-fullscreen #toasts ~ .side { display: none !important; }
+body.ed-fullscreen { overflow: hidden; }
+.tox.tox-fullscreen { z-index: 1500 !important; }

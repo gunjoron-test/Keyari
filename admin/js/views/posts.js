@@ -198,7 +198,7 @@ export async function editorView(view, kind, id) {
     <span class="top__title">${esc(d.title || 'নতুন ' + LABEL[kind])}</span>
     <span class="help" data-dirty></span>${statusBadge(d.status, d.date)}
     <button class="btn btn--light btn--sm only-focus" data-panel>⚙ প্যানেল</button>
-    <button class="btn btn--light btn--sm" data-focus title="পুরো পর্দায় মনোযোগ দিয়ে লিখুন (বের হতে Esc)">⛶ ফোকাস মোড</button>
+    <button class="btn btn--light btn--sm" data-focus title="শুধু লেখার অংশ পুরো পর্দায় (বের হতে Esc)">⛶ ফোকাস মোড</button>
     <button class="btn btn--light btn--sm" data-preview>প্রিভিউ</button>
     <button class="btn btn--light btn--sm" data-save-draft>${d.status === 'published' ? 'খসড়া করুন' : 'খসড়া সংরক্ষণ'}</button>
     <button class="btn btn--sm" data-publish>${publishLabel()}</button>`, (top) => {
@@ -209,27 +209,25 @@ export async function editorView(view, kind, id) {
     $('[data-publish]', top).onclick = () => save(kind === 'post' && !can('publish') ? 'review' : 'published');
   });
   // ---------- ফোকাস মোড (পুরো পর্দায় লেখা) ----------
+  const isFs = () => !!(ed && ed.plugins && ed.plugins.fullscreen && ed.plugins.fullscreen.isFullscreen());
   const fit = () => {
-    if (!ed) return;
-    const focus = document.body.classList.contains('focus-mode');
+    if (!ed || isFs()) return;
     const c = ed.getContainer(); if (!c) return;
     // "আরও টুল" খুললে টুলবার যতটা জায়গা নেয়, লেখার জায়গা তত বাড়ে — যাতে লেখার অংশ ছোট না হয়
     const extra = [...c.querySelectorAll('.tox-editor-header .tox-toolbar.k-sub-row')].reduce((s, r) => s + (r.offsetHeight ? r.offsetHeight + 8 : 0), 0);
-    c.style.height = Math.max(420, window.innerHeight - (focus ? 150 : 260)) + extra + 'px';
+    c.style.height = Math.max(420, window.innerHeight - 260) + extra + 'px';
   };
+  // ---------- ফোকাস মোড: শুধু এডিটরের অংশটুকু (মেনু, টুলবার ও লেখার পাতা) পুরো পর্দায় ----------
+  const paintFocusBtn = () => { const b = $('[data-focus]'); if (b) b.innerHTML = isFs() ? '✕ ফোকাস বন্ধ' : '⛶ ফোকাস মোড'; };
   const setFocus = (on) => {
-    document.body.classList.toggle('focus-mode', on);
-    if (!on) document.body.classList.remove('panel-open');
-    const b = $('[data-focus]'); if (b) b.innerHTML = on ? '✕ ফোকাস বন্ধ' : '⛶ ফোকাস মোড';
-    if (on) { try { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {}); } catch (e) { /* */ } window.scrollTo(0, 0); }
-    else if (document.fullscreenElement) { try { document.exitFullscreen().catch(() => {}); } catch (e) { /* */ } }
-    setTimeout(fit, 120);
+    if (!ed || !ed.plugins.fullscreen) return;
+    if (isFs() !== on) ed.execCommand('mceFullScreen');
+    paintFocusBtn();
+    if (!on) setTimeout(fit, 150);
   };
-  const toggleFocus = () => setFocus(!document.body.classList.contains('focus-mode'));
-  const onFsChange = () => { if (!document.fullscreenElement && document.body.classList.contains('focus-mode')) setFocus(false); };
-  const onEsc = (e) => { if (e.key === 'Escape' && document.body.classList.contains('focus-mode') && !document.querySelector('.tox-dialog, .modal-back')) setFocus(false); };
-  document.addEventListener('fullscreenchange', onFsChange);
-  document.addEventListener('keydown', onEsc);
+  const toggleFocus = () => setFocus(!isFs());
+  const onFsChange = () => {};
+  const onEsc = () => {};
   window.addEventListener('resize', fit);
 
   renderTop();
@@ -292,7 +290,8 @@ export async function editorView(view, kind, id) {
     });
     $('.ed-loading', view)?.remove();
     ed.setDirty(false);
-    ed.on('keydown', (e) => { if (e.key === 'Escape' && document.body.classList.contains('focus-mode') && !document.fullscreenElement) setFocus(false); });
+    ed.on('FullscreenStateChanged', () => { try { ed.getDoc().documentElement.classList.toggle('k-word', isFs()); } catch (er) { /* */ } paintFocusBtn(); document.body.classList.toggle('ed-fullscreen', isFs()); if (!isFs()) setTimeout(fit, 150); });
+    ed.on('keydown', (e) => { if (e.key === 'Escape' && isFs() && !document.querySelector('.tox-dialog')) setFocus(false); });
     S.dirty = false;
     updateStats();
     refreshSeo();
@@ -426,7 +425,7 @@ export async function editorView(view, kind, id) {
   // Ctrl+S
   const keyH = (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); save(d.status === 'published' ? 'published' : d.status || 'draft'); } };
   document.addEventListener('keydown', keyH);
-  view._cleanup = () => { document.removeEventListener('keydown', keyH); document.removeEventListener('keydown', onEsc); document.removeEventListener('fullscreenchange', onFsChange); window.removeEventListener('resize', fit); setFocus(false); if (ed) { ed.remove(); ed = null; } };
+  view._cleanup = () => { document.removeEventListener('keydown', keyH); document.removeEventListener('keydown', onEsc); document.removeEventListener('fullscreenchange', onFsChange); window.removeEventListener('resize', fit); if (isFs()) setFocus(false); document.body.classList.remove('ed-fullscreen'); if (ed) { ed.remove(); ed = null; } };
 }
 
 function showPublished(kind, d) {

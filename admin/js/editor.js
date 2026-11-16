@@ -184,7 +184,7 @@ export async function createEditor(target, ctx) {
     'undo redo | kparastyle blocks | bold italic underline | kalign | bullist numlist | link image | kfootnote kscene | removeformat code',
   ] : [
     // মূল সারি — সবচেয়ে বেশি যা লাগে
-    'undo redo | kparastyle blocks | bold italic underline | kalign | bullist numlist | link image table | kfootnote | kmore',
+    'undo redo | kparastyle blocks | bold italic underline | kalign | bullist numlist | link image table | kfootnote | kmore | kfocus',
     // "আরও টুল" খুললে নিচের সারিগুলো (প্রতিটির বাঁয়ে বিষয়ের নাম থাকে)
     'kcharstyle fontsize forecolor backcolor | strikethrough superscript subscript | kchar kpaint removeformat',
     'outdent indent kfirstindent | lineheight kspacing | kdropcap kpara',
@@ -208,7 +208,8 @@ export async function createEditor(target, ctx) {
       kview: { title: 'দৃশ্য', items: 'kfocusmenu | visualaid visualchars visualblocks | preview' },
       kbangla: { title: 'বাংলা ও টাইপোগ্রাফি', items: 'kpara kchar | kparastyles kcharstyles | kbnall kpunctall kquotesall | kcleanall | kfootnote kscene kpoem kpullquote kbox' },
     },
-    plugins: 'advlist anchor autolink charmap code directionality help image insertdatetime link lists media nonbreaking pagebreak preview quickbars searchreplace table visualblocks visualchars wordcount accordion emoticons',
+    plugins: 'advlist anchor autolink charmap code directionality fullscreen help image insertdatetime link lists media nonbreaking pagebreak preview quickbars searchreplace table visualblocks visualchars wordcount accordion emoticons',
+    fullscreen_native: true,
     toolbar, toolbar_mode: 'wrap', toolbar_sticky: true, toolbar_sticky_offset: 64,
     content_css: [ctx.fontsCss, ctx.siteCss],
     content_style: `${css}
@@ -221,6 +222,9 @@ export async function createEditor(target, ctx) {
       .k-box,.k-cols-2,.k-cols-3{outline:1px dashed #CCEDE0;outline-offset:4px}
       img[data-mce-selected]{outline:3px solid #00A664}
       .mce-content-body [data-mce-selected="inline-boundary"]{background:#CCEDE0}
+      html.k-word{background:#E7E9EC}
+      html.k-word body.entry-content{max-width:none;width:min(816px,calc(100% - 48px));min-height:1056px;margin:36px auto 72px;padding:96px;box-sizing:border-box;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.10),0 10px 30px rgba(0,0,0,.10);border-radius:2px}
+      @media (max-width:760px){html.k-word body.entry-content{padding:48px 28px;margin:16px auto 40px;width:calc(100% - 24px)}}
       ${ctx.justify === false ? 'body.entry-content p{text-align:left}' : ''}`,
     body_class: 'entry-content',
     font_family_formats: FONTS.map(([n, v]) => `${n}=${v}`).join('; '),
@@ -431,8 +435,8 @@ function setupKeyari(ed, ctx, paraStyles, charStyles) {
   ed.ui.registry.addButton('kimgdlg', { icon: 'edit-block', text: 'বিস্তারিত', tooltip: 'ছবির বিস্তারিত — বিকল্প লেখা (alt), মাপ, ঠিকানা', onAction: () => ed.execCommand('mceImage') });
   ed.ui.registry.addButton('kimgdel', { icon: 'remove', tooltip: 'ছবিটি মুছুন', onAction: () => { const { t } = imgOf(); if (t) { ed.undoManager.transact(() => ed.dom.remove(t)); ed.nodeChanged(); } } });
 
-  ed.ui.registry.addButton('kfocus', { icon: 'fullscreen', text: 'ফোকাস মোড', tooltip: 'পুরো পর্দায় মনোযোগ দিয়ে লিখুন', onAction: () => ctx.toggleFocus && ctx.toggleFocus() });
-  ed.ui.registry.addMenuItem('kfocusmenu', { icon: 'fullscreen', text: 'ফোকাস মোড (পুরো পর্দা)', onAction: () => ctx.toggleFocus && ctx.toggleFocus() });
+  ed.ui.registry.addToggleButton('kfocus', { icon: 'fullscreen', tooltip: 'শুধু লেখার অংশ পুরো পর্দায় (বের হতে Esc)', onAction: () => (ctx.toggleFocus ? ctx.toggleFocus() : ed.execCommand('mceFullScreen')), onSetup: (api) => { const h = (ev) => api.setActive(!!ev.state); ed.on('FullscreenStateChanged', h); return () => ed.off('FullscreenStateChanged', h); } });
+  ed.ui.registry.addMenuItem('kfocusmenu', { icon: 'fullscreen', text: 'ফোকাস মোড (শুধু লেখার অংশ পুরো পর্দায়)', onAction: () => (ctx.toggleFocus ? ctx.toggleFocus() : ed.execCommand('mceFullScreen')) });
 
   // ---------- অনুচ্ছেদ স্টাইল (প্যারাগ্রাফ স্টাইল শিট) ----------
   const applyPara = (id) => {
