@@ -904,3 +904,32 @@ html.hdr-compact { --header-h: var(--header-compact); }
   .site-header.is-compact .hamburger { width: 38px; height: 38px; }
 }
 @media print { body { padding-top: 0; } }
+
+/* ---------- মোবাইলে শেয়ার: নিচে ভাসমান বার + লেখার শেষে শেয়ার-কার্ড ---------- */
+.m-bar, .share-end { display: none; }
+@media (max-width: 991.98px) {
+  .entry-rail { display: none !important; }
+  .m-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 2px;
+    position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 160;
+    width: min(440px, calc(100vw - 24px)); padding: 6px 8px; border-radius: 999px;
+    background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border: 1px solid var(--line); box-shadow: 0 10px 34px rgba(41, 41, 75, .18);
+    transform: translate(-50%, calc(100% + 30px)); opacity: 0; visibility: hidden; transition: transform .35s cubic-bezier(.22,.61,.36,1), opacity .25s, visibility .35s;
+  }
+  .m-bar.is-on { transform: translate(-50%, 0); opacity: 1; visibility: visible; }
+  .m-bar__btn { flex: none; width: 42px; height: 42px; border-radius: 50%; border: 0; background: transparent; color: var(--text); display: grid; place-items: center; transition: background .2s, transform .15s; }
+  .m-bar__btn:active { transform: scale(.9); background: var(--highlight); }
+  .m-bar__btn:disabled { opacity: .3; }
+  .m-bar__share { width: auto; padding: 0 14px 0 12px; display: inline-flex; gap: 6px; border-radius: 999px; background: var(--accent); color: #fff; font-weight: 700; font-size: 14.5px; }
+  .m-bar__share:active { background: var(--accent-ink); }
+  .m-bar__sep { width: 1px; height: 24px; background: var(--line); margin: 0 2px; }
+  body.mbar-on .to-top { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+
+  .share-end { display: block; margin-top: 28px; padding: 20px 18px; text-align: center; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .share-end__title { font-weight: 700; font-size: 16px; margin-bottom: 14px; }
+  .share-end__row { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+  .share-end__btn { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg-start, #fff); color: var(--text); display: grid; place-items: center; transition: transform .15s; }
+  .share-end__btn:active { transform: scale(.92); }
+}
+@media print { .m-bar, .share-end { display: none !important; } }

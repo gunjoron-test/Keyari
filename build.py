@@ -1072,6 +1072,49 @@ def avatar(a, size=64):
     return f'<span class="avatar avatar--ph" style="--h:{hue};width:{size}px;height:{size}px;font-size:{round(size * 0.4)}px" aria-hidden="true">{esc(initial)}</span>'
 
 
+def brand_svg(k, size=20, color=None):
+    c, path, _ = BRAND[k]
+    return '<svg viewBox="0 0 24 24" width="' + str(size) + '" height="' + str(size) + '" fill="' + (color or c) + '" aria-hidden="true"><path d="' + path + '"/></svg>'
+
+
+A_PLUS = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 8 6l5 13M5 14.5h6"/><path d="M18 4v6M15 7h6"/></svg>'
+A_MINUS = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 8 6l5 13M5 14.5h6"/><path d="M15 7h6"/></svg>'
+SHARE_ICO = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'
+
+
+def mobile_actions(p):
+    """মোবাইলে পড়ার সময় নিচে ভাসমান বার: শেয়ার + লেখার আকার (পেশাদার নিউজ সাইটের মতো)"""
+    full = absu(p["_path"])
+    url = urllib.parse.quote(full, safe="")
+    t = urllib.parse.quote(p["title"], safe="")
+    return f'''<div class="m-bar" data-mbar role="toolbar" aria-label="শেয়ার ও লেখার আকার">
+  <button class="m-bar__btn m-bar__share" type="button" data-native-share data-url="{esc(full)}" data-title="{esc(p["title"])}" aria-label="শেয়ার করুন">{SHARE_ICO}<span>শেয়ার</span></button>
+  <a class="m-bar__btn" href="https://www.facebook.com/sharer/sharer.php?u={url}" target="_blank" rel="noopener" aria-label="ফেসবুকে শেয়ার">{brand_svg("facebook")}</a>
+  <a class="m-bar__btn" href="https://api.whatsapp.com/send?text={t}%20{url}" target="_blank" rel="noopener" aria-label="হোয়াটসঅ্যাপে শেয়ার">{brand_svg("whatsapp")}</a>
+  <button class="m-bar__btn" type="button" data-copy="{esc(full)}" aria-label="লিংক কপি করুন">{icon("link", 20)}</button>
+  <span class="m-bar__sep" aria-hidden="true"></span>
+  <button class="m-bar__btn" type="button" data-fs="-1" aria-label="লেখা ছোট করুন">{A_MINUS}</button>
+  <button class="m-bar__btn" type="button" data-fs="1" aria-label="লেখা বড় করুন">{A_PLUS}</button>
+</div>'''
+
+
+def share_end(p):
+    """লেখার শেষে শেয়ার-কার্ড (মোবাইলে দেখায়)"""
+    full = absu(p["_path"])
+    url = urllib.parse.quote(full, safe="")
+    t = urllib.parse.quote(p["title"], safe="")
+    return f'''<div class="share-end" aria-label="লেখাটি শেয়ার করুন">
+  <p class="share-end__title">লেখাটি ভালো লাগলে শেয়ার করুন</p>
+  <div class="share-end__row">
+    <a class="share-end__btn" href="https://www.facebook.com/sharer/sharer.php?u={url}" target="_blank" rel="noopener" aria-label="ফেসবুকে শেয়ার">{brand_svg("facebook", 22)}</a>
+    <a class="share-end__btn" href="https://api.whatsapp.com/send?text={t}%20{url}" target="_blank" rel="noopener" aria-label="হোয়াটসঅ্যাপে শেয়ার">{brand_svg("whatsapp", 22)}</a>
+    <a class="share-end__btn" href="https://x.com/intent/post?url={url}&text={t}" target="_blank" rel="noopener" aria-label="এক্স-এ শেয়ার">{brand_svg("x", 20)}</a>
+    <a class="share-end__btn" href="https://t.me/share/url?url={url}&text={t}" target="_blank" rel="noopener" aria-label="টেলিগ্রামে শেয়ার">{brand_svg("telegram", 22)}</a>
+    <button class="share-end__btn" type="button" data-copy="{esc(full)}" aria-label="লিংক কপি করুন">{icon("link", 20)}</button>
+  </div>
+</div>'''
+
+
 def share_bar(p):
     url = urllib.parse.quote(absu(p["_path"]), safe="")
     t = urllib.parse.quote(p["title"], safe="")
@@ -1220,11 +1263,12 @@ def build_post(p):
         <div class="entry-footer__cats">{cats_html}</div>
         {f'<div class="entry-footer__tags">{tags_html}</div>' if tags_html else ""}
       </footer>
-      <div class="share share--inline-wrap">{share_bar(p)}</div>
+      {share_end(p)}
       {comments_html(p)}
     </div>
     {sidebar(exclude=p, author=a)}
   </div>
+  {mobile_actions(p)}
   <section class="read-next container" aria-labelledby="rn-h">
     <h2 class="read-next__title" id="rn-h">আরও পড়ুন</h2>
     <div class="grid grid--3">{"".join(card_v(x) for x in related)}</div>
