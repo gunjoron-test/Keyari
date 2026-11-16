@@ -1064,6 +1064,25 @@ def comments_html(p):
     c = S.get("comments", {})
     prov = c.get("provider", "none")
     url = absu(p["_path"])
+    endpoint = ((c.get("native") or {}).get("endpoint") or "").strip().rstrip("/")
+    if prov == "native" and endpoint:
+        pid = re.sub(r"[^A-Za-z0-9_-]", "_", str(p["id"]))
+        return f'''<section class="comments cm" id="comments" aria-label="মন্তব্য" data-cm data-endpoint="{esc(endpoint)}" data-post="{esc(pid)}" data-title="{esc(p["title"])}" data-url="{esc(url)}">
+  <h2 class="cm__title">মন্তব্য <span class="cm__count" data-cm-count></span></h2>
+  <form class="cm__form" data-cm-form novalidate>
+    <label class="cm__label" for="cm-text">আপনার মতামত</label>
+    <textarea id="cm-text" name="text" rows="4" maxlength="2000" required placeholder="লেখাটি নিয়ে আপনার ভাবনা লিখুন…"></textarea>
+    <div class="cm__row">
+      <input class="cm__name" name="name" maxlength="60" autocomplete="name" placeholder="আপনার নাম (ঐচ্ছিক)" aria-label="আপনার নাম (ঐচ্ছিক)">
+      <button class="btn cm__send" type="submit">মন্তব্য পাঠান</button>
+    </div>
+    <input class="cm__hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <p class="cm__hint">নাম না দিলে মন্তব্যে "নাম প্রকাশে অনিচ্ছুক" দেখাবে। সম্পাদক অনুমোদন দিলে তবেই মন্তব্য সবার কাছে দেখা যাবে।</p>
+    <p class="cm__msg" role="status" aria-live="polite" data-cm-msg></p>
+  </form>
+  <div class="cm__list" data-cm-list></div>
+  <noscript><p class="cm__hint">মন্তব্য করতে জাভাস্ক্রিপ্ট চালু থাকতে হবে।</p></noscript>
+</section>'''
     if prov == "giscus" and c.get("giscus", {}).get("repo"):
         g = c["giscus"]
         embed = (f'<script src="https://giscus.app/client.js" data-repo="{esc(g["repo"])}" data-repo-id="{esc(g["repo_id"])}" '
@@ -1171,18 +1190,6 @@ def build_post(p):
         {f'<div class="entry-footer__tags">{tags_html}</div>' if tags_html else ""}
       </footer>
       <div class="share share--inline-wrap">{share_bar(p)}</div>
-      <section class="author-box" aria-label="লেখক পরিচিতি">
-        <p class="author-box__label">লেখক পরিচিতি</p>
-        <div class="author-box__who">
-          {avatar(a, 84)}
-          <div class="author-box__id">
-            <h2 class="author-box__name"><a href="{u("/author/" + a["slug"] + "/")}">{esc(a["name"])}</a></h2>
-            <a class="author-box__profile" href="{u("/author/" + a["slug"] + "/")}">{bn(len(a.get("_posts", [])))}টি লেখা · প্রোফাইল দেখুন {icon("right", 15)}</a>
-          </div>
-        </div>
-        {f'<p class="author-box__bio">{esc(a["bio"])}</p>' if a.get("bio") else ""}
-        {f'<div class="author-box__more-wrap"><p class="author-box__label author-box__label--sm">লেখকের আরও লেখা</p><ul class="author-box__more">{other_html}</ul></div>' if other_html else ""}
-      </section>
       {comments_html(p)}
     </div>
     {sidebar(exclude=p)}

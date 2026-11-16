@@ -33,7 +33,7 @@
     "keywords": "বাংলা সাহিত্য, সাহিত্য পত্রিকা, ওয়েবজিন, গল্প, কবিতা, প্রবন্ধ, উপন্যাস, অনুবাদ, কেয়ারি"
   },
   "comments": {
-    "provider": "none",
+    "provider": "native",
     "giscus": {
       "repo": "",
       "repo_id": "",
@@ -47,7 +47,10 @@
     "disqus": {
       "shortname": ""
     },
-    "facebook": {}
+    "facebook": {},
+    "native": {
+      "endpoint": ""
+    }
   },
   "reading": {
     "justify_desktop": true,

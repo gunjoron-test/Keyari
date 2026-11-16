@@ -193,6 +193,84 @@
     });
   }
 
+
+  // ---------- নিজস্ব মন্তব্য (অনুমোদনসাপেক্ষ) ----------
+  var cm = $('[data-cm]');
+  if (cm) {
+    var cmEnd = cm.getAttribute('data-endpoint'), cmPost = cm.getAttribute('data-post');
+    var cmForm = $('[data-cm-form]', cm), cmList = $('[data-cm-list]', cm), cmMsg = $('[data-cm-msg]', cm), cmCount = $('[data-cm-count]', cm);
+    var PKEY = 'keyari-pending-comments';
+    var readP = function () { try { return JSON.parse(localStorage.getItem(PKEY) || '{}'); } catch (e) { return {}; } };
+    var writeP = function (o) { try { localStorage.setItem(PKEY, JSON.stringify(o)); } catch (e) {} };
+    var BNd = '০১২৩৪৫৬৭৮৯';
+    var toBn = function (n) { return String(n).replace(/\d/g, function (d) { return BNd[d]; }); };
+    var fmt = function (ts) {
+      try { return new Date(ts).toLocaleDateString('bn-BD', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return ''; }
+    };
+    var el = function (tag, cls, text) { var e = doc.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+    var ANON = 'নাম প্রকাশে অনিচ্ছুক';
+    var card = function (c, pending) {
+      var wrap = el('article', 'cm__item' + (pending ? ' is-pending' : ''));
+      var nm = (c.name || '').trim();
+      wrap.appendChild(el('span', 'cm__avatar' + (nm ? '' : ' is-anon'), nm ? nm.charAt(0) : 'অ'));
+      var body = el('div', 'cm__body');
+      var head = el('div', 'cm__meta');
+      head.appendChild(el('strong', 'cm__who' + (nm ? '' : ' is-anon'), nm || ANON));
+      head.appendChild(el('time', 'cm__time', fmt(c.ts)));
+      if (pending) head.appendChild(el('span', 'cm__badge', 'অনুমোদনের অপেক্ষায় · শুধু আপনি দেখছেন'));
+      body.appendChild(head);
+      body.appendChild(el('p', 'cm__text', c.text));
+      if (c.reply) {
+        var r = el('div', 'cm__reply');
+        r.appendChild(el('strong', 'cm__reply-who', 'কেয়ারির উত্তর'));
+        r.appendChild(el('p', '', c.reply));
+        body.appendChild(r);
+      }
+      wrap.appendChild(body);
+      return wrap;
+    };
+    var render = function (approved) {
+      var p = readP(), mine = p[cmPost] || [];
+      var have = {}; approved.forEach(function (c) { have[c.id] = 1; });
+      var still = mine.filter(function (c) { return !have[c.id]; });
+      if (still.length !== mine.length) { p[cmPost] = still; writeP(p); }
+      cmList.textContent = '';
+      still.slice().reverse().forEach(function (c) { cmList.appendChild(card(c, true)); });
+      approved.slice().reverse().forEach(function (c) { cmList.appendChild(card(c, false)); });
+      cmCount.textContent = approved.length ? '(' + toBn(approved.length) + ')' : '';
+      if (!approved.length && !still.length) cmList.appendChild(el('p', 'cm__empty', 'এখনো কোনো মন্তব্য নেই — প্রথম মন্তব্যটি আপনিই করুন।'));
+    };
+    var fetchList = function () {
+      fetch(cmEnd + '/comments?post=' + encodeURIComponent(cmPost)).then(function (r) { return r.json(); })
+        .then(function (d) { render(d.comments || []); })
+        .catch(function () { render([]); });
+    };
+    if ('IntersectionObserver' in window) {
+      var cmIo = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { cmIo.disconnect(); fetchList(); } }, { rootMargin: '600px 0px' });
+      cmIo.observe(cm);
+    } else fetchList();
+    cmForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var f = cmForm.elements, text = f.text.value.trim();
+      if (text.length < 2) { cmMsg.textContent = 'আগে মন্তব্য লিখুন।'; cmMsg.className = 'cm__msg is-err'; f.text.focus(); return; }
+      var btn = $('.cm__send', cmForm); btn.disabled = true; btn.textContent = 'পাঠানো হচ্ছে…';
+      var name = f.name.value.trim();
+      fetch(cmEnd + '/comments', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ post: cmPost, title: cm.getAttribute('data-title'), url: cm.getAttribute('data-url'), name: name, text: text, website: f.website.value })
+      }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); }).then(function (x) {
+        if (!x.ok) throw new Error(x.d.error || 'পাঠানো যায়নি');
+        var p = readP(); (p[cmPost] = p[cmPost] || []).push({ id: x.d.id, name: name, text: text, ts: Date.now() }); writeP(p);
+        f.text.value = '';
+        cmMsg.textContent = 'ধন্যবাদ! আপনার মন্তব্য জমা হয়েছে। সম্পাদক অনুমোদন দিলে সবার কাছে দেখা যাবে — ততক্ষণ শুধু আপনি নিচে দেখতে পাবেন।';
+        cmMsg.className = 'cm__msg is-ok';
+        fetchList();
+      }).catch(function (err) {
+        cmMsg.textContent = err.message || 'পাঠানো যায়নি, আবার চেষ্টা করুন।'; cmMsg.className = 'cm__msg is-err';
+      }).then(function () { btn.disabled = false; btn.textContent = 'মন্তব্য পাঠান'; });
+    });
+  }
+
   // ---------- মন্তব্য (ক্লিকে লোড) ----------
   var cBtn = $('[data-comments-open]');
   if (cBtn) {

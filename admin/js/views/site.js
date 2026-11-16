@@ -255,7 +255,7 @@ export function stylesView(view) {
 export function settingsView(view) {
   const s = clone(S.settings);
   s.seo = s.seo || {}; s.social = s.social || {}; s.comments = s.comments || { provider: 'none' }; s.reading = s.reading || {};
-  ['giscus', 'cusdis', 'disqus'].forEach((k) => (s.comments[k] = s.comments[k] || {}));
+  ['giscus', 'cusdis', 'disqus', 'native'].forEach((k) => (s.comments[k] = s.comments[k] || {}));
   const f = (path, label, help = '', type = 'text', ph = '') => {
     const v = path.split('.').reduce((o, k) => (o || {})[k], s) ?? '';
     return `<div class="field"><label>${label}</label>${type === 'textarea' ? `<textarea class="textarea" data-path="${path}" placeholder="${esc(ph)}">${esc(v)}</textarea>` : `<input class="input" type="${type}" data-path="${path}" value="${esc(v)}" placeholder="${esc(ph)}">`}${help ? `<p class="help">${help}</p>` : ''}</div>`;
@@ -270,7 +270,8 @@ export function settingsView(view) {
       f('seo.title_separator', 'শিরোনামের বিভাজক', 'যেমন: আগুনের জল — সমর ইসলাম | কেয়ারি') + f('seo.keywords', 'সাইটের মূল বিষয়/কিওয়ার্ড') +
       `<div class="grid2">${f('seo.google_analytics', 'Google Analytics আইডি', 'G-XXXXXXX')}${f('seo.google_site_verification', 'Google Search Console যাচাই কোড', 'HTML ট্যাগ পদ্ধতির content="…" অংশ')}${f('seo.bing_site_verification', 'Bing যাচাই কোড')}${f('seo.facebook_app_id', 'Facebook App ID')}${f('seo.twitter_handle', 'X/Twitter হ্যান্ডল', '', 'text', '@keyari')}</div>`;
     if (tab === 'social') body = f('facebook', 'ফেসবুক পেজ', 'ফুটারের ফেসবুক আইকন ও লেখা শেয়ারে ব্যবহৃত', 'url') + f('app_url', '"অ্যাপে পড়ুন" বোতামের লিংক', 'হেডারের সবুজ বোতাম এখানে যায় (যেমন Play Store বা অ্যাপ ডাউনলোডের ঠিকানা)', 'url') + `<div class="grid2">${f('social.x', 'X / Twitter', '', 'url')}${f('social.youtube', 'YouTube', '', 'url')}${f('social.instagram', 'Instagram', '', 'url')}${f('social.whatsapp', 'WhatsApp', '', 'url')}${f('social.telegram', 'Telegram', '', 'url')}${f('social.tiktok', 'TikTok', '', 'url')}</div><div class="notice">যে ঘরে লিংক দেবেন শুধু সেটারই আসল আইকন ফুটারে লোগোর নিচে দেখাবে। ফাঁকা রাখলে দেখাবে না।</div>`;
-    if (tab === 'comments') body = `<div class="field"><label>মন্তব্য ব্যবস্থা</label><select class="select" data-path="comments.provider">${[['none', 'নেই — ইমেইল/ফেসবুকে মতামত বোতাম'], ['cusdis', 'Cusdis (প্রস্তাবিত: বিনামূল্যে, অ্যাকাউন্ট ছাড়াই মন্তব্য, মডারেশনসহ)'], ['giscus', 'Giscus (GitHub Discussions — পাঠকের GitHub অ্যাকাউন্ট লাগে)'], ['disqus', 'Disqus'], ['facebook', 'Facebook Comments']].map(([v, l]) => `<option value="${v}" ${s.comments.provider === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    if (tab === 'comments') body = `<div class="field"><label>মন্তব্য ব্যবস্থা</label><select class="select" data-path="comments.provider">${[['native', 'কেয়ারির নিজস্ব — অ্যাডমিন অনুমোদন করলে তবেই প্রকাশ (প্রস্তাবিত)'], ['none', 'নেই — ইমেইল/ফেসবুকে মতামত বোতাম'], ['cusdis', 'Cusdis (প্রস্তাবিত: বিনামূল্যে, অ্যাকাউন্ট ছাড়াই মন্তব্য, মডারেশনসহ)'], ['giscus', 'Giscus (GitHub Discussions — পাঠকের GitHub অ্যাকাউন্ট লাগে)'], ['disqus', 'Disqus'], ['facebook', 'Facebook Comments']].map(([v, l]) => `<option value="${v}" ${s.comments.provider === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div class="card"><b>কেয়ারির নিজস্ব মন্তব্য-সার্ভার</b>${f('comments.native.endpoint', 'সার্ভারের ঠিকানা (Worker URL)', 'Cloudflare Worker বানানোর পর পাওয়া ঠিকানা, যেমন https://keyari-comments.আপনার-নাম.workers.dev — সেটআপের ধাপগুলো README-র "মন্তব্য চালু করা" অংশে', 'url')}<p class="help">ঠিকানা না দেওয়া পর্যন্ত লেখার নিচে শুধু ইমেইল/ফেসবুকে মতামতের বোতাম দেখাবে।</p></div>
       <div class="grid2"><div class="card"><b>Cusdis</b>${f('comments.cusdis.app_id', 'App ID', 'cusdis.com-এ ফ্রি অ্যাকাউন্ট → নতুন ওয়েবসাইট → App ID')}${f('comments.cusdis.host', 'হোস্ট', 'ডিফল্ট: https://cusdis.com')}</div>
       <div class="card"><b>Giscus</b>${f('comments.giscus.repo', 'রিপো (owner/name)')}${f('comments.giscus.repo_id', 'Repo ID')}${f('comments.giscus.category', 'Category')}${f('comments.giscus.category_id', 'Category ID')}<p class="help">giscus.app থেকে মানগুলো নিন</p></div>
       <div class="card"><b>Disqus</b>${f('comments.disqus.shortname', 'Shortname')}</div></div>`;
@@ -318,17 +319,93 @@ export function usersView(view) {
 // ==================================================================== মন্তব্য
 export function commentsView(view) {
   const c = S.settings.comments || {};
-  const p = c.provider || 'none';
-  const links = {
-    cusdis: ['Cusdis ড্যাশবোর্ডে মন্তব্য অনুমোদন/মুছুন', 'https://cusdis.com/dashboard'],
-    giscus: ['GitHub Discussions-এ মন্তব্য দেখুন', c.giscus?.repo ? `https://github.com/${c.giscus.repo}/discussions` : 'https://giscus.app'],
-    disqus: ['Disqus মডারেশন', c.disqus?.shortname ? `https://${c.disqus.shortname}.disqus.com/admin/moderate/` : 'https://disqus.com/admin/'],
-    facebook: ['Facebook মন্তব্য মডারেশন', 'https://developers.facebook.com/tools/comments/'],
+  const prov = c.provider || 'none';
+  const endpoint = ((c.native && c.native.endpoint) || '').trim().replace(/\/$/, '');
+  const TK = 'keyari-comments-token';
+  const getTok = () => { try { return localStorage.getItem(TK) || ''; } catch (e) { return ''; } };
+  const setTok = (v) => { try { localStorage.setItem(TK, v); } catch (e) {} };
+  let tab = 'p', data = { comments: [], counts: { pending: 0, approved: 0 } };
+  const postTitle = (c) => { const p = S.posts.find((x) => String(x.id).replace(/[^A-Za-z0-9_-]/g, '_') === c.post); return p ? p.title : (c.title || c.post); };
+  const api = async (path, opts = {}) => {
+    const r = await fetch(endpoint + path, { ...opts, headers: { 'content-type': 'application/json', authorization: 'Bearer ' + getTok(), ...(opts.headers || {}) } });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || ('ত্রুটি ' + r.status));
+    return d;
   };
-  view.innerHTML = `<div class="page-head"><div><h1>মন্তব্য</h1><p>পাঠকের মন্তব্য ব্যবস্থাপনা</p></div><a class="btn btn--light" href="#/settings">মন্তব্যের সেটিংস</a></div>
-    ${p === 'none' ? `<div class="notice notice--warn">এখন কোনো মন্তব্য ব্যবস্থা চালু নেই — লেখার নিচে "ইমেইলে/ফেসবুকে মতামত" বোতাম দেখায়।<br><br><b>প্রস্তাবনা:</b> <a href="https://cusdis.com" target="_blank" rel="noopener">Cusdis</a> — বিনামূল্যে, পাঠককে অ্যাকাউন্ট খুলতে হয় না, প্রতিটি মন্তব্য আপনি অনুমোদন দিলে প্রকাশ হয়, ইমেইলে নোটিফিকেশন আসে। সেটিংস → মন্তব্য-এ App ID দিলেই চালু।</div>`
-    : `<div class="card"><p>সক্রিয়: <b>${esc(p)}</b></p><p class="help">স্ট্যাটিক সাইটের মন্তব্য একটি বাইরের সেবায় জমা থাকে; সেখান থেকেই অনুমোদন, মুছে ফেলা ও উত্তর দেওয়া হয়।</p><a class="btn" target="_blank" rel="noopener" href="${esc(links[p]?.[1] || '#')}">${esc(links[p]?.[0] || 'মডারেশন')} ↗</a></div>`}
-    <div class="card"><h2 class="card__title">লেখাভিত্তিক মন্তব্য নিয়ন্ত্রণ</h2><p class="help">মন্তব্য বন্ধ আছে এমন লেখা: ${bn(S.posts.filter((x) => x.comments === false).length)}টি। লেখা সম্পাদকের "প্রকাশ" প্যানেলে "মন্তব্য চালু" টিক দিয়ে বদলানো যায়।</p></div>`;
+  const head = `<div class="page-head"><div><h1>মন্তব্য</h1><p>পাঠকের মন্তব্য অনুমোদন, উত্তর ও ব্যবস্থাপনা</p></div><a class="btn btn--light" href="#/settings">মন্তব্যের সেটিংস</a></div>`;
+
+  const other = () => {
+    const links = {
+      cusdis: ['Cusdis ড্যাশবোর্ডে মন্তব্য অনুমোদন/মুছুন', 'https://cusdis.com/dashboard'],
+      giscus: ['GitHub Discussions-এ মন্তব্য দেখুন', c.giscus?.repo ? `https://github.com/${c.giscus.repo}/discussions` : 'https://giscus.app'],
+      disqus: ['Disqus মডারেশন', c.disqus?.shortname ? `https://${c.disqus.shortname}.disqus.com/admin/moderate/` : 'https://disqus.com/admin/'],
+      facebook: ['Facebook মন্তব্য মডারেশন', 'https://developers.facebook.com/tools/comments/'],
+    };
+    view.innerHTML = head + (prov === 'native'
+      ? `<div class="notice notice--warn"><b>নিজস্ব মন্তব্য ব্যবস্থা এখনো চালু হয়নি।</b> সেটিংস → মন্তব্য-এ "সার্ভারের ঠিকানা" দিতে হবে। ঠিকানা পাওয়ার ধাপগুলো README-র "মন্তব্য চালু করা" অংশে বাংলায় লেখা আছে (প্রায় ১০ মিনিট, বিনামূল্যে)। ততক্ষণ লেখার নিচে ইমেইল/ফেসবুকে মতামতের বোতাম দেখাবে।</div>`
+      : prov === 'none'
+        ? `<div class="notice notice--warn">এখন কোনো মন্তব্য ব্যবস্থা চালু নেই। সেটিংস → মন্তব্য-এ "কেয়ারির নিজস্ব" বেছে নিন।</div>`
+        : `<div class="card"><p>সক্রিয়: <b>${esc(prov)}</b></p><a class="btn" target="_blank" rel="noopener" href="${esc(links[prov]?.[1] || '#')}">${esc(links[prov]?.[0] || 'মডারেশন')} ↗</a></div>`)
+      + `<div class="card"><h2 class="card__title">লেখাভিত্তিক মন্তব্য নিয়ন্ত্রণ</h2><p class="help">মন্তব্য বন্ধ আছে এমন লেখা: ${bn(S.posts.filter((x) => x.comments === false).length)}টি। লেখা সম্পাদকের "প্রকাশ" প্যানেলে "মন্তব্য চালু" টিক দিয়ে বদলানো যায়।</p></div>`;
+  };
+  if (prov !== 'native' || !endpoint) return other();
+
+  const askToken = () => {
+    view.innerHTML = head + `<div class="card" style="max-width:560px"><h2 class="card__title">মন্তব্য-সার্ভারে প্রবেশ</h2>
+      <p class="help">সার্ভার বানানোর সময় যে "ADMIN_TOKEN" (গোপন পাসওয়ার্ড) ঠিক করেছিলেন সেটা এখানে দিন। এটি শুধু এই ব্রাউজারে মনে রাখা হয়, কোথাও জমা হয় না।</p>
+      <div class="field"><input class="input" type="password" data-tok placeholder="ADMIN_TOKEN" autocomplete="off"></div>
+      <button class="btn" data-go>প্রবেশ করুন</button></div>`;
+    $('[data-go]', view).onclick = () => { const v = $('[data-tok]', view).value.trim(); if (!v) return; setTok(v); load(); };
+  };
+
+  const draw = () => {
+    const list = data.comments;
+    view.innerHTML = head + `<div class="tabs" style="margin-bottom:16px">
+        <button class="tab ${tab === 'p' ? 'is-active' : ''}" data-tab="p">অপেক্ষমাণ <span class="badge">${bn(data.counts.pending)}</span></button>
+        <button class="tab ${tab === 'a' ? 'is-active' : ''}" data-tab="a">অনুমোদিত <span class="badge">${bn(data.counts.approved)}</span></button>
+        <button class="tab ${tab === 'all' ? 'is-active' : ''}" data-tab="all">সব</button>
+        <span style="flex:1"></span><button class="btn btn--light btn--sm" data-refresh>↻ নতুন করে আনুন</button><button class="btn btn--ghost btn--sm" data-logout>টোকেন মুছুন</button></div>
+      ${list.length ? list.map((x, i) => `<div class="card" data-i="${i}" style="margin-bottom:12px">
+        <div class="btn-row" style="justify-content:space-between;align-items:flex-start;gap:12px">
+          <div style="min-width:0"><b>${x.name ? esc(x.name) : '<span style="color:var(--text-muted)">নাম প্রকাশে অনিচ্ছুক</span>'}</b>
+            <span class="help" style="margin-left:8px">${bnDate(new Date(x.ts).toISOString(), true)}</span>
+            <span class="badge ${x.status === 'approved' ? 'badge--published' : 'badge--draft'}" style="margin-left:6px">${x.status === 'approved' ? 'অনুমোদিত' : 'অপেক্ষমাণ'}</span>
+            <div class="help" style="margin-top:2px">লেখা: ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(postTitle(x))}</a>` : esc(postTitle(x))}</div></div>
+          <div class="btn-row">${x.status === 'approved'
+            ? '<button class="btn btn--light btn--sm" data-act="unapprove">লুকান</button>'
+            : '<button class="btn btn--sm" data-act="approve">অনুমোদন দিন</button>'}
+            <button class="btn btn--light btn--sm" data-act="reply">${x.reply ? 'উত্তর বদলান' : 'উত্তর দিন'}</button>
+            <button class="btn btn--ghost btn--sm" data-act="delete" style="color:#c0392b">মুছুন</button></div></div>
+        <p style="margin-top:10px;white-space:pre-wrap;line-height:1.8">${esc(x.text)}</p>
+        ${x.reply ? `<div class="notice" style="margin-top:10px"><b>আপনার উত্তর:</b> ${esc(x.reply)}</div>` : ''}</div>`).join('')
+        : `<div class="empty"><p>${tab === 'p' ? 'কোনো অপেক্ষমাণ মন্তব্য নেই 🎉' : 'কোনো মন্তব্য নেই'}</p></div>`}
+      <div class="notice">অনুমোদন না দেওয়া পর্যন্ত মন্তব্য শুধু যিনি লিখেছেন তিনিই নিজের ব্রাউজারে দেখতে পান। "লুকান" দিলে অনুমোদিত মন্তব্য আবার অপেক্ষমাণে ফিরে যায়।</div>`;
+    $$('[data-tab]', view).forEach((b) => (b.onclick = () => { tab = b.dataset.tab; load(); }));
+    $('[data-refresh]', view).onclick = load;
+    $('[data-logout]', view).onclick = () => { setTok(''); askToken(); };
+    $$('[data-act]', view).forEach((b) => (b.onclick = async () => {
+      const x = list[+b.closest('[data-i]').dataset.i];
+      const act = b.dataset.act;
+      try {
+        if (act === 'delete') { if (!(await confirmBox('মন্তব্যটি চিরতরে মুছে ফেলবেন?', { ok: 'মুছুন', danger: true }))) return; await api('/admin/comments', { method: 'POST', body: JSON.stringify({ key: x.key, action: 'delete' }) }); toast('মুছে ফেলা হয়েছে'); }
+        else if (act === 'reply') {
+          const m = modal({ title: 'মন্তব্যের উত্তর', body: `<p class="help" style="margin-bottom:8px">${esc(x.text.slice(0, 160))}</p><div class="field"><label>আপনার উত্তর (মন্তব্যের নিচে "কেয়ারির উত্তর" হিসেবে দেখাবে)</label><textarea class="textarea" rows="5" data-r>${esc(x.reply || '')}</textarea></div>`, foot: '<button class="btn btn--light" data-no>বাতিল</button><button class="btn" data-ok>সংরক্ষণ</button>' });
+          $('[data-no]', m.el).onclick = () => m.close();
+          $('[data-ok]', m.el).onclick = async () => { try { await api('/admin/comments', { method: 'POST', body: JSON.stringify({ key: x.key, reply: $('[data-r]', m.el).value }) }); m.close(); toast('উত্তর সংরক্ষিত'); load(); } catch (e) { toast(e.message, 'err'); } };
+          return;
+        } else { await api('/admin/comments', { method: 'POST', body: JSON.stringify({ key: x.key, action: act }) }); toast(act === 'approve' ? 'অনুমোদন হয়েছে — এখন সবাই দেখতে পাবে' : 'অপেক্ষমাণে ফেরানো হয়েছে'); }
+        load();
+      } catch (e) { toast(e.message, 'err'); }
+    }));
+  };
+
+  async function load() {
+    if (!getTok()) return askToken();
+    view.innerHTML = head + '<div class="empty"><p>মন্তব্য আনা হচ্ছে…</p></div>';
+    try { data = await api('/admin/comments?status=' + tab); draw(); }
+    catch (e) { if (/অনুমতি|401/.test(e.message)) { setTok(''); toast('টোকেন ভুল', 'err'); askToken(); } else { view.innerHTML = head + `<div class="notice notice--warn">সার্ভারে সংযোগ হয়নি: ${esc(e.message)}<br>সেটিংসে ঠিকানা ঠিক আছে কি দেখুন।</div>`; } }
+  }
+  load();
 }
 
 // ==================================================================== মুখপাতার স্লাইডার (ব্যানার)
