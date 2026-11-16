@@ -6,8 +6,15 @@
     var b = e.target.closest && e.target.closest('[data-more]');
     if (!b) return;
     var wrap = b.parentNode, grid = wrap.previousElementSibling;
-    if (grid) grid.classList.add('is-open');
-    wrap.parentNode.removeChild(wrap);
+    if (!grid) return;
+    var open = grid.classList.toggle('is-open');
+    b.textContent = open ? 'কম দেখান' : 'আরও দেখুন';
+    b.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (!open) {
+      var sec = grid.closest('section') || grid;
+      var top = sec.getBoundingClientRect().top;
+      if (top < 0) window.scrollBy({ top: top - 90, behavior: 'smooth' });
+    }
   });
   var BASE = (window.KEYARI && window.KEYARI.base) || '';
   var $ = function (s, c) { return (c || doc).querySelector(s); };
