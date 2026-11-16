@@ -933,3 +933,15 @@ html.hdr-compact { --header-h: var(--header-compact); }
   .share-end__btn:active { transform: scale(.92); }
 }
 @media print { .m-bar, .share-end { display: none !important; } }
+
+/* ---------- মোবাইলে তারিখের পাশে ছোট A− / A+ ---------- */
+.entry-meta .fs-inline { display: none; }
+@media (max-width: 991.98px) {
+  .m-bar { display: none !important; }
+  .entry-meta .fs-inline { display: inline-flex; gap: 0; align-items: center; height: 34px; padding: 0 2px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
+  .fs-inline button { width: 38px; height: 32px; border: 0; background: none; color: var(--text); display: grid; place-items: center; border-radius: 999px; }
+  .fs-inline button svg { width: 18px; height: 18px; }
+  .fs-inline button:active { background: var(--highlight); color: var(--accent-ink); }
+  .fs-inline button:disabled { opacity: .3; }
+  .fs-inline__sep { width: 1px; height: 16px; background: var(--line); }
+}

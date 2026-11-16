@@ -195,23 +195,6 @@
     });
   });
 
-  // ---------- মোবাইলের ভাসমান শেয়ার-বার ----------
-  var mbar = $('[data-mbar]'), mBody = $('.entry-content');
-  if (mbar && mBody && 'IntersectionObserver' in window) {
-    var mIo = new IntersectionObserver(function (en) {
-      var on = en[0].isIntersecting;
-      mbar.classList.toggle('is-on', on); doc.body.classList.toggle('mbar-on', on);
-    }, { rootMargin: '-35% 0px -20% 0px' });
-    mIo.observe(mBody);
-  }
-  $$('[data-native-share]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var url = b.getAttribute('data-url'), title = b.getAttribute('data-title');
-      if (navigator.share) { navigator.share({ title: title, url: url }).catch(function () {}); return; }
-      (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () { toast('লিংক কপি হয়েছে — যেখানে খুশি পেস্ট করে শেয়ার করুন'); }, function () { toast(url); });
-    });
-  });
-
   // ---------- লেখার আকার ----------
   var fsBtns = $$('[data-fs]');
   if (fsBtns.length) {
