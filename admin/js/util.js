@@ -124,10 +124,10 @@ export function blobToBase64(blob) {
   return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(blob); });
 }
 /** একটি ছবি ফাইল থেকে কমিটযোগ্য পরিবর্তন (মূল + ৬৪০px থাম্ব) */
-export async function imageChanges(file, baseName) {
-  const main = await processImage(file, 1600);
+export async function imageChanges(file, baseName, maxW = 1600) {
+  const main = await processImage(file, maxW);
   const d = new Date();
-  const dir = `static/uploads/${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+  const dir = maxW > 1600 ? 'static/uploads/banners' : `static/uploads/${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}`;
   const name = (asciiSlug(baseName || file.name.replace(/\.[^.]+$/, '')) || 'image') + '-' + Date.now().toString(36);
   const changes = [{ path: `${dir}/${name}.${main.ext}`, base64: await blobToBase64(main.blob) }];
   if (main.ext === 'webp' && main.width > 700) {

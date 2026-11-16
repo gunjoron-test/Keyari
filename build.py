@@ -795,6 +795,54 @@ def breadcrumb(items):
 
 
 # ------------------------------------------------------------------ pages
+def banner_slider():
+    """মুখপাতার ওপরের ব্যানার-স্লাইডার (content/slides.json — অ্যাডমিনের "স্লাইডার" পাতা থেকে)"""
+    cfg = load("slides.json", {}) or {}
+    if not cfg.get("enabled", True):
+        return ""
+    items = []
+    for sl in cfg.get("items", []):
+        if sl.get("active", True) is False or not sl.get("image"):
+            continue
+        if sl.get("start") and parse_date(sl["start"]) > NOW:
+            continue
+        if sl.get("end") and parse_date(sl["end"]) < NOW:
+            continue
+        items.append(sl)
+    if not items:
+        return ""
+    all_mobile = all(sl.get("mobile_image") for sl in items)
+    slides = ""
+    for i, sl in enumerate(items):
+        alt = esc(sl.get("alt") or SITE)
+        src_m = ""
+        if sl.get("mobile_image"):
+            src_m = '<source media="(max-width: 640px)" srcset="' + asset(sl["mobile_image"]) + '">'
+        loading = 'fetchpriority="high" decoding="async"' if i == 0 else 'loading="lazy" decoding="async"'
+        pic = "<picture>" + src_m + '<img src="' + asset(sl["image"]) + '" alt="' + alt + '" width="2244" height="592" ' + loading + "></picture>"
+        link = sl.get("link") or ""
+        if link:
+            href = u(link) if link.startswith("/") else link
+            tgt = ' target="_blank" rel="noopener"' if sl.get("new_tab") else ""
+            inner = '<a href="' + esc(href) + '"' + tgt + ">" + pic + "</a>"
+        else:
+            inner = "<div>" + pic + "</div>"
+        slides += ('<div class="slide" role="group" aria-roledescription="স্লাইড" aria-label="' + bn(i + 1) + " / " + bn(len(items)) + '">' + inner + "</div>")
+    controls = ""
+    if len(items) > 1:
+        if len(items) <= 12:
+            dots = "".join('<button class="slider__dot" type="button" aria-label="স্লাইড ' + bn(k + 1) + '"></button>' for k in range(len(items)))
+            controls += '<div class="slider__dots">' + dots + "</div>"
+        else:
+            controls += '<div class="slider__count" aria-hidden="true"></div>'
+        controls += ('<button class="slider__arrow slider__arrow--prev" type="button" aria-label="আগের স্লাইড">' + icon("left", 20) + "</button>"
+                     '<button class="slider__arrow slider__arrow--next" type="button" aria-label="পরের স্লাইড">' + icon("right", 20) + "</button>")
+    interval = int(float(cfg.get("interval", 6) or 6) * 1000) if (cfg.get("autoplay", True) and len(items) > 1) else 0
+    style = "--bn-d:2244/592;" + ("--bn-m:1200/900;" if all_mobile else "")
+    return ('<section class="banner-slider container" aria-label="প্রধান ব্যানার" style="' + style + '">'
+            '<div class="slider" data-slider data-interval="' + str(interval) + '"><div class="slider__track">' + slides + "</div>" + controls + "</div></section>")
+
+
 def build_home():
     per = S.get("posts_per_page", 10)
     hero_cfg = HOME.get("hero", {})
@@ -821,6 +869,8 @@ def build_home():
     for page in range(1, total + 1):
         chunk = feed[(page - 1) * per: page * per]
         parts = []
+        if page == 1:
+            parts.append(banner_slider())
         if page == 1 and on("hero") and main:
             parts.append(f'''<section class="hero container" aria-label="প্রধান লেখা">
   <article class="hero__main">

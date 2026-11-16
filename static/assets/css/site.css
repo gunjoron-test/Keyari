@@ -671,3 +671,25 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 }
 
 .author-chip .avatar, .author-card .avatar { align-self: center; margin-inline: auto; }
+
+/* ---------- মুখপাতার ব্যানার-স্লাইডার (অ্যাডমিন থেকে নিয়ন্ত্রিত) ---------- */
+.banner-slider { margin-top: 28px; }
+.banner-slider .slider__track { aspect-ratio: var(--bn-d, 2244/592); border-radius: var(--radius-lg); background: var(--highlight); }
+.banner-slider .slide > a, .banner-slider .slide > div { display: block; width: 100%; height: 100%; }
+.banner-slider .slide picture, .banner-slider .slide img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
+.banner-slider .slider__arrow { top: 50%; transform: translateY(-50%); width: 44px; height: 44px; background: rgba(255, 255, 255, .92); box-shadow: 0 4px 16px rgba(41, 41, 75, .18); opacity: 0; transition: opacity .2s, transform .2s; }
+.banner-slider .slider:hover .slider__arrow, .banner-slider .slider__arrow:focus-visible { opacity: 1; }
+.banner-slider .slider__arrow:hover { transform: translateY(-50%) scale(1.06); }
+.banner-slider .slider__arrow--prev { left: 16px; }
+.banner-slider .slider__arrow--next { right: 16px; }
+.banner-slider .slider__dots { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); margin: 0; padding: 7px 12px; border-radius: 99px; background: rgba(41, 41, 75, .38); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); gap: 7px; }
+.banner-slider .slider__dot { background: #fff; opacity: .55; }
+.banner-slider .slider__dot.is-active { width: 24px; opacity: 1; background: #fff; }
+.slider__count { position: absolute; right: 16px; bottom: 14px; padding: 4px 14px; border-radius: 99px; background: rgba(41, 41, 75, .5); color: #fff; font-size: 13.5px; font-weight: 600; backdrop-filter: blur(6px); }
+.banner-slider + .hero { margin-top: 40px; }
+@media (max-width: 640px) {
+  .banner-slider { margin-top: 16px; }
+  .banner-slider .slider__track { aspect-ratio: var(--bn-m, var(--bn-d, 2244/592)); border-radius: 12px; }
+  .banner-slider .slider__arrow { display: none; }
+  .banner-slider .slider__dots { bottom: 10px; padding: 5px 10px; }
+}

@@ -130,14 +130,17 @@
   $$('[data-slider]').forEach(function (sl) {
     var slides = $$('.slide', sl), dots = $$('.slider__dot', sl), i = 0, t;
     if (!slides.length) return;
-    var interval = +sl.getAttribute('data-interval') || 5000;
+    var iv = sl.getAttribute('data-interval');
+    var interval = iv === null ? 5000 : +iv;
+    var counter = $('.slider__count', sl);
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     function go(n) {
       i = (n + slides.length) % slides.length;
       slides.forEach(function (s, k) { s.classList.toggle('is-active', k === i); s.setAttribute('aria-hidden', k === i ? 'false' : 'true'); $$('a', s).forEach(function (a) { a.tabIndex = k === i ? 0 : -1; }); });
       dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); d.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+      if (counter) counter.textContent = bn(i + 1) + ' / ' + bn(slides.length);
     }
-    function play() { if (reduce) return; stop(); t = setInterval(function () { go(i + 1); }, interval); }
+    function play() { if (reduce || !interval) return; stop(); t = setInterval(function () { go(i + 1); }, interval); }
     function stop() { clearInterval(t); }
     dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); play(); }); });
     var prev = $('.slider__arrow--prev', sl), next = $('.slider__arrow--next', sl);

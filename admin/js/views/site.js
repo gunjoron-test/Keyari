@@ -1,6 +1,6 @@
 // সাইট কাঠামো: বিভাগ, লেখক, মেনু, মুখপাতা, স্টাইল শিট, সেটিংস, ব্যবহারকারী, মন্তব্য
 import { S, ROLES, can, commit, saveSingle, PATHS, topCats, childCats, catName, imgUrl, imgFallback, siteUrl } from '../state.js';
-import { $, $$, esc, bn, toast, modal, confirmBox, slugify, asciiSlug, jsonText, clone, imageChanges, debounce } from '../util.js';
+import { $, $$, esc, bn, bnDate, toast, modal, confirmBox, slugify, asciiSlug, jsonText, clone, imageChanges, debounce, uid, toLocalInput, fromLocalInput } from '../util.js';
 import { stylesToCss } from '../editor.js';
 import { pickMedia } from './media.js';
 
@@ -315,4 +315,91 @@ export function commentsView(view) {
     ${p === 'none' ? `<div class="notice notice--warn">এখন কোনো মন্তব্য ব্যবস্থা চালু নেই — লেখার নিচে "ইমেইলে/ফেসবুকে মতামত" বোতাম দেখায়।<br><br><b>প্রস্তাবনা:</b> <a href="https://cusdis.com" target="_blank" rel="noopener">Cusdis</a> — বিনামূল্যে, পাঠককে অ্যাকাউন্ট খুলতে হয় না, প্রতিটি মন্তব্য আপনি অনুমোদন দিলে প্রকাশ হয়, ইমেইলে নোটিফিকেশন আসে। সেটিংস → মন্তব্য-এ App ID দিলেই চালু।</div>`
     : `<div class="card"><p>সক্রিয়: <b>${esc(p)}</b></p><p class="help">স্ট্যাটিক সাইটের মন্তব্য একটি বাইরের সেবায় জমা থাকে; সেখান থেকেই অনুমোদন, মুছে ফেলা ও উত্তর দেওয়া হয়।</p><a class="btn" target="_blank" rel="noopener" href="${esc(links[p]?.[1] || '#')}">${esc(links[p]?.[0] || 'মডারেশন')} ↗</a></div>`}
     <div class="card"><h2 class="card__title">লেখাভিত্তিক মন্তব্য নিয়ন্ত্রণ</h2><p class="help">মন্তব্য বন্ধ আছে এমন লেখা: ${bn(S.posts.filter((x) => x.comments === false).length)}টি। লেখা সম্পাদকের "প্রকাশ" প্যানেলে "মন্তব্য চালু" টিক দিয়ে বদলানো যায়।</p></div>`;
+}
+
+// ==================================================================== মুখপাতার স্লাইডার (ব্যানার)
+export function slidesView(view) {
+  const cfg = clone(S.slides && Array.isArray(S.slides.items) ? S.slides : { enabled: true, autoplay: true, interval: 6, items: [] });
+  cfg.items = cfg.items || [];
+  const state = (it) => {
+    const now = Date.now();
+    if (it.active === false) return ['off', 'বন্ধ'];
+    if (it.start && new Date(it.start).getTime() > now) return ['sched', 'নির্ধারিত'];
+    if (it.end && new Date(it.end).getTime() < now) return ['ended', 'মেয়াদ শেষ'];
+    return ['on', 'চলছে'];
+  };
+  const draw = () => {
+    view.innerHTML = `<div class="page-head"><div><h1>মুখপাতার স্লাইডার</h1><p>হেডারের নিচে ঘুরতে থাকা ব্যানার — যত খুশি স্লাইড যোগ করা যায় (৫০টি বা তারও বেশি)</p></div>
+      <div class="btn-row"><button class="btn btn--light" data-add>＋ নতুন স্লাইড</button><button class="btn" data-save>সংরক্ষণ</button></div></div>
+      <div class="card"><div class="grid3">
+        <label class="check"><input type="checkbox" data-en ${cfg.enabled !== false ? 'checked' : ''}> মুখপাতায় স্লাইডার দেখান</label>
+        <label class="check"><input type="checkbox" data-auto ${cfg.autoplay !== false ? 'checked' : ''}> নিজে নিজে ঘুরবে (অটোপ্লে)</label>
+        <div class="field" style="margin:0"><label>প্রতি স্লাইড কত সেকেন্ড থাকবে</label><input class="input" type="number" min="2" max="60" data-iv value="${esc(cfg.interval || 6)}" style="max-width:120px"></div>
+      </div>
+      <p class="help" style="margin-top:10px"><b>ছবির মাপ:</b> কম্পিউটারের জন্য ২২৪৪×৫৯২ পিক্সেল (প্রায় ৩.৮ : ১), ফোনের জন্য ১২০০×৯০০ (৪ : ৩, ঐচ্ছিক)। ফোনের ছবি না দিলে কম্পিউটারের ছবিই ছোট হয়ে দেখায়, তখন লেখা ছোট দেখাতে পারে। ছবিতে লেখা থাকলে "বিকল্প লেখা"-য় সেই লেখাটি লিখে দিন — গুগল ও দৃষ্টিপ্রতিবন্ধী পাঠকের জন্য জরুরি।</p></div>
+      <div class="list slides-list" data-list>${cfg.items.map((it, i) => {
+        const [k, label] = state(it);
+        return `<div class="card slide-row" data-i="${i}" style="display:grid;grid-template-columns:auto 240px 1fr auto;gap:16px;align-items:center;padding:14px">
+          <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><button class="btn btn--ghost btn--sm" data-top="${i}" title="সবার আগে আনুন">⤒</button><button class="btn btn--ghost btn--sm" data-up="${i}" title="এক ধাপ আগে">↑</button><b>${bn(i + 1)}</b><button class="btn btn--ghost btn--sm" data-down="${i}" title="এক ধাপ পরে">↓</button></div>
+          <div>${it.image ? `<img src="${esc(imgUrl(it.image))}" alt="" style="width:100%;aspect-ratio:2244/592;object-fit:cover;border-radius:10px;background:var(--highlight)">` : '<div class="empty" style="padding:20px">ছবি নেই</div>'}</div>
+          <div style="min-width:0"><div class="btn-row" style="margin-bottom:6px"><span class="badge ${k === 'on' ? 'badge--published' : k === 'sched' ? 'badge--scheduled' : 'badge--draft'}">${label}</span>${it.mobile_image ? '<span class="badge">ফোনের ছবি আছে</span>' : ''}</div>
+            <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(it.alt || '(বিকল্প লেখা নেই)')}</div>
+            <div class="help" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.link ? 'লিংক: ' + esc(it.link) : 'লিংক নেই'}${it.start ? ' · শুরু ' + bnDate(it.start, true) : ''}${it.end ? ' · শেষ ' + bnDate(it.end, true) : ''}</div></div>
+          <div class="btn-row"><label class="check" title="চালু / বন্ধ"><input type="checkbox" data-act="${i}" ${it.active !== false ? 'checked' : ''}> চালু</label><button class="btn btn--light btn--sm" data-edit="${i}">সম্পাদনা</button><button class="btn btn--ghost btn--sm" data-dup="${i}">অনুলিপি</button><button class="btn btn--ghost btn--sm" data-del="${i}" style="color:var(--danger)">মুছুন</button></div></div>`;
+      }).join('') || '<div class="card empty">এখনো কোনো স্লাইড নেই। "＋ নতুন স্লাইড" চাপুন।</div>'}</div>`;
+    $$('img', view).forEach(imgFallback);
+    $('[data-en]', view).onchange = (e) => { cfg.enabled = e.target.checked; };
+    $('[data-auto]', view).onchange = (e) => { cfg.autoplay = e.target.checked; };
+    $('[data-iv]', view).oninput = (e) => { cfg.interval = Math.max(2, +e.target.value || 6); };
+    const move = (i, j) => { if (j < 0 || j >= cfg.items.length) return; const [x] = cfg.items.splice(i, 1); cfg.items.splice(j, 0, x); draw(); };
+    $$('[data-up]', view).forEach((b) => (b.onclick = () => move(+b.dataset.up, +b.dataset.up - 1)));
+    $$('[data-down]', view).forEach((b) => (b.onclick = () => move(+b.dataset.down, +b.dataset.down + 1)));
+    $$('[data-top]', view).forEach((b) => (b.onclick = () => move(+b.dataset.top, 0)));
+    $$('[data-act]', view).forEach((b) => (b.onchange = () => { cfg.items[+b.dataset.act].active = b.checked; draw(); }));
+    $$('[data-dup]', view).forEach((b) => (b.onclick = () => { const c = clone(cfg.items[+b.dataset.dup]); c.id = uid('s'); cfg.items.splice(+b.dataset.dup + 1, 0, c); draw(); }));
+    $$('[data-del]', view).forEach((b) => (b.onclick = async () => { if (!(await confirmBox('এই স্লাইডটি তালিকা থেকে মুছবেন? (ছবির ফাইল মিডিয়াতে থেকে যাবে)', { ok: 'মুছুন', danger: true }))) return; cfg.items.splice(+b.dataset.del, 1); draw(); }));
+    $$('[data-edit]', view).forEach((b) => (b.onclick = () => editSlide(+b.dataset.edit)));
+    $('[data-add]', view).onclick = () => editSlide(-1);
+    $('[data-save]', view).onclick = async () => { S.slides = cfg; await saveSingle('slides', 'স্লাইডার হালনাগাদ'); };
+  };
+
+  function editSlide(idx) {
+    const isNew = idx < 0;
+    const it = isNew ? { id: uid('s'), image: '', mobile_image: '', alt: '', link: '', new_tab: false, active: true, start: '', end: '' } : clone(cfg.items[idx]);
+    const m = modal({
+      title: isNew ? 'নতুন স্লাইড' : 'স্লাইড সম্পাদনা', wide: true,
+      body: `<div class="grid2"><div>
+          <p class="label">কম্পিউটারের ছবি (২২৪৪×৫৯২)</p><div class="cover-box" data-box="image" style="aspect-ratio:2244/592" tabindex="0" role="button"></div>
+          <div class="btn-row" style="margin:8px 0 16px"><label class="btn btn--light btn--sm" style="cursor:pointer">কম্পিউটার থেকে আপলোড<input type="file" accept="image/*" data-up-d hidden></label><button class="btn btn--light btn--sm" data-lib-d type="button">মিডিয়া থেকে বাছুন</button></div></div>
+        <div><p class="label">ফোনের ছবি (১২০০×৯০০, ঐচ্ছিক)</p><div class="cover-box" data-box="mobile_image" style="aspect-ratio:4/3;max-width:260px" tabindex="0" role="button"></div>
+          <div class="btn-row" style="margin:8px 0 16px"><label class="btn btn--light btn--sm" style="cursor:pointer">আপলোড<input type="file" accept="image/*" data-up-m hidden></label><button class="btn btn--light btn--sm" data-lib-m type="button">মিডিয়া থেকে</button><button class="btn btn--ghost btn--sm" data-rm-m type="button">সরান</button></div></div></div>
+        <div class="field"><label>বিকল্প লেখা (alt) — ছবিতে যা লেখা আছে তা এখানে লিখুন</label><input class="input" data-k="alt" value="${esc(it.alt || '')}" placeholder="যেমন: আপনার লেখা পাঠান — বিশেষ বার্তা পড়ে নিন"></div>
+        <div class="grid2"><div class="field"><label>ক্লিক করলে কোথায় যাবে (ঐচ্ছিক)</label><input class="input input--mono" data-k="link" value="${esc(it.link || '')}" placeholder="/আয়োজন/ অথবা https://…"></div>
+          <div class="field"><label>&nbsp;</label><label class="check"><input type="checkbox" data-k="new_tab" ${it.new_tab ? 'checked' : ''}> নতুন ট্যাবে খুলবে</label><label class="check"><input type="checkbox" data-k="active" ${it.active !== false ? 'checked' : ''}> চালু আছে</label></div></div>
+        <div class="grid2"><div class="field"><label>দেখানো শুরু (ঐচ্ছিক)</label><input class="input" type="datetime-local" data-s="start" value="${it.start ? toLocalInput(it.start) : ''}"></div>
+          <div class="field"><label>দেখানো শেষ (ঐচ্ছিক)</label><input class="input" type="datetime-local" data-s="end" value="${it.end ? toLocalInput(it.end) : ''}"></div></div>
+        <p class="help">শুরু ও শেষের সময় দিলে স্লাইডটি ঐ সময়ের মধ্যেই দেখাবে (সাইট প্রতি ঘণ্টায় হালনাগাদ হয়)।</p>`,
+      foot: '<button class="btn btn--light" data-no>বাতিল</button><button class="btn" data-ok>ঠিক আছে</button>',
+    });
+    const paint = () => ['image', 'mobile_image'].forEach((k) => { const b = $(`[data-box="${k}"]`, m.el); b.innerHTML = it[k] ? `<img src="${esc(imgUrl(it[k]))}" alt="">` : '<span>ছবি নেই</span>'; const im = $('img', b); im && imgFallback(im); });
+    paint();
+    const upload = async (file, key) => {
+      if (!file) return;
+      try { toast('ছবি আপলোড হচ্ছে…'); const r = await imageChanges(file, 'slide', 2400); await commit('স্লাইডারের ছবি আপলোড', r.changes); it[key] = r.url; paint(); } catch (e) { toast('আপলোড ব্যর্থ: ' + e.message, 'err'); }
+    };
+    $('[data-up-d]', m.el).onchange = (e) => upload(e.target.files[0], 'image');
+    $('[data-up-m]', m.el).onchange = (e) => upload(e.target.files[0], 'mobile_image');
+    $('[data-lib-d]', m.el).onclick = async () => { const r = await pickMedia({ title: 'কম্পিউটারের ছবি' }); if (r && r.url) { it.image = r.url; paint(); } };
+    $('[data-lib-m]', m.el).onclick = async () => { const r = await pickMedia({ title: 'ফোনের ছবি' }); if (r && r.url) { it.mobile_image = r.url; paint(); } };
+    $('[data-rm-m]', m.el).onclick = () => { it.mobile_image = ''; paint(); };
+    $$('[data-k]', m.el).forEach((el) => el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => { it[el.dataset.k] = el.type === 'checkbox' ? el.checked : el.value; }));
+    $$('[data-s]', m.el).forEach((el) => el.addEventListener('input', () => { it[el.dataset.s] = el.value ? fromLocalInput(el.value) : ''; }));
+    $('[data-no]', m.el).onclick = () => m.close();
+    $('[data-ok]', m.el).onclick = () => {
+      if (!it.image) { toast('কম্পিউটারের ছবি দিন', 'err'); return; }
+      if (isNew) cfg.items.push(it); else cfg.items[idx] = it;
+      m.close(); draw();
+    };
+  }
+  draw();
 }
