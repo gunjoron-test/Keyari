@@ -520,7 +520,33 @@ def slider_posts():
     return picks[:n]
 
 
-def sidebar(exclude=None, minimal=True):
+def author_more_widget(a, exclude):
+    """লেখার পাতার ডানে: এই লেখকের আরও লেখা (কমপক্ষে ৩টি, ওপর-নিচ সাজানো)"""
+    mine = [x for x in a.get("_posts", []) if x is not exclude]
+    items = mine[:5]
+    if len(items) < 3:  # লেখকের লেখা কম হলে আগে একই বিভাগের, তারপর সর্বশেষ লেখা দিয়ে ভরা
+        for same_cat in (True, False):
+            for x in POSTS:
+                if len(items) >= 3:
+                    break
+                if x is exclude or x in items:
+                    continue
+                if same_cat and not (exclude["_top"] and exclude["_top"] in x["_cats"]):
+                    continue
+                items.append(x)
+    if not items:
+        return ""
+    lis = "".join(
+        '<li class="more-by__item"><a class="more-by__media" href="' + x["_url"] + '" tabindex="-1" aria-hidden="true">'
+        + img_tag(x["cover"].get("src"), x["title"], "more-by__img", 112, 112, sizes="88px") + '</a>'
+        '<div class="more-by__txt"><a class="more-by__title" href="' + x["_url"] + '">' + esc(x["title"]) + '</a>'
+        '<span class="more-by__meta">' + esc(x["_author"]["name"]) + " · " + bn_date(x["_date"]) + "</span></div></li>"
+        for x in items)
+    return ('<div class="widget more-by"><h2 class="more-by__head">' + (esc(a["name"]) + " — আরও লেখা" if all(x in mine for x in items) else "আরও লেখা") + '</h2><ul class="more-by__list">' + lis + "</ul>"
+            '<a class="more-by__all" href="' + u("/author/" + a["slug"] + "/") + '">সব লেখা দেখুন ' + icon("right", 15) + "</a></div>")
+
+
+def sidebar(exclude=None, minimal=True, author=None):
     cta = f'''<div class="widget widget--cta">
     <h2 class="cta-mini__title">লেখা পাঠান</h2>
     <p>আপনার অপ্রকাশিত রচনা ও শিল্পকাজ পাঠান কেয়ারির ঠিকানায়।</p>
@@ -528,7 +554,8 @@ def sidebar(exclude=None, minimal=True):
     <a class="cta-mini__mail" href="mailto:{esc(S.get("email"))}">{icon("mail", 16)} {esc(S.get("email"))}</a>
   </div>'''
     if minimal:  # সব জায়গায় পাশে শুধু "লেখা পাঠান" (পূর্ণ সাইডবার চাইলে minimal=False)
-        return f'<aside class="sidebar" aria-label="লেখা পাঠান">{cta}</aside>'
+        more = author_more_widget(author, exclude) if (author and exclude) else ""
+        return f'<aside class="sidebar" aria-label="লেখকের আরও লেখা ও লেখা পাঠান">{more}{cta}</aside>'
     sl = slider_posts()
     slides = "".join(f'<div class="slide" role="group" aria-roledescription="স্লাইড" aria-label="{bn(i + 1)} / {bn(len(sl))}">{card_overlay(p)}</div>' for i, p in enumerate(sl))
     dots = "".join(f'<button class="slider__dot" type="button" aria-label="স্লাইড {bn(i + 1)}"></button>' for i in range(len(sl)))
@@ -1177,7 +1204,12 @@ def build_post(p):
   </header>
   <div class="container entry-layout">
     <div class="entry-rail">{share_bar(p)}
-      <div class="font-tools" aria-label="লেখার আকার"><button type="button" data-fs="-1" aria-label="লেখা ছোট করুন">অ-</button><button type="button" data-fs="0" aria-label="স্বাভাবিক আকার">অ</button><button type="button" data-fs="1" aria-label="লেখা বড় করুন">অ+</button></div>
+      <div class="font-tools" role="group" aria-label="লেখার আকার">
+        <span class="font-tools__label">আকার</span>
+        <button type="button" data-fs="1" aria-label="লেখা বড় করুন" title="লেখা বড় করুন"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.9-4.9M10.5 7.8v5.4M7.8 10.5h5.4"/></svg></button>
+        <button type="button" class="font-tools__val" data-fs="0" aria-label="স্বাভাবিক আকারে ফিরুন" title="স্বাভাবিক আকারে ফিরুন"><span data-fs-val>১০০%</span></button>
+        <button type="button" data-fs="-1" aria-label="লেখা ছোট করুন" title="লেখা ছোট করুন"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.9-4.9M7.8 10.5h5.4"/></svg></button>
+      </div>
     </div>
     <div class="entry-main">
       {series_html if p["series"] and (p["series"].get("part") or 0) > 1 else ""}
@@ -1192,7 +1224,7 @@ def build_post(p):
       <div class="share share--inline-wrap">{share_bar(p)}</div>
       {comments_html(p)}
     </div>
-    {sidebar(exclude=p)}
+    {sidebar(exclude=p, author=a)}
   </div>
   <section class="read-next container" aria-labelledby="rn-h">
     <h2 class="read-next__title" id="rn-h">আরও পড়ুন</h2>

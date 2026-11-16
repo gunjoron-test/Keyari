@@ -827,3 +827,29 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .cm__reply p { margin-top: 4px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; }
 .cm__empty { color: var(--text-muted); text-align: center; padding: 28px 0; }
 @media (max-width: 575.98px) { .cm__form { padding: 16px; } .cm__send { width: 100%; } }
+
+/* ---------- লেখার আকার: আধুনিক জুম-বোতাম ---------- */
+.font-tools { gap: 2px; padding: 8px 6px; width: 56px; align-items: center; border-radius: 28px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.font-tools__label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: .02em; padding-bottom: 2px; }
+.font-tools button { width: 40px; height: 40px; display: grid; place-items: center; color: var(--text); transition: background .2s, color .2s, transform .15s; }
+.font-tools button:hover { background: var(--highlight); color: var(--accent-ink); }
+.font-tools button:active { transform: scale(.92); }
+.font-tools button:disabled { opacity: .35; pointer-events: none; }
+.font-tools .font-tools__val { height: 30px; border-radius: 999px; font-size: 12px; font-weight: 700; color: var(--accent-ink); background: var(--highlight); margin: 2px 0; }
+.font-tools .font-tools__val:hover { background: var(--accent); color: #fff; }
+@media (max-width: 991.98px) { .font-tools { flex-direction: row; width: auto; padding: 6px 10px; } .font-tools__label { padding: 0 4px 0 2px; } .font-tools button { width: 36px; height: 36px; } .font-tools .font-tools__val { width: 56px; height: 30px; } }
+
+/* ---------- ডানে: লেখকের আরও লেখা ---------- */
+.more-by { padding: 22px 20px 18px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+.more-by__head { font-size: 17px; line-height: 1.4; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.more-by__list { list-style: none; display: flex; flex-direction: column; }
+.more-by__item { display: flex; gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.more-by__item:last-child { border-bottom: 0; }
+.more-by__media { flex: none; overflow: hidden; border-radius: var(--radius-md); }
+.more-by__img { width: 76px; height: 76px; object-fit: cover; display: block; transition: transform .5s cubic-bezier(.22,.61,.36,1); }
+.more-by__item:hover .more-by__img { transform: scale(1.07); }
+.more-by__txt { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.more-by__title { font-weight: 700; line-height: 1.4; font-size: 15.5px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.more-by__title:hover { color: var(--accent-ink); }
+.more-by__meta { font-size: 12.5px; color: var(--text-muted); }
+.more-by__all { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; font-size: 14px; font-weight: 700; color: var(--accent-ink); }

@@ -182,17 +182,27 @@
   // ---------- লেখার আকার ----------
   var fsBtns = $$('[data-fs]');
   if (fsBtns.length) {
+    var fsVal = $('[data-fs-val]');
+    var fsBase = 17, fsMin = 14, fsMax = 24;
+    var fsPaint = function () {
+      var cur = parseFloat(getComputedStyle(root).getPropertyValue('--read-size')) || fsBase;
+      if (fsVal) fsVal.textContent = bn(Math.round(cur / fsBase * 100)) + '%';
+      fsBtns.forEach(function (b) {
+        var d = +b.getAttribute('data-fs');
+        b.disabled = (d > 0 && cur >= fsMax) || (d < 0 && cur <= fsMin);
+      });
+    };
     fsBtns.forEach(function (b) {
       b.addEventListener('click', function () {
         var d = +b.getAttribute('data-fs');
-        var cur = parseFloat(getComputedStyle(root).getPropertyValue('--read-size')) || 17;
-        var nv = d === 0 ? 17 : Math.min(24, Math.max(14, cur + d));
+        var cur = parseFloat(getComputedStyle(root).getPropertyValue('--read-size')) || fsBase;
+        var nv = d === 0 ? fsBase : Math.min(fsMax, Math.max(fsMin, cur + d));
         root.style.setProperty('--read-size', nv + 'px'); store.set('keyari-fs', nv);
-        toast('লেখার আকার: ' + bn(nv));
+        fsPaint();
       });
     });
+    fsPaint();
   }
-
 
   // ---------- নিজস্ব মন্তব্য (অনুমোদনসাপেক্ষ) ----------
   var cm = $('[data-cm]');
