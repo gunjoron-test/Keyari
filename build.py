@@ -416,6 +416,20 @@ def more_grid(items_html, n, cls="more-grid"):
     return '<div class="' + cls + '" data-more-grid>' + items_html + "</div>" + btn
 
 
+def series_card(s):
+    """ধারাবাহিকের কার্ড: অন্য সেকশনের মতোই ওপরে ছবি, নিচে শিরোনাম ও লেখক"""
+    url = u("/ধারাবাহিক/" + s["slug"] + "/")
+    first = s["posts"][0]
+    return f'''<article class="card-g">
+  <a class="card-g__media" href="{url}" tabindex="-1" aria-hidden="true">{img_tag(s["posts"][-1]["cover"].get("src"), s["name"], "card-g__img", sizes="(max-width: 575px) 100vw, 280px")}</a>
+  <div class="card-g__body">
+    <p class="card-g__cat">ধারাবাহিক · {bn(len(s["posts"]))}টি পর্ব</p>
+    <h3 class="card-g__title"><a href="{url}">{esc(s["name"])}</a></h3>
+    <p class="card-g__by"><a class="card__author" href="{u("/author/" + first["_author"]["slug"] + "/")}">{esc(first["_author"]["name"])}</a></p>
+  </div>
+</article>'''
+
+
 def card_g(p):
     """সর্বশেষ লেখার গ্রিড-কার্ড: ওপরে ছবি, নিচে বিভাগ, শিরোনাম, সারাংশ, শেষে লেখক ও তারিখ"""
     cat = p["_sub"] or p["_top"]
@@ -962,9 +976,9 @@ def build_home():
         feed_title = sections.get("feed", {}).get("title", "সর্বশেষ লেখা")
         parts.append(f'''<div class="container feed-wrap{" feed-wrap--top" if page > 1 else ""}">
   <section class="feed" aria-labelledby="feed-h">
-    {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
+    {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), u("/page/2/") if (page == 1 and total > 1) else None, "আরও দেখুন", h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
     {more_grid("".join(card_g(p) for p in chunk), len(chunk), "feed__list more-grid")}
-    {pagination(page, total, "/")}
+    {pagination(page, total, "/") if page > 1 else ""}
   </section>
 </div>''')
         if page == 1 and on("category_blocks"):
@@ -983,13 +997,10 @@ def build_home():
             parts.append(blocks)
         if page == 1 and on("series") and SERIES:
             ser = sorted(SERIES.values(), key=lambda s: max(p["_date"] for p in s["posts"]), reverse=True)[:12]
-            items = "".join(f'''<a class="series-card" href="{u("/ধারাবাহিক/" + s["slug"] + "/")}">
-  {img_tag(s["posts"][-1]["cover"].get("src"), s["name"], "series-card__img", sizes="300px")}
-  <span class="series-card__body"><span class="series-card__name">{esc(s["name"])}</span>
-  <span class="series-card__count">{bn(len(s["posts"]))}টি পর্ব · {esc(s["posts"][0]["_author"]["name"])}</span></span></a>''' for s in ser)
+            items = "".join(series_card(x) for x in ser)
             parts.append(f'''<section class="series-block container" aria-label="ধারাবাহিক">
   {section_head(sections.get("series", {}).get("title", "ধারাবাহিক"), u("/ধারাবাহিক/"))}
-  {more_grid(items, len(ser), "grid grid--3 more-grid")}</section>''')
+  {more_grid(items, len(ser), "feed__list more-grid")}</section>''')
         if page == 1 and on("authors"):
             n = sections.get("authors", {}).get("count", 12)
             top_authors = sorted([a for a in AUTHORS if a["_posts"]], key=lambda a: (-len(a["_posts"]), a["name"]))[:n]
@@ -1423,11 +1434,10 @@ def build_issues():
 
 def build_series():
     items = sorted(SERIES.values(), key=lambda s: max(p["_date"] for p in s["posts"]), reverse=True)
-    cards = "".join(f'''<a class="series-card" href="{u("/ধারাবাহিক/" + s["slug"] + "/")}">{img_tag(s["posts"][-1]["cover"].get("src"), s["name"], "series-card__img")}
-<span class="series-card__body"><span class="series-card__name">{esc(s["name"])}</span><span class="series-card__count">{bn(len(s["posts"]))}টি পর্ব · {esc(s["posts"][0]["_author"]["name"])}</span></span></a>''' for s in items)
+    cards = "".join(series_card(x) for x in items)
     bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("ধারাবাহিক", "/ধারাবাহিক/")])
     write("/ধারাবাহিক/", layout(title="ধারাবাহিক", description="কেয়ারির ধারাবাহিক উপন্যাস, জীবনী ও রচনা — পর্ব অনুযায়ী।", path="/ধারাবাহিক/",
-                                body=f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">ধারাবাহিক</h1><p class="archive-desc">পর্বে পর্বে প্রকাশিত লেখাগুলো একসাথে।</p></header><div class="grid grid--3">{cards}</div></div>', ld=[bc_ld]))
+                                body=f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">ধারাবাহিক</h1><p class="archive-desc">পর্বে পর্বে প্রকাশিত লেখাগুলো একসাথে।</p></header><div class="feed__list">{cards}</div></div>', ld=[bc_ld]))
     for s in items:
         path = f"/ধারাবাহিক/{s['slug']}/"
         header_html = f'<p class="sec-label">ধারাবাহিক · {bn(len(s["posts"]))}টি পর্ব</p><h1 class="archive-title">{esc(s["name"])}</h1><p class="archive-desc">{esc(s["posts"][0]["_author"]["name"])}</p>'
