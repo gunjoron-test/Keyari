@@ -17,7 +17,7 @@
     },
     {
       "type": "category_pills",
-      "enabled": true,
+      "enabled": false,
       "title": "পছন্দসই বিষয়ে লেখা পড়ুন"
     },
     {

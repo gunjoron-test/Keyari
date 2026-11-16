@@ -74,7 +74,7 @@ function loginScreen(localOk, err = '') {
 const NAV = [
   ['মূল', [['dashboard', 'dash', 'ড্যাশবোর্ড'], ['posts', 'posts', 'লেখাসমূহ', 'posts'], ['post/new', 'new', 'নতুন লেখা', 'posts'], ['media', 'media', 'মিডিয়া', 'media']]],
   ['প্রকাশনা', [['pages', 'pages', 'পাতাসমূহ', 'pages'], ['ayojon', 'ayojon', 'আয়োজন', 'ayojon'], ['categories', 'cats', 'বিভাগ', 'categories'], ['authors', 'authors', 'লেখক', 'authors'], ['comments', 'comments', 'মন্তব্য', 'comments']]],
-  ['নকশা', [['home', 'home', 'মুখপাতার বিন্যাস', 'home'], ['slides', 'slides', 'স্লাইডার', 'home'], ['menu', 'menu2', 'মেনু', 'menu'], ['styles', 'styles', 'স্টাইল শিট', 'styles']]],
+  ['নকশা', [['home', 'home', 'মুখপাতার বিন্যাস', 'home'], ['slides', 'slides', 'স্লাইডার', 'home'], ['ads', 'ads', 'বিজ্ঞাপন', 'home'], ['menu', 'menu2', 'মেনু', 'menu'], ['styles', 'styles', 'স্টাইল শিট', 'styles']]],
   ['ব্যবস্থাপনা', [['seo', 'seo', 'SEO ও র‍্যাংকিং', 'seo'], ['deploy', 'deploy', 'প্রকাশের অবস্থা', 'deploy'], ['settings', 'settings', 'সেটিংস', 'settings'], ['users', 'users', 'ব্যবহারকারী', 'users'], ['import', 'import', 'আমদানি ও ব্যাকআপ', 'import']]],
 ];
 
@@ -98,6 +98,7 @@ const IC = {
   chev: '<path d="m6 9 6 6 6-6"/>',
   out: '<path d="M10 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M15 8l4 4-4 4M19 12H9"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
+  ads: '<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a4 4 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11"/>',
   slides: '<rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M7 21h10M9 3.5h6"/>',
   dash: '<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
   posts: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
@@ -216,7 +217,7 @@ async function route() {
   $$('.side__link').forEach((a) => a.classList.toggle('is-active', a.dataset.r === pathPart || (a.dataset.r === parts[0] && parts.length === 1)));
   $('[data-side]').classList.remove('is-open');
   const n = $('[data-n-posts]'); if (n) n.textContent = bn(S.posts.filter((p) => p.status !== 'trash').length);
-  const title = { dashboard: 'ড্যাশবোর্ড', posts: 'লেখাসমূহ', media: 'মিডিয়া', pages: 'পাতাসমূহ', ayojon: 'আয়োজন', categories: 'বিভাগ', authors: 'লেখক', comments: 'মন্তব্য', home: 'মুখপাতার বিন্যাস', slides: 'স্লাইডার', menu: 'মেনু', styles: 'স্টাইল শিট', seo: 'SEO', deploy: 'প্রকাশের অবস্থা', settings: 'সেটিংস', users: 'ব্যবহারকারী', import: 'আমদানি ও ব্যাকআপ' }[parts[0]] || '';
+  const title = { dashboard: 'ড্যাশবোর্ড', posts: 'লেখাসমূহ', media: 'মিডিয়া', pages: 'পাতাসমূহ', ayojon: 'আয়োজন', categories: 'বিভাগ', authors: 'লেখক', comments: 'মন্তব্য', home: 'মুখপাতার বিন্যাস', slides: 'স্লাইডার', ads: 'বিজ্ঞাপন', menu: 'মেনু', styles: 'স্টাইল শিট', seo: 'SEO', deploy: 'প্রকাশের অবস্থা', settings: 'সেটিংস', users: 'ব্যবহারকারী', import: 'আমদানি ও ব্যাকআপ' }[parts[0]] || '';
   document.body.classList.remove('in-editor');
   setTop(`<div class="top__crumb"><span class="top__kicker">সম্পাদনা কক্ষ</span><h1 class="top__title">${esc(title)}</h1></div>`);
   view.innerHTML = '<div class="empty"><span class="spinner"></span></div>';
@@ -241,6 +242,7 @@ async function route() {
       case 'home': guard('home', () => Site.homeView(view)); break;
       case 'styles': guard('styles', () => Site.stylesView(view)); break;
       case 'slides': guard('home', () => Site.slidesView(view)); break;
+      case 'ads': guard('home', () => Site.adsView(view)); break;
       case 'settings': guard('settings', () => Site.settingsView(view)); break;
       case 'users': guard('users', () => Site.usersView(view)); break;
       case 'comments': guard('comments', () => Site.commentsView(view)); break;

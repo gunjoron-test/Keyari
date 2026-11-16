@@ -318,8 +318,16 @@ export function commentsView(view) {
 }
 
 // ==================================================================== মুখপাতার স্লাইডার (ব্যানার)
-export function slidesView(view) {
-  const cfg = clone(S.slides && Array.isArray(S.slides.items) ? S.slides : { enabled: true, autoplay: true, interval: 6, items: [] });
+const BANNER = {
+  slides: { key: 'slides', title: 'মুখপাতার স্লাইডার', desc: 'হেডারের নিচে ঘুরতে থাকা ব্যানার — যত খুশি স্লাইড যোগ করা যায় (৫০টি বা তারও বেশি)', ratio: '2244/592', sizeD: '২২৪৪×৫৯২ পিক্সেল (প্রায় ৩.৮ : ১)', toggle: 'মুখপাতায় স্লাইডার দেখান', save: 'স্লাইডার হালনাগাদ', def: { enabled: true, autoplay: true, interval: 6, items: [] } },
+  ads: { key: 'ads', title: 'বিজ্ঞাপন', desc: 'মুখপাতার মাঝখানে (হিরোর নিচে) দেখানো বিজ্ঞাপন-ব্যানার — ম্যাগাজিন, বই বা যেকোনো প্রচারের জন্য যত খুশি যোগ করা যায়', ratio: '1880/496', sizeD: '১৮৮০×৪৯৬ পিক্সেল (প্রায় ৩.৮ : ১)', toggle: 'মুখপাতায় বিজ্ঞাপন দেখান', save: 'বিজ্ঞাপন হালনাগাদ', def: { enabled: true, autoplay: true, interval: 7, show_label: true, items: [] } },
+};
+export const slidesView = (view) => bannerEditor(view, 'slides');
+export const adsView = (view) => bannerEditor(view, 'ads');
+
+function bannerEditor(view, kind) {
+  const B = BANNER[kind];
+  const cfg = clone(S[B.key] && Array.isArray(S[B.key].items) ? S[B.key] : B.def);
   cfg.items = cfg.items || [];
   const state = (it) => {
     const now = Date.now();
@@ -329,19 +337,19 @@ export function slidesView(view) {
     return ['on', 'চলছে'];
   };
   const draw = () => {
-    view.innerHTML = `<div class="page-head"><div><h1>মুখপাতার স্লাইডার</h1><p>হেডারের নিচে ঘুরতে থাকা ব্যানার — যত খুশি স্লাইড যোগ করা যায় (৫০টি বা তারও বেশি)</p></div>
+    view.innerHTML = `<div class="page-head"><div><h1>${B.title}</h1><p>${B.desc}</p></div>
       <div class="btn-row"><button class="btn btn--light" data-add>＋ নতুন স্লাইড</button><button class="btn" data-save>সংরক্ষণ</button></div></div>
       <div class="card"><div class="grid3">
-        <label class="check"><input type="checkbox" data-en ${cfg.enabled !== false ? 'checked' : ''}> মুখপাতায় স্লাইডার দেখান</label>
+        <label class="check"><input type="checkbox" data-en ${cfg.enabled !== false ? 'checked' : ''}> ${B.toggle}</label>
         <label class="check"><input type="checkbox" data-auto ${cfg.autoplay !== false ? 'checked' : ''}> নিজে নিজে ঘুরবে (অটোপ্লে)</label>
         <div class="field" style="margin:0"><label>প্রতি স্লাইড কত সেকেন্ড থাকবে</label><input class="input" type="number" min="2" max="60" data-iv value="${esc(cfg.interval || 6)}" style="max-width:120px"></div>
       </div>
-      <p class="help" style="margin-top:10px"><b>ছবির মাপ:</b> কম্পিউটারের জন্য ২২৪৪×৫৯২ পিক্সেল (প্রায় ৩.৮ : ১), ফোনের জন্য ১২০০×৯০০ (৪ : ৩, ঐচ্ছিক)। ফোনের ছবি না দিলে কম্পিউটারের ছবিই ছোট হয়ে দেখায়, তখন লেখা ছোট দেখাতে পারে। ছবিতে লেখা থাকলে "বিকল্প লেখা"-য় সেই লেখাটি লিখে দিন — গুগল ও দৃষ্টিপ্রতিবন্ধী পাঠকের জন্য জরুরি।</p></div>
+      ${kind === 'ads' ? `<label class="check" style="margin-top:10px"><input type="checkbox" data-lbl ${cfg.show_label !== false ? 'checked' : ''}> কোণায় ছোট করে "বিজ্ঞাপন" লেখাটি দেখান</label>` : ''}<p class="help" style="margin-top:10px"><b>ছবির মাপ:</b> কম্পিউটারের জন্য ${B.sizeD}, ফোনের জন্য ১২০০×৯০০ (৪ : ৩, ঐচ্ছিক)। ফোনের ছবি না দিলে কম্পিউটারের ছবিই ছোট হয়ে দেখায়, তখন লেখা ছোট দেখাতে পারে। ছবিতে লেখা থাকলে "বিকল্প লেখা"-য় সেই লেখাটি লিখে দিন — গুগল ও দৃষ্টিপ্রতিবন্ধী পাঠকের জন্য জরুরি।</p></div>
       <div class="list slides-list" data-list>${cfg.items.map((it, i) => {
         const [k, label] = state(it);
         return `<div class="card slide-row" data-i="${i}" style="display:grid;grid-template-columns:auto 240px 1fr auto;gap:16px;align-items:center;padding:14px">
           <div style="display:flex;flex-direction:column;gap:4px;align-items:center"><button class="btn btn--ghost btn--sm" data-top="${i}" title="সবার আগে আনুন">⤒</button><button class="btn btn--ghost btn--sm" data-up="${i}" title="এক ধাপ আগে">↑</button><b>${bn(i + 1)}</b><button class="btn btn--ghost btn--sm" data-down="${i}" title="এক ধাপ পরে">↓</button></div>
-          <div>${it.image ? `<img src="${esc(imgUrl(it.image))}" alt="" style="width:100%;aspect-ratio:2244/592;object-fit:cover;border-radius:10px;background:var(--highlight)">` : '<div class="empty" style="padding:20px">ছবি নেই</div>'}</div>
+          <div>${it.image ? `<img src="${esc(imgUrl(it.image))}" alt="" style="width:100%;aspect-ratio:${B.ratio};object-fit:cover;border-radius:10px;background:var(--highlight)">` : '<div class="empty" style="padding:20px">ছবি নেই</div>'}</div>
           <div style="min-width:0"><div class="btn-row" style="margin-bottom:6px"><span class="badge ${k === 'on' ? 'badge--published' : k === 'sched' ? 'badge--scheduled' : 'badge--draft'}">${label}</span>${it.mobile_image ? '<span class="badge">ফোনের ছবি আছে</span>' : ''}</div>
             <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(it.alt || '(বিকল্প লেখা নেই)')}</div>
             <div class="help" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.link ? 'লিংক: ' + esc(it.link) : 'লিংক নেই'}${it.start ? ' · শুরু ' + bnDate(it.start, true) : ''}${it.end ? ' · শেষ ' + bnDate(it.end, true) : ''}</div></div>
@@ -350,6 +358,7 @@ export function slidesView(view) {
     $$('img', view).forEach(imgFallback);
     $('[data-en]', view).onchange = (e) => { cfg.enabled = e.target.checked; };
     $('[data-auto]', view).onchange = (e) => { cfg.autoplay = e.target.checked; };
+    const lbl = $('[data-lbl]', view); if (lbl) lbl.onchange = (e) => { cfg.show_label = e.target.checked; };
     $('[data-iv]', view).oninput = (e) => { cfg.interval = Math.max(2, +e.target.value || 6); };
     const move = (i, j) => { if (j < 0 || j >= cfg.items.length) return; const [x] = cfg.items.splice(i, 1); cfg.items.splice(j, 0, x); draw(); };
     $$('[data-up]', view).forEach((b) => (b.onclick = () => move(+b.dataset.up, +b.dataset.up - 1)));
@@ -360,7 +369,7 @@ export function slidesView(view) {
     $$('[data-del]', view).forEach((b) => (b.onclick = async () => { if (!(await confirmBox('এই স্লাইডটি তালিকা থেকে মুছবেন? (ছবির ফাইল মিডিয়াতে থেকে যাবে)', { ok: 'মুছুন', danger: true }))) return; cfg.items.splice(+b.dataset.del, 1); draw(); }));
     $$('[data-edit]', view).forEach((b) => (b.onclick = () => editSlide(+b.dataset.edit)));
     $('[data-add]', view).onclick = () => editSlide(-1);
-    $('[data-save]', view).onclick = async () => { S.slides = cfg; await saveSingle('slides', 'স্লাইডার হালনাগাদ'); };
+    $('[data-save]', view).onclick = async () => { S[B.key] = cfg; await saveSingle(B.key, B.save); };
   };
 
   function editSlide(idx) {
@@ -369,7 +378,7 @@ export function slidesView(view) {
     const m = modal({
       title: isNew ? 'নতুন স্লাইড' : 'স্লাইড সম্পাদনা', wide: true,
       body: `<div class="grid2"><div>
-          <p class="label">কম্পিউটারের ছবি (২২৪৪×৫৯২)</p><div class="cover-box" data-box="image" style="aspect-ratio:2244/592" tabindex="0" role="button"></div>
+          <p class="label">কম্পিউটারের ছবি (${B.sizeD.split(" ")[0]})</p><div class="cover-box" data-box="image" style="aspect-ratio:${B.ratio}" tabindex="0" role="button"></div>
           <div class="btn-row" style="margin:8px 0 16px"><label class="btn btn--light btn--sm" style="cursor:pointer">কম্পিউটার থেকে আপলোড<input type="file" accept="image/*" data-up-d hidden></label><button class="btn btn--light btn--sm" data-lib-d type="button">মিডিয়া থেকে বাছুন</button></div></div>
         <div><p class="label">ফোনের ছবি (১২০০×৯০০, ঐচ্ছিক)</p><div class="cover-box" data-box="mobile_image" style="aspect-ratio:4/3;max-width:260px" tabindex="0" role="button"></div>
           <div class="btn-row" style="margin:8px 0 16px"><label class="btn btn--light btn--sm" style="cursor:pointer">আপলোড<input type="file" accept="image/*" data-up-m hidden></label><button class="btn btn--light btn--sm" data-lib-m type="button">মিডিয়া থেকে</button><button class="btn btn--ghost btn--sm" data-rm-m type="button">সরান</button></div></div></div>

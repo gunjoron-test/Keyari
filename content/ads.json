@@ -1,0 +1,30 @@
+{
+  "enabled": true,
+  "autoplay": true,
+  "interval": 7,
+  "show_label": true,
+  "items": [
+    {
+      "id": "ad-1",
+      "image": "/uploads/banners/ad-advertise.webp",
+      "mobile_image": "/uploads/banners/ad-advertise-m.webp",
+      "alt": "আপনার বিজ্ঞাপন এখানে — কেয়ারির পাঠকদের কাছে পৌঁছাতে যোগাযোগ করুন: thekeyari@gmail.com",
+      "link": "mailto:thekeyari@gmail.com",
+      "new_tab": false,
+      "active": true,
+      "start": "",
+      "end": ""
+    },
+    {
+      "id": "ad-2",
+      "image": "/uploads/banners/ad-facebook.webp",
+      "mobile_image": "/uploads/banners/ad-facebook-m.webp",
+      "alt": "কেয়ারি এখন ফেসবুকে — নতুন লেখার খবর সবার আগে পেতে আমাদের পেজ ফলো করুন।",
+      "link": "https://www.facebook.com/profile.php?id=61584421030620",
+      "new_tab": true,
+      "active": true,
+      "start": "",
+      "end": ""
+    }
+  ]
+}
