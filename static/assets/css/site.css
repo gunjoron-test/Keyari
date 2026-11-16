@@ -945,3 +945,14 @@ html.hdr-compact { --header-h: var(--header-compact); }
   .fs-inline button:disabled { opacity: .3; }
   .fs-inline__sep { width: 1px; height: 16px; background: var(--line); }
 }
+
+/* ---------- ফুটার: নিচের বাড়তি ফাঁকা কমানো, সোশ্যাল আইকন ছোট ---------- */
+.site-footer { padding-bottom: 0; margin-top: 16px; }
+.footer__row { padding: 32px 0 26px; }
+.footer__brand { gap: 10px; }
+.social-ico { width: 30px; height: 30px; box-shadow: 0 2px 8px rgba(41, 41, 75, .08); }
+.social-ico svg { width: 15px; height: 15px; }
+.footer__social { gap: 8px; }
+@media (max-width: 767.98px) {
+  .footer__row { padding: 28px 0 24px; gap: 16px; }
+}
