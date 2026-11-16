@@ -755,3 +755,18 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 }
 @media (min-width: 768px) { .more-wrap--m { display: none; } }
 @media (min-width: 576px) and (max-width: 767.98px) { .feed__list.more-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- ফুটার: লোগোর নিচে সোশ্যাল আইকন + মোবাইল ঠিক করা ---------- */
+.footer__brand { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.footer__logo, .footer__brand .site-logo { position: static; transform: none; }
+.footer__logo img { width: 100px; height: auto; max-width: 100%; }
+.footer__social { display: flex; flex-wrap: wrap; gap: 10px; }
+.social-ico { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--surface); box-shadow: var(--shadow); color: var(--text); transition: transform .2s; }
+.social-ico:hover { transform: translateY(-2px); }
+.social-ico svg { display: block; }
+@media (max-width: 767.98px) {
+  .footer__brand { align-items: center; }
+  .footer__social { justify-content: center; }
+  .footer__row { padding-bottom: 96px; }
+  .footer__copy { flex-wrap: wrap; row-gap: 4px; }
+}
