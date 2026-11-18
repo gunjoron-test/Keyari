@@ -1110,3 +1110,6 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
   .sf__editor .footer__social { justify-content: center; }
   .sf__bottom { gap: 10px 14px; padding-bottom: 88px; }
 }
+
+.share-row__btn { color: var(--text); }
+.share-row__btn:hover svg:not(.ico-stroke), .share-row__btn:focus-visible svg:not(.ico-stroke) { stroke: #fff; }

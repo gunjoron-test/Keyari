@@ -1108,9 +1108,9 @@ SHARE_ICO = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke=
 
 
 def outline_svg(k, size=20):
-    """স্টক (শুধু রেখা) ব্র্যান্ড-আইকন; মাউস নিলে CSS-এ ভরাট হয়"""
+    """একরঙা ভরাট আইকন; মাউস নিলে CSS-এ সাদা হয়ে সবুজ বোতামে বসে"""
     path = BRAND[k][1]
-    return '<svg class="ico-stroke" viewBox="0 0 24 24" width="' + str(size) + '" height="' + str(size) + '" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round" aria-hidden="true"><path d="' + path + '"/></svg>'
+    return '<svg class="ico-stroke" viewBox="0 0 24 24" width="' + str(size) + '" height="' + str(size) + '" fill="currentColor" stroke="none" aria-hidden="true"><path d="' + path + '"/></svg>'
 
 
 def share_row(p):
@@ -1124,7 +1124,7 @@ def share_row(p):
   <a class="share-row__btn" href="https://x.com/intent/post?url={url}&text={t}" target="_blank" rel="noopener" aria-label="এক্স-এ শেয়ার" title="এক্স">{outline_svg("x", 18)}</a>
   <a class="share-row__btn" href="https://api.whatsapp.com/send?text={t}%20{url}" target="_blank" rel="noopener" aria-label="হোয়াটসঅ্যাপে শেয়ার" title="হোয়াটসঅ্যাপ">{outline_svg("whatsapp", 20)}</a>
   <a class="share-row__btn" href="https://t.me/share/url?url={url}&text={t}" target="_blank" rel="noopener" aria-label="টেলিগ্রামে শেয়ার" title="টেলিগ্রাম">{outline_svg("telegram", 20)}</a>
-  <button class="share-row__btn" type="button" data-copy="{esc(full)}" aria-label="লিংক কপি করুন" title="লিংক কপি">{icon("link", 19)}</button>
+  <button class="share-row__btn" type="button" data-copy="{esc(full)}" aria-label="লিংক কপি করুন" title="লিংক কপি"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></button>
 </div>'''
 
 
