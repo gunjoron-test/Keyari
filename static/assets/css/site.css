@@ -1235,3 +1235,7 @@ html { overflow-x: clip; }
   .sf__brand { max-width: none; }
   .sf__follow { min-width: 0; }
 }
+
+/* ---------- লেখার পাতা: লেখা ছবির বাঁ কিনারা থেকে একটু ডানে, লেখকের আরও লেখার কাছাকাছি (লেখার মাপ একই) ---------- */
+@media (min-width: 992px) { .entry-layout { padding-left: calc(var(--gutter) + 28px); } }
+@media (min-width: 1201px) { .entry-layout { padding-left: calc(var(--gutter) + 48px); } }
