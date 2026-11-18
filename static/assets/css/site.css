@@ -1273,3 +1273,25 @@ html { overflow-x: clip; }
 }
 @media (min-width: 1201px) { .entry-layout { gap: 72px; } }
 @media (min-width: 992px) and (max-width: 1200px) { .entry-layout { gap: 44px; } }
+
+.archive-title__ico { display: inline-grid; vertical-align: middle; margin-right: 12px; }
+.archive-title__ico .cat-ico { width: 34px; height: 34px; }
+.meaning__icon .cat-ico { margin: 0 auto; }
+
+/* ---------- মোবাইল-পরিমার্জন ---------- */
+@media (max-width: 575.98px) {
+  /* লেখার শেষে শেয়ার-সারি: শিরোনাম ওপরে, পাঁচটি বোতাম এক লাইনে মাঝখানে */
+  .share-row { justify-content: center; gap: 10px 10px; padding: 16px 0 18px; }
+  .share-row__label { flex-basis: 100%; text-align: center; margin: 0 0 2px; }
+  .share-row__btn { width: 42px; height: 42px; }
+  /* ফুটারের শেষ লাইন "উপরে যান" বোতামের নিচে ঢাকা না পড়ে */
+  .sf__bottom { padding-bottom: 86px; }
+}
+@media (max-width: 767.98px) {
+  /* ফুটারে আঙুলে চাপার জায়গা বড় (দৃশ্যমান আইকন একই, অদৃশ্য চাপার ঘর ৪২px) */
+  .footer__social { gap: 4px; }
+  .footer__social .social-ico { width: 42px; height: 42px; }
+  .footer__social .social-ico svg { width: 22px; height: 22px; }
+  .sf__credit a, .sf__copy { padding: 6px 0; }
+  .sf__credit a { padding: 8px 2px; }
+}

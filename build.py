@@ -163,6 +163,11 @@ CAT_ICON_PATHS = {
     'alapon': '<path class="t" d="M12.5 8h6.4a2 2 0 0 1 2 2v4.8a2 2 0 0 1-2 2h-.4v3l-3.6-3h-2.4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z"/><path d="M15 8V6.5a2 2 0 0 0-2-2H5.5a2 2 0 0 0-2 2v5.2a2 2 0 0 0 2 2h.4v3.1l3.7-3.1H10"/><path d="M12.5 8h6.4a2 2 0 0 1 2 2v4.8a2 2 0 0 1-2 2h-.4v3l-3.6-3h-2.4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z"/><circle class="f" cx="6.6" cy="9.1" r=".75"/><circle class="f" cx="9.1" cy="9.1" r=".75"/>',
     'shilposomachar': '<path class="t" d="M12 3.2a8.8 8.8 0 1 0 0 17.6c1.2 0 1.9-.9 1.6-1.9-.4-1.2.4-2.2 1.6-2.2H17a3.9 3.9 0 0 0 3.8-4c-.2-5.2-4.2-9.5-8.8-9.5z"/><path d="M12 3.2a8.8 8.8 0 1 0 0 17.6c1.2 0 1.9-.9 1.6-1.9-.4-1.2.4-2.2 1.6-2.2H17a3.9 3.9 0 0 0 3.8-4c-.2-5.2-4.2-9.5-8.8-9.5z"/><circle class="f" cx="7.6" cy="11.4" r="1.15"/><circle class="f" cx="10.4" cy="7.4" r="1.15"/><circle class="f" cx="15.2" cy="7.9" r="1.15"/><circle class="f" cx="17" cy="12.2" r="1.15"/>',
 }
+MEAN_ICONS = [
+    '<svg class="cat-ico" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17.5c2.5-4 5-4 7.5 0s5 4 7.5 0c1-1.6 2-2.4 3-2.8"/><path d="M3 13.5c2.5-5 5-5 7.5 0s5 5 7.5 0c1-2 2-3 3-3.5"/><path d="M3 8.5c2.5-4 5-4 7.5 0s5 4 7.5 0c1-1.6 2-2.4 3-2.8"/></svg>',
+    '<svg class="cat-ico" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + CAT_ICON_PATHS["kobitapunjo"] + '</svg>',
+    '<svg class="cat-ico" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="t" d="M12 20.5C5 15.6 3 12.3 3 9.2A4.7 4.7 0 0 1 7.7 4.5c1.8 0 3.3.9 4.3 2.4 1-1.5 2.5-2.4 4.3-2.4A4.7 4.7 0 0 1 21 9.2c0 3.1-2 6.4-9 11.3z"/><path d="M12 20.5C5 15.6 3 12.3 3 9.2A4.7 4.7 0 0 1 7.7 4.5c1.8 0 3.3.9 4.3 2.4 1-1.5 2.5-2.4 4.3-2.4A4.7 4.7 0 0 1 21 9.2c0 3.1-2 6.4-9 11.3z"/></svg>',
+]
 CAT_ICON_DEFAULT = '<path class="t" d="M3.5 12.2V5.3a1 1 0 0 1 1-1h6.9l8.6 8.6-7.9 7.9z"/><path d="M3.5 12.2V5.3a1 1 0 0 1 1-1h6.9l8.6 8.6-7.9 7.9z"/><circle cx="8.2" cy="9" r="1.3"/>'
 
 
@@ -589,7 +594,7 @@ def sidebar(exclude=None, minimal=True, author=None):
         f'<div><a class="mini__title" href="{p["_url"]}">{esc(p["title"])}</a><span class="mini__author">{aname(p["_author"])}</span></div></li>'
         for p in featured)
     cat_list = "".join(
-        f'<li><a href="{cat_url(c["slug"])}"><span>{esc(c.get("icon", ""))} {esc(c["name"])}</span><span class="count">{bn(cat_count(c["slug"]))}</span></a></li>'
+        f'<li><a href="{cat_url(c["slug"])}"><span>{cat_ico(c, 18)} {esc(c["name"])}</span><span class="count">{bn(cat_count(c["slug"]))}</span></a></li>'
         for c in TOP_CATS)
     ay = ""
     if AYOJON:
@@ -1382,7 +1387,7 @@ def build_categories():
             sib = CAT[c["parent"]]["children"]
             siblings = "".join(f'<a class="pill-lg pill-lg--sm{" is-active" if k["slug"] == c["slug"] else ""}" href="{cat_url(k["slug"])}">{esc(k["name"])}</a>' for k in sib)
         header_html = f'''<p class="sec-label">{"উপ-বিভাগ" if c.get("parent") else "বিভাগ"} · {bn(len(items))}টি লেখা</p>
-<h1 class="archive-title">{esc(c.get("icon", "") + " " if not c.get("parent") else "")}{esc(c["name"])}</h1>
+<h1 class="archive-title">{('<span class="archive-title__ico">' + cat_ico(c, 34) + "</span>") if not c.get("parent") else ""}{esc(c["name"])}</h1>
 {f'<p class="archive-desc">{esc(c["description"])}</p>' if c.get("description") else ""}
 {f'<div class="archive-kids">{kids or siblings}</div>' if (kids or siblings) else ""}'''
         archive_page(path=cat_path(c["slug"]), title=c.get("seo_title") or c["name"], items=items, crumbs=crumbs, header_html=header_html,
@@ -1465,9 +1470,9 @@ def build_pages():
         banner = pg.get("banner") or {}
         bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), (pg["title"], path)])
         if tpl == "about":
-            meanings = [("সিঁথি", "মাথার কেশদামে সযত্নে কাটা হয় যে সিঁথি, তার নাম কেয়ারি।", "〰"),
-                        ("বাগানের কেয়ারি", "শখের বাগানে বাখারির বেড়ায় বিশেষিত যে অংশ, তারও নাম কেয়ারি।", "🌱"),
-                        ("প্রেম-প্রযত্ন", "প্রিয় মানুষ, প্রিয় জিনিসের প্রতি যে প্রেম-প্রযত্ন, তাতেও থাকে কেয়ারির ছাপ।", "♡")]
+            meanings = [("সিঁথি", "মাথার কেশদামে সযত্নে কাটা হয় যে সিঁথি, তার নাম কেয়ারি।", MEAN_ICONS[0]),
+                        ("বাগানের কেয়ারি", "শখের বাগানে বাখারির বেড়ায় বিশেষিত যে অংশ, তারও নাম কেয়ারি।", MEAN_ICONS[1]),
+                        ("প্রেম-প্রযত্ন", "প্রিয় মানুষ, প্রিয় জিনিসের প্রতি যে প্রেম-প্রযত্ন, তাতেও থাকে কেয়ারির ছাপ।", MEAN_ICONS[2])]
             mean_html = "".join(f'<div class="meaning"><span class="meaning__icon" aria-hidden="true">{ic}</span><h2 class="meaning__title">{t}</h2><p>{d}</p></div>' for t, d, ic in meanings)
             cats = "".join(f'<a class="topic-mini" href="{cat_url(c["slug"])}"><span class="topic-mini__icon" aria-hidden="true">{cat_ico(c, 24)}</span><span>{esc(c["name"])}</span><span class="count">{bn(cat_count(c["slug"]))}টি লেখা</span></a>' for c in TOP_CATS)
             content = f'''<div class="container page page--about">{bc_html}
