@@ -1060,3 +1060,10 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 .share-row__btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--text); display: grid; place-items: center; cursor: pointer; transition: transform .15s, box-shadow .2s, border-color .2s; }
 .share-row__btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: transparent; }
 .entry-footer__tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+
+/* ---------- লেখার পাতার ডানে: লেখকের আরও লেখা (হোমের মতো কার্ড) ---------- */
+.entry-layout > .sidebar { position: static; }
+.more-by--cards { padding: 0; background: none; border: 0; box-shadow: none; }
+.more-by--cards .more-by__head { font-size: 19px; margin-bottom: 18px; padding-bottom: 12px; }
+.more-by__cards { display: flex; flex-direction: column; gap: 30px; }
+.more-by--cards .more-by__all { margin-top: 18px; }

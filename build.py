@@ -536,13 +536,9 @@ def author_more_widget(a, exclude):
                 items.append(x)
     if not items:
         return ""
-    lis = "".join(
-        '<li class="more-by__item"><a class="more-by__media" href="' + x["_url"] + '" tabindex="-1" aria-hidden="true">'
-        + img_tag(x["cover"].get("src"), x["title"], "more-by__img", 112, 112, sizes="88px") + '</a>'
-        '<div class="more-by__txt"><a class="more-by__title" href="' + x["_url"] + '">' + esc(x["title"]) + '</a>'
-        '<span class="more-by__meta">' + aname(x["_author"], 18) + " · " + bn_date(x["_date"]) + "</span></div></li>"
-        for x in items)
-    return ('<div class="widget more-by"><h2 class="more-by__head">' + (esc(a["name"]) + " — আরও লেখা" if all(x in mine for x in items) else "আরও লেখা") + '</h2><ul class="more-by__list">' + lis + "</ul>"
+    cards = "".join(card_g(x) for x in items[:3])
+    return ('<div class="widget more-by more-by--cards"><h2 class="more-by__head">' + (esc(a["name"]) + " — আরও লেখা" if all(x in mine for x in items[:3]) else "আরও লেখা") + '</h2>'
+            '<div class="more-by__cards">' + cards + "</div>"
             '<a class="more-by__all" href="' + u("/author/" + a["slug"] + "/") + '">সব লেখা দেখুন ' + icon("right", 15) + "</a></div>")
 
 
@@ -555,7 +551,7 @@ def sidebar(exclude=None, minimal=True, author=None):
   </div>'''
     if minimal:  # সব জায়গায় পাশে শুধু "লেখা পাঠান" (পূর্ণ সাইডবার চাইলে minimal=False)
         more = author_more_widget(author, exclude) if (author and exclude) else ""
-        return f'<aside class="sidebar" aria-label="লেখকের আরও লেখা ও লেখা পাঠান">{more}{cta}</aside>'
+        return f'<aside class="sidebar" aria-label="লেখকের আরও লেখা">{more}</aside>'
     sl = slider_posts()
     slides = "".join(f'<div class="slide" role="group" aria-roledescription="স্লাইড" aria-label="{bn(i + 1)} / {bn(len(sl))}">{card_overlay(p)}</div>' for i, p in enumerate(sl))
     dots = "".join(f'<button class="slider__dot" type="button" aria-label="স্লাইড {bn(i + 1)}"></button>' for i in range(len(sl)))
