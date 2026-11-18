@@ -1295,3 +1295,13 @@ html { overflow-x: clip; }
   .sf__credit a, .sf__copy { padding: 6px 0; }
   .sf__credit a { padding: 8px 2px; }
 }
+
+/* ---------- লেখকের ছোট গোল ছবি: আরও সুবিধাজনক মাপ (সব জায়গায়), নামের সাথে মাঝ-সারিবদ্ধ ---------- */
+.aname { gap: 8px; align-items: center; }
+.aname .avatar--xs, img.avatar--xs { width: 26px; height: 26px; min-width: 26px; font-size: 13px; line-height: 1; border-radius: 50%; object-fit: cover; }
+.aname .avatar--xs.avatar--ph { font-weight: 700; }
+.entry-byline .aname { gap: 10px; }
+.entry-byline .aname .avatar--xs { width: 36px; height: 36px; min-width: 36px; font-size: 16px; }
+.more-by__meta .aname .avatar--xs, .mini__author .aname .avatar--xs, .card-o__author .aname .avatar--xs, .ay-card__author .aname .avatar--xs { width: 22px; height: 22px; min-width: 22px; font-size: 11px; }
+.card-g__by { display: flex; align-items: center; flex-wrap: wrap; gap: 2px 6px; }
+.card-g__by .card__author { display: inline-flex; align-items: center; }
