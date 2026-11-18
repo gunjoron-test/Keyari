@@ -780,7 +780,7 @@ def footer():
     {link_row}
     <div class="sf__line" aria-hidden="true"></div>
     <div class="sf__bottom">
-      <p class="sf__copy">মালিকানা {yr} — <img class="footer__copy-logo" src="{logo_src}" alt="{esc(SITE)}" width="34" height="20" loading="lazy"></p>
+      <p class="sf__copy">মালিকানা {bn(year)} — {esc(SITE)}</p>
       <span class="sf__bar" aria-hidden="true"></span>
       <p class="sf__credit">বিনির্মাণে <a href="https://gunjoronit.github.io/" target="_blank" rel="noopener">গুঞ্জরণ আইটি</a></p>
     </div>
