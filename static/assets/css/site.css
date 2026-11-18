@@ -1207,3 +1207,8 @@ html { overflow-x: clip; }
 
 /* হেডার: সাধারণ, কোনো গ্লাস/ঝাপসা প্রভাব ছাড়া */
 .site-header { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: var(--header-bg) !important; }
+
+/* ফুটারের সব আইকন: কোম্পানির নিজস্ব রঙ নয়, কেয়ারির ব্র্যান্ড-সবুজে */
+.site-footer .social-ico, .site-footer .social-ico svg { color: var(--accent); fill: currentColor; }
+.site-footer .social-ico svg[fill="none"] { fill: none; }
+.site-footer .social-ico:hover { color: var(--accent-ink); }

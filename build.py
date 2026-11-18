@@ -745,7 +745,7 @@ def social_links():
         if not href:
             continue
         out.append('<a class="social-ico social-ico--' + k + '" href="' + esc(href) + '" target="_blank" rel="noopener me" aria-label="' + esc(label) + '" title="' + esc(label) + '">'
-                   '<svg viewBox="0 0 24 24" width="20" height="20" fill="' + color + '" aria-hidden="true"><path d="' + path + '"/></svg></a>')
+                   '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="' + path + '"/></svg></a>')
     return ('<div class="footer__social" aria-label="সোশ্যাল মিডিয়া">' + "".join(out) + "</div>") if out else ""
 
 
@@ -759,7 +759,7 @@ def editor_icons():
         if href:
             if k == "whatsapp" and not href.startswith("http"):
                 href = "https://wa.me/" + re.sub(r"\D", "", href)
-            out.append('<a class="social-ico" href="' + esc(href) + '" target="_blank" rel="noopener me" aria-label="সম্পাদকের ' + label + '" title="' + label + '">' + brand_svg(k, 15) + "</a>")
+            out.append('<a class="social-ico" href="' + esc(href) + '" target="_blank" rel="noopener me" aria-label="সম্পাদকের ' + label + '" title="' + label + '">' + brand_svg(k, 15, "currentColor") + "</a>")
     mail = (es.get("email") or S.get("email") or "").strip()
     if mail:
         out.append('<a class="social-ico" href="mailto:' + esc(mail) + '" aria-label="সম্পাদককে ইমেইল" title="ইমেইল">' + icon("mail", 15) + "</a>")
