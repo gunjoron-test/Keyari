@@ -375,3 +375,19 @@ body.focus-mode .top__title { display: none; }
 body.ed-fullscreen .top, body.ed-fullscreen .side, body.ed-fullscreen .ed__side, body.ed-fullscreen #toasts ~ .side { display: none !important; }
 body.ed-fullscreen { overflow: hidden; }
 .tox.tox-fullscreen { z-index: 1500 !important; }
+
+/* ---------- মোবাইল পরিমার্জন (অ্যাডমিন) ---------- */
+.dash > *, .stats > *, .grid2 > *, .grid3 > * { min-width: 0; }
+@media (max-width: 860px) {
+  .dash { grid-template-columns: minmax(0, 1fr); }
+  .top__kicker { display: none; }
+  .top__crumb h1 { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card { overflow-wrap: anywhere; }
+  .bars { overflow: hidden; }
+}
+@media (max-width: 860px) {
+  .card[style*="padding:0"] { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .card[style*="padding:0"] .table { min-width: 560px; }
+  .slide-row { grid-template-columns: minmax(0, 1fr) !important; }
+  .slide-row .btn-row { flex-wrap: wrap; }
+}
