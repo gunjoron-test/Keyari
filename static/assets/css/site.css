@@ -1113,3 +1113,16 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 
 .share-row__btn { color: var(--text); }
 .share-row__btn:hover svg:not(.ico-stroke), .share-row__btn:focus-visible svg:not(.ico-stroke) { stroke: #fff; }
+
+/* ---------- ফুটার: নিচ থেকে সারিবদ্ধ, চিকন সবুজ রেখা, আইকনে সাদা গোল নেই ---------- */
+.sf__top { align-items: end; padding-bottom: 28px; }
+.sf__follow, .sf__editor { padding-top: 0; }
+.sf__follow { gap: 12px; }
+.sf__editor { gap: 3px; }
+.sf__editor .footer__social { margin-top: 12px; }
+.sf__line { height: 1px; border-radius: 0; background: var(--accent); }
+.footer__social .social-ico { width: 28px; height: 28px; background: none; box-shadow: none; border-radius: 0; }
+.footer__social .social-ico:hover { transform: translateY(-2px); background: none; }
+.footer__social .social-ico svg { width: 20px; height: 20px; }
+.footer__social { gap: 12px; }
+@media (max-width: 767.98px) { .sf__top { align-items: center; } }
