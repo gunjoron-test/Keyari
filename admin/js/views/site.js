@@ -501,3 +501,58 @@ function bannerEditor(view, kind) {
   }
   draw();
 }
+
+
+// ==================================================================== সংখ্যাগুচ্ছ (সংখ্যা তালিকা)
+export function issuesView(view) {
+  const cfg = clone(S.issues && Array.isArray(S.issues.items) ? S.issues : { items: [] });
+  const bnNum = (n) => (n ? bn(n) : '');
+  const draw = () => {
+    cfg.items.sort((a, b) => (a.number || 0) - (b.number || 0));
+    view.innerHTML = `<div class="page-head"><div><h1>সংখ্যাগুচ্ছ</h1><p>কেয়ারির সংখ্যাগুলো — মুখপাতার "সংখ্যাগুচ্ছ" পাতায় কার্ড হিসেবে দেখায়। প্রতিটি সংখ্যায় প্রচ্ছদ, শিরোনাম, সারাংশ ও সেই সংখ্যার লেখা বেছে দেওয়া যায়।</p></div>
+      <div class="btn-row"><button class="btn btn--light" data-add>＋ নতুন সংখ্যা</button><button class="btn" data-save>সংরক্ষণ</button></div></div>
+      <div class="notice">মেনুর "সংখ্যাগুচ্ছ" ড্রপডাউনের নাম-লিংক আলাদা: অ্যাডমিন → মেনু থেকে বদলানো যায়। নতুন সংখ্যার ঠিকানা: <code>/সংখ্যাগুচ্ছ/স্লাগ/</code></div>
+      <div class="card" style="padding:0"><table class="table"><thead><tr><th class="hide-sm"></th><th>নম্বর</th><th>শিরোনাম</th><th>লেখা</th><th>অবস্থা</th><th></th></tr></thead><tbody>
+      ${cfg.items.map((x, i) => `<tr data-i="${i}"><td class="hide-sm">${x.cover ? `<img class="thumb" src="${esc(imgUrl(x.cover))}" alt="">` : ''}</td><td>${bnNum(x.number)}</td><td><b>${esc(x.title)}</b><div class="help">${esc((x.summary || '').slice(0, 70))}</div></td><td>${bn((x.posts || []).length)}টি</td><td>${x.status === 'draft' ? '<span class="badge badge--draft">লুকানো</span>' : '<span class="badge badge--published">প্রকাশিত</span>'}</td>
+        <td><button class="btn btn--ghost btn--sm" data-ed="${i}">সম্পাদনা</button> <button class="btn btn--ghost btn--sm" data-del="${i}" style="color:#c0392b">মুছুন</button></td></tr>`).join('') || '<tr><td colspan="6" class="empty">এখনো কোনো সংখ্যা নেই</td></tr>'}
+      </tbody></table></div>`;
+    $$('img', view).forEach(imgFallback);
+    $$('[data-ed]', view).forEach((b) => (b.onclick = () => edit(+b.dataset.ed)));
+    $$('[data-del]', view).forEach((b) => (b.onclick = async () => { if (!(await confirmBox('সংখ্যাটি মুছবেন?', { danger: true, ok: 'মুছুন' }))) return; cfg.items.splice(+b.dataset.del, 1); draw(); }));
+    $('[data-add]', view).onclick = () => edit(-1);
+    $('[data-save]', view).onclick = async () => { S.issues = cfg; await saveSingle('issues', 'সংখ্যাগুচ্ছ হালনাগাদ'); };
+  };
+  function edit(idx) {
+    const isNew = idx < 0;
+    const nextNo = Math.max(0, ...cfg.items.map((x) => x.number || 0)) + 1;
+    const it = isNew ? { id: uid('is'), number: nextNo, slug: 'sonkha-' + nextNo, title: '', cover: '', summary: '', date: new Date().toISOString(), posts: [], status: 'published' } : clone(cfg.items[idx]);
+    const posts = S.posts.filter((p) => p.status === 'published').sort((a, b) => new Date(b.date) - new Date(a.date));
+    const m = modal({
+      title: isNew ? 'নতুন সংখ্যা' : 'সংখ্যা সম্পাদনা', wide: true,
+      body: `<div class="grid2"><div class="field"><label>সংখ্যা নম্বর</label><input class="input" type="number" min="1" data-k="number" value="${it.number || ''}"></div>
+        <div class="field"><label>অবস্থা</label><select class="select" data-k="status"><option value="published" ${it.status !== 'draft' ? 'selected' : ''}>প্রকাশিত</option><option value="draft" ${it.status === 'draft' ? 'selected' : ''}>লুকানো</option></select></div></div>
+        <div class="field"><label>শিরোনাম</label><input class="input" data-k="title" value="${esc(it.title)}" placeholder="যেমন: স্বাগত সংখ্যা"></div>
+        <div class="field"><label>ঠিকানার অংশ (স্লাগ)</label><input class="input input--mono" data-k="slug" value="${esc(it.slug || '')}"></div>
+        <div class="field"><label>সারাংশ (কার্ডে তিন লাইন দেখায়)</label><textarea class="textarea" rows="3" data-k="summary">${esc(it.summary || '')}</textarea></div>
+        <div class="field"><label>প্রচ্ছদ ছবি</label><div class="cover-box" data-box style="aspect-ratio:16/9;max-width:320px"></div>
+          <div class="btn-row" style="margin-top:8px"><label class="btn btn--light btn--sm" style="cursor:pointer">আপলোড<input type="file" accept="image/*" data-up hidden></label><button class="btn btn--light btn--sm" type="button" data-lib>মিডিয়া থেকে বাছুন</button><button class="btn btn--ghost btn--sm" type="button" data-rm>সরান</button></div></div>
+        <div class="field"><label>এই সংখ্যার লেখা (একাধিক বাছুন — Ctrl চেপে ধরে)</label><select class="select" multiple size="8" data-posts>${posts.map((p) => `<option value="${esc(p.id)}" ${(it.posts || []).includes(p.id) ? 'selected' : ''}>${esc(p.title)}</option>`).join('')}</select></div>`,
+      foot: '<button class="btn btn--light" data-no>বাতিল</button><button class="btn" data-ok>ঠিক আছে</button>',
+    });
+    const paint = () => { const b = $('[data-box]', m.el); b.innerHTML = it.cover ? `<img src="${esc(imgUrl(it.cover))}" alt="">` : '<span>প্রচ্ছদ নেই</span>'; const im = $('img', b); im && imgFallback(im); };
+    paint();
+    $$('[data-k]', m.el).forEach((el) => el.addEventListener('input', () => { it[el.dataset.k] = el.dataset.k === 'number' ? (+el.value || 0) : el.value; }));
+    $('[data-up]', m.el).onchange = async (e) => { const f = e.target.files[0]; if (!f) return; try { toast('ছবি আপলোড হচ্ছে…'); const r = await imageChanges(f, 'issue', 1600); await commit('সংখ্যার প্রচ্ছদ আপলোড', r.changes); it.cover = r.url; paint(); } catch (er) { toast('আপলোড ব্যর্থ: ' + er.message, 'err'); } };
+    $('[data-lib]', m.el).onclick = async () => { const r = await pickMedia({ title: 'প্রচ্ছদ বাছুন' }); if (r && r.url) { it.cover = r.url; paint(); } };
+    $('[data-rm]', m.el).onclick = () => { it.cover = ''; paint(); };
+    $('[data-no]', m.el).onclick = () => m.close();
+    $('[data-ok]', m.el).onclick = () => {
+      it.posts = [...$('[data-posts]', m.el).selectedOptions].map((o) => o.value);
+      if (!it.title.trim()) { toast('শিরোনাম লিখুন', 'err'); return; }
+      it.slug = slugify(it.slug || it.title) || it.id;
+      if (isNew) cfg.items.push(it); else cfg.items[idx] = it;
+      m.close(); draw();
+    };
+  }
+  draw();
+}

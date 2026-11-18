@@ -217,6 +217,14 @@ POSTS.sort(key=post_sort_key, reverse=True)
 POST_BY_ID = {p["id"]: p for p in POSTS}
 
 PAGES = [p for p in load_dir("pages") if is_live(p) or p.get("status") == "published"]
+ISSUES = sorted([x for x in (load("issues.json", {}) or {}).get("items", []) if x.get("status", "published") == "published"],
+                key=lambda x: (x.get("number") or 0, x.get("title", "")))
+
+
+def issue_path(x):
+    return "/সংখ্যাগুচ্ছ/" + (x.get("slug") or x["id"]) + "/"
+
+
 AYOJON = sorted([a for a in load_dir("ayojon") if a.get("status", "published") == "published"],
                 key=lambda a: (a.get("number", 0), a.get("date", "")), reverse=True)
 
@@ -1317,14 +1325,14 @@ def build_post(p):
 
 
 def archive_page(*, path, title, items, crumbs, header_html, description, active="বিষয়সূচি", per=None, ld_type="CollectionPage",
-                 header_cls="archive-header", before_grid="", card_fn=None):
+                 header_cls="archive-header", before_grid="", card_fn=None, empty_msg="এই বিভাগে এখনো কোনো লেখা প্রকাশিত হয়নি।"):
     per = per or S.get("archive_per_page", 12)
     total = max(1, math.ceil(len(items) / per))
     bc_html, bc_ld = breadcrumb(crumbs)
     for page in range(1, total + 1):
         chunk = items[(page - 1) * per: page * per]
         ppath = path if page == 1 else f"{path}page/{page}/"
-        grid = "".join((card_fn or card_v)(p) for p in chunk) or '<p class="empty">এই বিভাগে এখনো কোনো লেখা প্রকাশিত হয়নি।</p>'
+        grid = "".join((card_fn or card_v)(p) for p in chunk) or f'<p class="empty">{empty_msg}</p>'
         body = f'''<div class="container archive">
   {bc_html}
   <header class="{header_cls}">{header_html}</header>
@@ -1509,21 +1517,40 @@ def build_ayojon():
 EMPTY_SOON = '<p class="empty">শীঘ্রই আসছে।</p>'
 
 
+def issue_card(x):
+    """সংখ্যার কার্ড: হোমের লেখার কার্ডের মতোই — ওপরে প্রচ্ছদ, নিচে সংখ্যা নম্বর, শিরোনাম, সারাংশ, তারিখ"""
+    url = u(issue_path(x))
+    num = ("সংখ্যা " + bn(x["number"])) if x.get("number") else "বিশেষ সংখ্যা"
+    return f'''<article class="card-g">
+  <a class="card-g__media" href="{url}" tabindex="-1" aria-hidden="true">{img_tag(x.get("cover"), x["title"], "card-g__img", sizes="(max-width: 575px) 100vw, 280px")}</a>
+  <div class="card-g__body">
+    <p class="card-g__cat">{num}</p>
+    <h3 class="card-g__title"><a href="{url}">{esc(x["title"])}</a></h3>
+    <p class="card__excerpt clamp-3">{esc(x.get("summary", ""))}</p>
+    <p class="card-g__by"><time datetime="{parse_date(x.get("date")).isoformat()}">{bn_date(parse_date(x.get("date")))}</time></p>
+  </div>
+</article>'''
+
+
 def build_issues():
-    """সংখ্যাগুচ্ছ — সব সংখ্যা (আয়োজন) একসাথে, নতুন থেকে পুরোনো"""
-    cards = ""
-    for a in AYOJON:
-        n = len([i for i in a.get("posts", []) if i in POST_BY_ID])
-        cards += f'''<a class="series-card" href="{u(ayojon_path(a))}">{img_tag(a.get("banner", {}).get("src"), a["title"], "series-card__img", sizes="400px")}
-<span class="series-card__body"><span class="series-card__count">{("সংখ্যা " + bn(a["number"])) if a.get("number") else "বিশেষ সংখ্যা"}</span><span class="series-card__name">{esc(a["title"])}</span>
-<span class="series-card__count">{esc(a.get("subtitle", ""))}{" · " if a.get("subtitle") else ""}{bn(n)}টি লেখা</span></span></a>'''
+    """সংখ্যাগুচ্ছ — সব সংখ্যা এক জায়গায় (কম্পিউটারে ৬টি, মোবাইলে ৩টি, বাকিগুলো 'আরও দেখুন')"""
+    cards = "".join(issue_card(x) for x in ISSUES)
     bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("সংখ্যাগুচ্ছ", "/সংখ্যাগুচ্ছ/")])
     body = (f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">সংখ্যাগুচ্ছ</h1>'
-            f'<p class="archive-desc">কেয়ারির প্রকাশিত সব সংখ্যা এক জায়গায়, নতুন থেকে পুরোনো ক্রমে।</p></header>'
-            f'<div class="grid grid--3">{cards or EMPTY_SOON}</div></div>')
-    write("/সংখ্যাগুচ্ছ/", layout(title="সংখ্যাগুচ্ছ", description=f"{SITE}-এর সব সংখ্যা ও বিশেষ আয়োজন একসাথে।",
+            f'<p class="archive-desc">কেয়ারির সব সংখ্যা এক জায়গায়, ক্রমানুসারে।</p></header>'
+            f'{more_grid(cards, len(ISSUES), "feed__list more-grid") if cards else EMPTY_SOON}</div>')
+    write("/সংখ্যাগুচ্ছ/", layout(title="সংখ্যাগুচ্ছ", description=f"{SITE}-এর সব সংখ্যা এক জায়গায়।",
                                   path="/সংখ্যাগুচ্ছ/", body=body, active="সংখ্যাগুচ্ছ", ld=[bc_ld],
-                                  og_image=(AYOJON[0].get("banner", {}).get("src", "") if AYOJON else "")))
+                                  og_image=((ISSUES[0].get("cover") or "") if ISSUES else "")))
+    for x in ISSUES:
+        ps = [POST_BY_ID[i] for i in x.get("posts", []) if i in POST_BY_ID]
+        num = ("সংখ্যা " + bn(x["number"])) if x.get("number") else "বিশেষ সংখ্যা"
+        header_html = (f'<p class="sec-label">{num}</p><h1 class="archive-title">{esc(x["title"])}</h1>'
+                       + (f'<p class="archive-desc">{esc(x["summary"])}</p>' if x.get("summary") else ""))
+        archive_page(path=issue_path(x), title=x["title"] + " — সংখ্যাগুচ্ছ", items=ps, header_html=header_html, card_fn=card_g,
+                     crumbs=[("মুখপাতা", "/"), ("সংখ্যাগুচ্ছ", "/সংখ্যাগুচ্ছ/"), (x["title"], issue_path(x))],
+                     description=(x.get("summary") or x["title"]) + " — " + SITE, active="সংখ্যাগুচ্ছ",
+                     empty_msg="এই সংখ্যার লেখাগুলো শীঘ্রই যুক্ত হবে।")
 
 
 def build_series():
@@ -1679,7 +1706,7 @@ def main():
     build_404()
     build_feeds()
     extra = ["/বিষয়সূচি/", "/লেখক-তালিকা/", "/আয়োজন/", "/সংখ্যাগুচ্ছ/", "/ধারাবাহিক/"] + [f"/{p['slug']}/" for p in PAGES] + \
-            [ayojon_path(a) for a in AYOJON] + [f"/ধারাবাহিক/{s}/" for s in SERIES]
+            [ayojon_path(a) for a in AYOJON] + [issue_path(x) for x in ISSUES] + [f"/ধারাবাহিক/{s}/" for s in SERIES]
     build_sitemaps(extra)
     n = sum(1 for _ in DIST.rglob("*.html"))
     print(f"✔ {len(POSTS)}টি লেখা, {n}টি HTML পাতা তৈরি হলো ({(datetime.now() - t0).total_seconds():.1f} সেকেন্ড) → {DIST}")
