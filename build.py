@@ -627,11 +627,7 @@ def header(active=""):
                     groups += (f'<div class="mega__group"><a class="mega__cat" href="{cat_url(c["slug"])}">{esc(c["name"])}</a>'
                                + (f'<ul class="mega__subs">{subs}</ul>' if subs else "") + "</div>")
                 col_html += f'<div class="mega__col">{groups}</div>'
-            feature = ""
-            if AYOJON:
-                a = AYOJON[0]
-                feature = (f'<a class="mega__feature" href="{u(ayojon_path(a))}">{img_tag(a.get("banner", {}).get("src"), a["title"], "mega__feature-img", sizes="260px")}'
-                           f'<span class="mega__feature-label">সর্বশেষ আয়োজন</span><span class="mega__feature-title">{esc(a["title"])}</span></a>')
+            feature = ""  # মেগা-মেনুতে "সর্বশেষ আয়োজন" কার্ড আর নেই
             items.append(f'''<li class="{cls} has-sub has-mega">
   <a class="nav__link" href="{u(it.get("url") or "/বিষয়সূচি/")}" aria-haspopup="true" aria-expanded="false">{esc(it["label"])}{icon("chev", 14)}</a>
   <div class="mega" role="region" aria-label="{esc(it["label"])}"><div class="mega__cols">{col_html}</div>{feature}</div>

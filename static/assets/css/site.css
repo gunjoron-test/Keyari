@@ -1141,3 +1141,10 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 
 /* ---------- হোমের নিচের আয়োজন-স্লাইডার (ধারাবাহিকের পরে, ফুটারের ওপরে) ---------- */
 .banner-slider--ayojon { margin-top: 8px; margin-bottom: 56px; }
+
+/* মেগা-মেনু: ৩ কলাম, ডানের কার্ড ছাড়া */
+.mega { width: min(820px, calc(100vw - 48px)); }
+.mega__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 36px; }
+.mega__col .mega__group:first-child { margin-top: 0; }
+.nav__item.has-mega { position: static; }
+.nav__item.has-mega > .mega { left: 50%; }

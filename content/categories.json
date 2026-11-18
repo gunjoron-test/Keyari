@@ -13,8 +13,8 @@
     "slug": "kothasahityo",
     "name": "কথাসাহিত্য",
     "parent": null,
-    "column": 1,
-    "order": 2,
+    "column": 2,
+    "order": 5,
     "icon": "📖",
     "home_pill": true,
     "description": "গল্প, উপন্যাস ও অনুবাদ কথাসাহিত্য।"
@@ -51,8 +51,8 @@
     "slug": "alapon",
     "name": "আলাপন",
     "parent": null,
-    "column": 1,
-    "order": 3,
+    "column": 3,
+    "order": 8,
     "icon": "💬",
     "home_pill": true,
     "description": "সাক্ষাৎকার ও আলাপচারিতা।"
@@ -61,8 +61,8 @@
     "slug": "rochonaboli",
     "name": "রচনাবলি",
     "parent": null,
-    "column": 2,
-    "order": 4,
+    "column": 1,
+    "order": 2,
     "icon": "📜",
     "home_pill": true,
     "description": "প্রবন্ধ, ইতিহাস, তুরাস ও ফিচার।"
@@ -100,7 +100,7 @@
     "name": "কবিতাকুঞ্জ",
     "parent": null,
     "column": 2,
-    "order": 5,
+    "order": 4,
     "icon": "🌿",
     "home_pill": true,
     "description": "কবিতা ও অনুবাদ কবিতা।"
@@ -109,8 +109,8 @@
     "slug": "somalochona",
     "name": "সমালোচনা",
     "parent": null,
-    "column": 2,
-    "order": 6,
+    "column": 3,
+    "order": 7,
     "icon": "🔍",
     "home_pill": true,
     "description": "আলোকপাত, মতামত ও বইকথা।"
@@ -140,8 +140,8 @@
     "slug": "godyolekha",
     "name": "গদ্যলেখা",
     "parent": null,
-    "column": 3,
-    "order": 7,
+    "column": 1,
+    "order": 3,
     "icon": "🖋",
     "home_pill": true,
     "description": "মুক্তগদ্য, স্মৃতিগদ্য, ভ্রমণকাহিনি ও দিনলিপি।"
@@ -155,7 +155,7 @@
   },
   {
     "slug": "sritikotha",
-    "name": "স্মৃতিগদ্য",
+    "name": "স্মৃতিকথা",
     "parent": "godyolekha",
     "order": 2,
     "description": ""
@@ -178,8 +178,8 @@
     "slug": "jibonisahityo",
     "name": "জীবনীসাহিত্য",
     "parent": null,
-    "column": 3,
-    "order": 8,
+    "column": 2,
+    "order": 6,
     "icon": "👤",
     "home_pill": true,
     "description": "গল্পভাষ্য, আত্মজীবনী ও জীবনপাঠ।"
@@ -214,5 +214,54 @@
     "icon": "🎨",
     "home_pill": true,
     "description": "শিল্পভাবনা, শিল্পগল্প ও চিত্রকথা।"
+  },
+  {
+    "slug": "kobita",
+    "name": "কবিতা",
+    "parent": "kobitapunjo",
+    "order": 1,
+    "description": ""
+  },
+  {
+    "slug": "onubad-kobita",
+    "name": "অনুবাদকবিতা",
+    "parent": "kobitapunjo",
+    "order": 2,
+    "description": ""
+  },
+  {
+    "slug": "mukhomukhi",
+    "name": "মুখোমুখি",
+    "parent": "alapon",
+    "order": 1,
+    "description": ""
+  },
+  {
+    "slug": "mukhadda",
+    "name": "মুখাড্ডা",
+    "parent": "alapon",
+    "order": 2,
+    "description": ""
+  },
+  {
+    "slug": "shilpogolpo",
+    "name": "শিল্পগল্প",
+    "parent": "shilposomachar",
+    "order": 1,
+    "description": ""
+  },
+  {
+    "slug": "rongtuli",
+    "name": "রংতুলি",
+    "parent": "shilposomachar",
+    "order": 2,
+    "description": ""
+  },
+  {
+    "slug": "alokchitro",
+    "name": "আলোকচিত্র",
+    "parent": "shilposomachar",
+    "order": 3,
+    "description": ""
   }
 ]
