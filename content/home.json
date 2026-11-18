@@ -33,10 +33,14 @@
       "type": "category_blocks",
       "enabled": true,
       "categories": [
-        "kothasahityo",
-        "kobitapunjo",
         "rochonaboli",
-        "godyolekha"
+        "godyolekha",
+        "kobitapunjo",
+        "kothasahityo",
+        "jibonisahityo",
+        "somalochona",
+        "alapon",
+        "shilposomachar"
       ],
       "count": 12
     },
