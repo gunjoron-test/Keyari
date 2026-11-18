@@ -1167,3 +1167,40 @@ body.single .entry-content { font-size: 20px; line-height: 1.95; }
 .topic-mini:hover { transform: translateY(-2px); }
 .topic-mini:hover .cat-ico .t { fill-opacity: .3; }
 .cm__row { justify-content: center; }
+
+/* ---------- মুখপাতার প্রতিটি সেকশন: কালার প্লেট থেকে আলাদা আলাদা অতি-হালকা রঙের পটি ---------- */
+/* প্লেট: গাঢ় বন #1B3E1B · মাঝারি সবুজ #2F6B38 · সতেজ সবুজ #8DC03F · হালকা লাইম #CAE27A */
+:root {
+  --tone-1: rgba(202, 226, 122, .16);
+  --tone-2: rgba(141, 192, 63, .09);
+  --tone-3: rgba(47, 107, 56, .07);
+  --tone-4: rgba(202, 226, 122, .26);
+  --tone-5: rgba(27, 62, 27, .05);
+  --tone-6: rgba(141, 192, 63, .15);
+  --tone-7: rgba(202, 226, 122, .11);
+  --tone-8: rgba(47, 107, 56, .11);
+  --tone-9: rgba(141, 192, 63, .06);
+  --tone-10: rgba(202, 226, 122, .22);
+  --tone-11: rgba(27, 62, 27, .08);
+  --tone-12: rgba(141, 192, 63, .12);
+}
+[data-scheme="dark"] {
+  --tone-1: rgba(141, 192, 63, .07);
+  --tone-2: rgba(47, 107, 56, .22);
+  --tone-3: rgba(202, 226, 122, .05);
+  --tone-4: rgba(141, 192, 63, .11);
+  --tone-5: rgba(47, 107, 56, .14);
+  --tone-6: rgba(202, 226, 122, .08);
+  --tone-7: rgba(141, 192, 63, .05);
+  --tone-8: rgba(47, 107, 56, .27);
+  --tone-9: rgba(202, 226, 122, .04);
+  --tone-10: rgba(141, 192, 63, .09);
+  --tone-11: rgba(47, 107, 56, .18);
+  --tone-12: rgba(202, 226, 122, .06);
+}
+html { overflow-x: clip; }
+.tone { position: relative; isolation: isolate; }
+.tone::before { content: ""; position: absolute; z-index: -1; top: -40px; bottom: -40px; left: 50%; width: 100vw; transform: translateX(-50%); background: var(--tone); pointer-events: none; }
+.tone-1 { --tone: var(--tone-1); } .tone-2 { --tone: var(--tone-2); } .tone-3 { --tone: var(--tone-3); } .tone-4 { --tone: var(--tone-4); }
+.tone-5 { --tone: var(--tone-5); } .tone-6 { --tone: var(--tone-6); } .tone-7 { --tone: var(--tone-7); } .tone-8 { --tone: var(--tone-8); }
+.tone-9 { --tone: var(--tone-9); } .tone-10 { --tone: var(--tone-10); } .tone-11 { --tone: var(--tone-11); } .tone-12 { --tone: var(--tone-12); }

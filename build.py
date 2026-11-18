@@ -1046,7 +1046,7 @@ def build_home():
   <div class="container"><div class="hscroll" tabindex="0" aria-label="আয়োজনের লেখাসমূহ">{cards}</div></div>
 </section>''')
         feed_title = sections.get("feed", {}).get("title", "সর্বশেষ লেখা")
-        parts.append(f'''<div class="container feed-wrap{" feed-wrap--top" if page > 1 else ""}">
+        parts.append(f'''<div class="container feed-wrap{" feed-wrap--top" if page > 1 else " tone tone-1"}">
   <section class="feed" aria-labelledby="feed-h">
     {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), u("/page/2/") if (page == 1 and total > 1) else None, "সব দেখুন", h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
     {more_grid("".join(card_g(p) for p in chunk), len(chunk), "feed__list more-grid")}
@@ -1056,13 +1056,15 @@ def build_home():
         if page == 1 and on("category_blocks"):
             cb = sections.get("category_blocks", {})
             blocks = ""
+            tone = 1  # ১ = সর্বশেষ লেখা; এরপর প্রতিটি সেকশন আলাদা হালকা রঙের পটি
             for slug in cb.get("categories", []):
                 if slug not in CAT:
                     continue
                 ps = cat_posts(slug)[: max(6, cb.get("count", 12))]
                 if not ps:
                     continue
-                blocks += f'''<section class="cat-block container" aria-label="{esc(CAT[slug]["name"])}">
+                tone += 1
+                blocks += f'''<section class="cat-block container tone tone-{tone}" aria-label="{esc(CAT[slug]["name"])}">
   {section_head(CAT[slug]["name"], cat_url(slug))}
   {more_grid("".join(card_g(p) for p in ps), len(ps), "feed__list more-grid")}
 </section>'''
@@ -1070,7 +1072,7 @@ def build_home():
         if page == 1 and on("series") and SERIES:
             ser = sorted(SERIES.values(), key=lambda s: max(p["_date"] for p in s["posts"]), reverse=True)[:12]
             items = "".join(series_card(x) for x in ser)
-            parts.append(f'''<section class="series-block container" aria-label="ধারাবাহিক">
+            parts.append(f'''<section class="series-block container tone tone-{(tone + 1) if on("category_blocks") else 2}" aria-label="ধারাবাহিক">
   {section_head(sections.get("series", {}).get("title", "ধারাবাহিক"), u("/ধারাবাহিক/"))}
   {more_grid(items, len(ser), "feed__list more-grid")}</section>''')
         if page == 1 and on("cta"):
