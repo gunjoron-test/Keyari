@@ -1166,3 +1166,4 @@ body.single .entry-content { font-size: 20px; line-height: 1.95; }
 .topic-mini { transition: transform .2s, box-shadow .2s; }
 .topic-mini:hover { transform: translateY(-2px); }
 .topic-mini:hover .cat-ico .t { fill-opacity: .3; }
+.cm__row { justify-content: center; }
