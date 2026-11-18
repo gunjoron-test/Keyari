@@ -1271,3 +1271,5 @@ html { overflow-x: clip; }
   .sf__sub, .sf__notice { max-width: none; }
   .sf__follow .footer__social, .sf__editor .footer__social { justify-content: center; }
 }
+@media (min-width: 1201px) { .entry-layout { gap: 72px; } }
+@media (min-width: 992px) and (max-width: 1200px) { .entry-layout { gap: 44px; } }
