@@ -13,7 +13,8 @@
     "x": "",
     "youtube": "",
     "instagram": "",
-    "whatsapp": ""
+    "whatsapp": "",
+    "linkedin": ""
   },
   "logo": "/assets/img/logo.svg",
   "logo_dark": "",
@@ -55,5 +56,13 @@
   "reading": {
     "justify_desktop": true,
     "font_size": 17
+  },
+  "editor_role": "সম্পাদক ও প্রকাশক",
+  "editor_social": {
+    "facebook": "",
+    "instagram": "",
+    "whatsapp": "",
+    "linkedin": "",
+    "email": ""
   }
 }

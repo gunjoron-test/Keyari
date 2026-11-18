@@ -1081,3 +1081,32 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 .cm__req { color: #c0392b; margin-left: 2px; }
 .cm__form .cm__name { width: 100%; flex: none; }
 .cm__row { justify-content: flex-start; }
+
+/* ---------- নতুন ফুটার: লোগো+লেখা | সাথে থাকুন+আইকন | সম্পাদক ---------- */
+.sf { margin-top: 24px; padding-bottom: 0; }
+.sf > .container { border-top: 1px solid var(--line); }
+.sf__top { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; padding: 44px 0 34px; }
+.sf__brand { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.sf__brand .footer__logo img { width: 100px; height: auto; }
+.sf__tagline { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.7; }
+.sf__notice { font-size: 14px; color: var(--text-muted); line-height: 1.8; max-width: 420px; }
+.sf__follow { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; padding-top: 6px; }
+.sf__heading { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.sf__follow .footer__social { justify-content: center; }
+.sf__editor { display: flex; flex-direction: column; align-items: flex-end; text-align: right; gap: 4px; padding-top: 6px; }
+.sf__editor-name { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; }
+.sf__role { font-size: 14.5px; color: var(--text-muted); }
+.sf__editor .footer__social { justify-content: flex-end; margin-top: 10px; }
+.sf__line { height: 2px; border-radius: 2px; background: var(--accent); margin: 0; }
+.sf__bottom { display: flex; align-items: center; justify-content: center; gap: 18px; padding: 16px 0 20px; font-size: 13.5px; color: var(--text-muted); flex-wrap: wrap; }
+.sf__copy { display: inline-flex; align-items: center; gap: 8px; }
+.sf__bar { width: 1px; height: 18px; background: var(--text-muted); opacity: .5; }
+.sf__credit a { color: var(--accent-ink); font-weight: 700; border-bottom: 1px solid transparent; transition: border-color .2s; }
+.sf__credit a:hover { border-bottom-color: currentColor; }
+@media (max-width: 767.98px) {
+  .sf__top { grid-template-columns: 1fr; gap: 26px; padding: 32px 0 26px; text-align: center; }
+  .sf__brand, .sf__editor { align-items: center; text-align: center; }
+  .sf__notice { max-width: none; }
+  .sf__editor .footer__social { justify-content: center; }
+  .sf__bottom { gap: 10px 14px; padding-bottom: 88px; }
+}
