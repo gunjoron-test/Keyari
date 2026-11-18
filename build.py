@@ -1074,6 +1074,12 @@ A_MINUS = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="c
 SHARE_ICO = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'
 
 
+def outline_svg(k, size=20):
+    """স্টক (শুধু রেখা) ব্র্যান্ড-আইকন; মাউস নিলে CSS-এ ভরাট হয়"""
+    path = BRAND[k][1]
+    return '<svg class="ico-stroke" viewBox="0 0 24 24" width="' + str(size) + '" height="' + str(size) + '" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round" aria-hidden="true"><path d="' + path + '"/></svg>'
+
+
 def share_row(p):
     """লেখার শেষে শেয়ার-সারি (পাশের উল্লম্ব সারির বদলে)"""
     full = absu(p["_path"])
@@ -1081,10 +1087,10 @@ def share_row(p):
     t = urllib.parse.quote(p["title"], safe="")
     return f'''<div class="share-row" aria-label="লেখাটি শেয়ার করুন">
   <span class="share-row__label">শেয়ার করুন</span>
-  <a class="share-row__btn" href="https://www.facebook.com/sharer/sharer.php?u={url}" target="_blank" rel="noopener" aria-label="ফেসবুকে শেয়ার" title="ফেসবুক">{brand_svg("facebook", 20)}</a>
-  <a class="share-row__btn" href="https://x.com/intent/post?url={url}&text={t}" target="_blank" rel="noopener" aria-label="এক্স-এ শেয়ার" title="এক্স">{brand_svg("x", 18, "currentColor")}</a>
-  <a class="share-row__btn" href="https://api.whatsapp.com/send?text={t}%20{url}" target="_blank" rel="noopener" aria-label="হোয়াটসঅ্যাপে শেয়ার" title="হোয়াটসঅ্যাপ">{brand_svg("whatsapp", 20)}</a>
-  <a class="share-row__btn" href="https://t.me/share/url?url={url}&text={t}" target="_blank" rel="noopener" aria-label="টেলিগ্রামে শেয়ার" title="টেলিগ্রাম">{brand_svg("telegram", 20)}</a>
+  <a class="share-row__btn" href="https://www.facebook.com/sharer/sharer.php?u={url}" target="_blank" rel="noopener" aria-label="ফেসবুকে শেয়ার" title="ফেসবুক">{outline_svg("facebook", 20)}</a>
+  <a class="share-row__btn" href="https://x.com/intent/post?url={url}&text={t}" target="_blank" rel="noopener" aria-label="এক্স-এ শেয়ার" title="এক্স">{outline_svg("x", 18)}</a>
+  <a class="share-row__btn" href="https://api.whatsapp.com/send?text={t}%20{url}" target="_blank" rel="noopener" aria-label="হোয়াটসঅ্যাপে শেয়ার" title="হোয়াটসঅ্যাপ">{outline_svg("whatsapp", 20)}</a>
+  <a class="share-row__btn" href="https://t.me/share/url?url={url}&text={t}" target="_blank" rel="noopener" aria-label="টেলিগ্রামে শেয়ার" title="টেলিগ্রাম">{outline_svg("telegram", 20)}</a>
   <button class="share-row__btn" type="button" data-copy="{esc(full)}" aria-label="লিংক কপি করুন" title="লিংক কপি">{icon("link", 19)}</button>
 </div>'''
 
@@ -1112,16 +1118,17 @@ def comments_html(p):
     if prov == "native":
         pid = re.sub(r"[^A-Za-z0-9_-]", "_", str(p["id"]))
         return f'''<section class="comments cm" id="comments" aria-label="মন্তব্য" data-cm{" data-demo" if not endpoint else ""} data-endpoint="{esc(endpoint)}" data-post="{esc(pid)}" data-title="{esc(p["title"])}" data-url="{esc(url)}">
-  <h2 class="cm__title">মন্তব্য <span class="cm__count" data-cm-count></span></h2>
+  <h2 class="cm__title">মন্তব্য করুন <span class="cm__count" data-cm-count></span></h2>
   <form class="cm__form" data-cm-form novalidate>
-    <label class="cm__label" for="cm-text">আপনার মতামত</label>
+    <label class="cm__label" for="cm-name">আপনার নাম <span class="cm__req" aria-hidden="true">*</span></label>
+    <input id="cm-name" class="cm__name" name="name" maxlength="60" autocomplete="name" required placeholder="আপনার নাম লিখুন">
+    <label class="cm__label" for="cm-text">আপনার মতামত <span class="cm__req" aria-hidden="true">*</span></label>
     <textarea id="cm-text" name="text" rows="4" maxlength="2000" required placeholder="লেখাটি নিয়ে আপনার ভাবনা লিখুন…"></textarea>
     <div class="cm__row">
-      <input class="cm__name" name="name" maxlength="60" autocomplete="name" placeholder="আপনার নাম (ঐচ্ছিক)" aria-label="আপনার নাম (ঐচ্ছিক)">
       <button class="btn cm__send" type="submit">মন্তব্য পাঠান</button>
     </div>
     <input class="cm__hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <p class="cm__hint">নাম না দিলে মন্তব্যে "নাম প্রকাশে অনিচ্ছুক" দেখাবে। সম্পাদক অনুমোদন দিলে তবেই মন্তব্য সবার কাছে দেখা যাবে।</p>
+    <p class="cm__hint">সম্পাদক অনুমোদন দিলে তবেই আপনার মন্তব্য সবার কাছে দেখা যাবে।</p>
     <p class="cm__msg" role="status" aria-live="polite" data-cm-msg></p>
     {'<p class="cm__demo">পরীক্ষামূলক অবস্থা: মন্তব্য-সার্ভার এখনো যুক্ত হয়নি, তাই এখন পাঠালে মন্তব্য কেবল আপনার ব্রাউজারে থাকবে।</p>' if not endpoint else ""}
   </form>

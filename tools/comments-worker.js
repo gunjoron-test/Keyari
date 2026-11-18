@@ -84,6 +84,7 @@ export default {
       const text = String(b.text || '').trim();
       const name = String(b.name || '').trim().slice(0, MAX_NAME);
       if (!post) return json(env, req, { error: 'লেখা চেনা যায়নি' }, 400);
+      if (!name) return json(env, req, { error: 'আপনার নাম লিখুন' }, 400);
       if (text.length < 2) return json(env, req, { error: 'মন্তব্য খুব ছোট' }, 400);
       if (text.length > MAX_TEXT) return json(env, req, { error: `মন্তব্য ${MAX_TEXT} অক্ষরের মধ্যে রাখুন` }, 400);
       if ((text.match(/https?:\/\//gi) || []).length > 2) return json(env, req, { error: 'একসাথে অনেক লিংক দেওয়া যাবে না' }, 400);

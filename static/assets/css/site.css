@@ -1070,3 +1070,14 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 
 .more-by__cards:not(.is-open) > :nth-child(n+4) { display: none; }
 .more-by--cards .more-wrap { margin-top: 26px; justify-content: flex-start; }
+
+/* ---------- শেয়ার আইকন: স্টক (রেখা) → মাউস নিলে ব্র্যান্ড-সবুজে ভরাট ---------- */
+.share-row__btn { color: var(--text); }
+.share-row__btn .ico-stroke { transition: fill .22s, stroke .22s; }
+.share-row__btn:hover, .share-row__btn:focus-visible { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 8px 20px rgba(0, 166, 100, .28); }
+.share-row__btn:hover .ico-stroke, .share-row__btn:focus-visible .ico-stroke { fill: #fff; stroke: #fff; }
+
+/* ---------- মন্তব্য ফর্ম: নাম আগে (আবশ্যিক), তারপর মতামত ---------- */
+.cm__req { color: #c0392b; margin-left: 2px; }
+.cm__form .cm__name { width: 100%; flex: none; }
+.cm__row { justify-content: flex-start; }

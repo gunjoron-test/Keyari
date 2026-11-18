@@ -367,6 +367,7 @@
     cmForm.addEventListener('submit', function (e) {
       e.preventDefault();
       var f = cmForm.elements, text = f.text.value.trim();
+      if (!f.name.value.trim()) { cmMsg.textContent = 'আপনার নাম লিখুন।'; cmMsg.className = 'cm__msg is-err'; f.name.focus(); return; }
       if (text.length < 2) { cmMsg.textContent = 'আগে মন্তব্য লিখুন।'; cmMsg.className = 'cm__msg is-err'; f.text.focus(); return; }
       var btn = $('.cm__send', cmForm); btn.disabled = true; btn.textContent = 'পাঠানো হচ্ছে…';
       var name = f.name.value.trim();
