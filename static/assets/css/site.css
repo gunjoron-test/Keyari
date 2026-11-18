@@ -370,7 +370,7 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .entry-cover { margin: 28px 0 0; }
 .entry-cover__img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
 .entry-cover figcaption { font-size: 14px; color: var(--text-muted); margin-top: 8px; }
-.entry-layout { display: grid; grid-template-columns: 64px minmax(0, var(--reading)) 1fr; gap: 40px; margin-top: 56px; align-items: start; }
+.entry-layout { display: grid; grid-template-columns: minmax(0, var(--reading)) 1fr; gap: 56px; margin-top: 40px; align-items: start; }
 .entry-layout > .sidebar { justify-self: end; width: 100%; max-width: 370px; }
 .entry-rail { position: sticky; top: calc(var(--header-h) + 24px); display: flex; flex-direction: column; gap: 20px; align-items: center; }
 .share { display: flex; flex-direction: column; gap: 8px; align-items: center; }
@@ -596,7 +596,7 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
    responsive
    ========================================================================== */
 @media (max-width: 1200px) {
-  .entry-layout { grid-template-columns: 56px minmax(0, 1fr) 320px; gap: 32px; }
+  .entry-layout { grid-template-columns: minmax(0, 1fr) 320px; gap: 32px; }
   .with-sidebar { grid-template-columns: minmax(0, 1fr) 320px; gap: 40px; }
   .card-h { grid-template-columns: 320px minmax(0, 1fr); }
   .authors-strip__list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -1053,3 +1053,10 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
   .entry-byline .fs-inline button:disabled { opacity: .3; }
   .entry-byline .fs-inline__sep { width: 1px; height: 16px; background: var(--line); }
 }
+
+/* ---------- লেখার শেষে শেয়ার-সারি ---------- */
+.share-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 44px; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.share-row__label { font-weight: 700; font-size: 15px; margin-right: 6px; }
+.share-row__btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--text); display: grid; place-items: center; cursor: pointer; transition: transform .15s, box-shadow .2s, border-color .2s; }
+.share-row__btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: transparent; }
+.entry-footer__tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }

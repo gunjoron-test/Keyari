@@ -839,7 +839,7 @@ def layout(*, title, description, path, body, active="", og_image="", og_type="w
 <link rel="stylesheet" href="{u("/assets/css/fonts.css")}?v={BUILD_ID}">
 <link rel="stylesheet" href="{u("/assets/css/site.css")}?v={BUILD_ID}">
 <link rel="stylesheet" href="{u("/assets/css/styles.css")}?v={BUILD_ID}">
-<script>(function(){{try{{var s=localStorage.getItem('keyari-scheme');if(!s)s=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-scheme',s);var f=localStorage.getItem('keyari-fs');if(f)document.documentElement.style.setProperty('--read-size',f+'px')}}catch(e){{}}}})();window.KEYARI={{base:"{BASE}"}};</script>
+<script>(function(){{try{{var s=localStorage.getItem('keyari-scheme');if(!s)s=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-scheme',s);localStorage.removeItem('keyari-fs')}}catch(e){{}}}})();window.KEYARI={{base:"{BASE}"}};</script>
 {extra_head}
 {"".join(jsonld(x) for x in lds)}
 {analytics}
@@ -1083,20 +1083,18 @@ A_MINUS = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="c
 SHARE_ICO = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'
 
 
-def share_end(p):
-    """লেখার শেষে শেয়ার-কার্ড (মোবাইলে দেখায়)"""
+def share_row(p):
+    """লেখার শেষে শেয়ার-সারি (পাশের উল্লম্ব সারির বদলে)"""
     full = absu(p["_path"])
     url = urllib.parse.quote(full, safe="")
     t = urllib.parse.quote(p["title"], safe="")
-    return f'''<div class="share-end" aria-label="লেখাটি শেয়ার করুন">
-  <p class="share-end__title">লেখাটি ভালো লাগলে শেয়ার করুন</p>
-  <div class="share-end__row">
-    <a class="share-end__btn" href="https://www.facebook.com/sharer/sharer.php?u={url}" target="_blank" rel="noopener" aria-label="ফেসবুকে শেয়ার">{brand_svg("facebook", 22)}</a>
-    <a class="share-end__btn" href="https://api.whatsapp.com/send?text={t}%20{url}" target="_blank" rel="noopener" aria-label="হোয়াটসঅ্যাপে শেয়ার">{brand_svg("whatsapp", 22)}</a>
-    <a class="share-end__btn" href="https://x.com/intent/post?url={url}&text={t}" target="_blank" rel="noopener" aria-label="এক্স-এ শেয়ার">{brand_svg("x", 20)}</a>
-    <a class="share-end__btn" href="https://t.me/share/url?url={url}&text={t}" target="_blank" rel="noopener" aria-label="টেলিগ্রামে শেয়ার">{brand_svg("telegram", 22)}</a>
-    <button class="share-end__btn" type="button" data-copy="{esc(full)}" aria-label="লিংক কপি করুন">{icon("link", 20)}</button>
-  </div>
+    return f'''<div class="share-row" aria-label="লেখাটি শেয়ার করুন">
+  <span class="share-row__label">শেয়ার করুন</span>
+  <a class="share-row__btn" href="https://www.facebook.com/sharer/sharer.php?u={url}" target="_blank" rel="noopener" aria-label="ফেসবুকে শেয়ার" title="ফেসবুক">{brand_svg("facebook", 20)}</a>
+  <a class="share-row__btn" href="https://x.com/intent/post?url={url}&text={t}" target="_blank" rel="noopener" aria-label="এক্স-এ শেয়ার" title="এক্স">{brand_svg("x", 18, "currentColor")}</a>
+  <a class="share-row__btn" href="https://api.whatsapp.com/send?text={t}%20{url}" target="_blank" rel="noopener" aria-label="হোয়াটসঅ্যাপে শেয়ার" title="হোয়াটসঅ্যাপ">{brand_svg("whatsapp", 20)}</a>
+  <a class="share-row__btn" href="https://t.me/share/url?url={url}&text={t}" target="_blank" rel="noopener" aria-label="টেলিগ্রামে শেয়ার" title="টেলিগ্রাম">{brand_svg("telegram", 20)}</a>
+  <button class="share-row__btn" type="button" data-copy="{esc(full)}" aria-label="লিংক কপি করুন" title="লিংক কপি">{icon("link", 19)}</button>
 </div>'''
 
 
@@ -1223,7 +1221,6 @@ def build_post(p):
       <a class="entry-author" href="{u("/author/" + a["slug"] + "/")}">{aname(a, 28)}</a>
       <span class="entry-byline__dot" aria-hidden="true">•</span>
       <time datetime="{p["_date"].isoformat()}" itemprop="datePublished">{bn_date(p["_date"])}</time>
-      <span class="fs-inline" role="group" aria-label="লেখার আকার"><button type="button" data-fs="-1" aria-label="লেখা ছোট করুন">{A_MINUS}</button><span class="fs-inline__sep" aria-hidden="true"></span><button type="button" data-fs="1" aria-label="লেখা বড় করুন">{A_PLUS}</button></span>
     </div>
     <h1 class="entry-title" itemprop="headline">{esc(p["title"])}</h1>
     {f'<p class="entry-subtitle">{esc(p["subtitle"])}</p>' if p.get("subtitle") else ""}
@@ -1233,24 +1230,13 @@ def build_post(p):
     {f'<figcaption>{esc(cover["caption"])}</figcaption>' if cover.get("caption") else ""}</figure>
   </header>
   <div class="container entry-layout">
-    <div class="entry-rail">{share_bar(p)}
-      <div class="font-tools" role="group" aria-label="লেখার আকার">
-        <button type="button" data-fs="1" aria-label="লেখা বড় করুন" title="লেখা বড় করুন"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 8 6l5 13M5 14.5h6"/><path d="M18 4v6M15 7h6"/></svg></button>
-        <button type="button" data-fs="-1" aria-label="লেখা ছোট করুন" title="লেখা ছোট করুন"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 8 6l5 13M5 14.5h6"/><path d="M15 7h6"/></svg></button>
-        <button type="button" class="font-tools__val" data-fs="0" aria-label="স্বাভাবিক আকারে ফিরুন" title="স্বাভাবিক আকারে ফিরুন" hidden><span data-fs-val>১০০%</span></button>
-      </div>
-    </div>
     <div class="entry-main">
       {series_html if p["series"] and (p["series"].get("part") or 0) > 1 else ""}
       {toc}
       <div class="{body_cls}" itemprop="articleBody">{body}</div>
       {series_html}
-      <footer class="entry-footer">
-        <div class="entry-footer__by"><a class="meta__author" href="{u("/author/" + a["slug"] + "/")}">{aname(a)}</a> · {bn_date(p["_date"])}</div>
-        <div class="entry-footer__cats">{cats_html}</div>
-        {f'<div class="entry-footer__tags">{tags_html}</div>' if tags_html else ""}
-      </footer>
-      {share_end(p)}
+      {share_row(p)}
+      {f'<div class="entry-footer__tags">{tags_html}</div>' if tags_html else ""}
       {comments_html(p)}
     </div>
     {sidebar(exclude=p, author=a)}
