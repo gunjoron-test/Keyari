@@ -659,7 +659,6 @@ def header(active=""):
     toggle = f'''<button class="scheme-toggle" type="button" data-scheme-toggle aria-label="আলো/আঁধার মোড বদলান">
       <span class="scheme-toggle__opt scheme-toggle__opt--light">{icon("sun", 16)}</span><span class="scheme-toggle__opt scheme-toggle__opt--dark">{icon("moon", 16)}</span></button>'''
     return f'''<a class="skip-link" href="#main">মূল লেখায় যান</a>
-<div class="read-progress" aria-hidden="true"><span></span></div>
 <header class="site-header" data-header>
   <div class="container site-header__inner">
     <button class="icon-btn hamburger" type="button" data-offcanvas-open aria-label="মেনু খুলুন" aria-controls="offcanvas">{icon("menu", 22)}</button>

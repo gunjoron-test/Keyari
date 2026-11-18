@@ -1148,3 +1148,7 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 .mega__col .mega__group:first-child { margin-top: 0; }
 .nav__item.has-mega { position: static; }
 .nav__item.has-mega > .mega { left: 50%; }
+
+/* ---------- শুধু লেখার (আর্টিকেল) পাতায়: পড়ার লেখা আরেকটু বড় ---------- */
+body.single .entry-content { font-size: 20px; line-height: 1.95; }
+@media (max-width: 767.98px) { body.single .entry-content { font-size: 19px; } }
