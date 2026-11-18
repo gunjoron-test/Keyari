@@ -153,23 +153,23 @@ TOP_CATS = sorted([c for c in CATS if not c.get("parent")], key=lambda x: x.get(
 
 
 CAT_ICON_PATHS = {
-    "kothamukh": '<path d="M12 3l5 6-5 12-5-12z"/><path d="M12 9v5"/><circle cx="12" cy="14.5" r="1"/>',
-    "rochonaboli": '<path d="M8 4h10a2 2 0 0 1 2 2v1H8z"/><path d="M8 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V7"/><path d="M10 11h6M10 15h6"/>',
-    "godyolekha": '<path d="M20 4c-6 0-11 4-12 11l-3 5"/><path d="M20 4c0 6-4 10-11 11"/><path d="M9 15h5"/>',
-    "kobitapunjo": '<path d="M12 21v-8"/><path d="M12 13c0-4 3-7 8-7 0 4-3 7-8 7z"/><path d="M12 15c0-3-2.5-5.5-7-5.5 0 3.5 2.5 5.5 7 5.5z"/>',
-    "kothasahityo": '<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',
-    "jibonisahityo": '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
-    "somalochona": '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.5-4.5"/><path d="M8.5 11h5"/>',
-    "alapon": '<path d="M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3.5V15H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M17 9h2.5a1.5 1.5 0 0 1 1.5 1.5v5a1.5 1.5 0 0 1-1.5 1.5H19v2.5L15.5 17H12"/>',
-    "shilposomachar": '<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.5-1.9-.4-1.2.4-2.1 1.5-2.1H17a4 4 0 0 0 4-4c0-5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15.5" cy="8" r="1"/>',
+    'kothamukh': '<path class="t" d="M12 3.2l5.2 7.3L12 20.8 6.8 10.5z"/><path d="M12 3.2l5.2 7.3L12 20.8 6.8 10.5z"/><path d="M12 12.4v8.4"/><circle cx="12" cy="10.7" r="1.4"/><path d="M9.2 7.1h5.6"/>',
+    'rochonaboli': '<path class="t" d="M7.5 4h10.5a2 2 0 0 1 2 2v11.5a2.5 2.5 0 0 1-2.5 2.5H8a2.5 2.5 0 0 1-2.5-2.5V6a2 2 0 0 1 2-2z"/><path d="M7.5 4A2 2 0 0 0 5.5 6v11.5A2.5 2.5 0 0 0 8 20h9.5a2.5 2.5 0 0 0 2.5-2.5V6a2 2 0 0 0-2-2z"/><path d="M5.5 7.5h14.5"/><path d="M9.2 11.4h6.6M9.2 14.6h6.6M9.2 17.6h3.6"/>',
+    'godyolekha': '<path class="t" d="M20.6 3.4c-7 .3-12.1 4.2-13.7 11.3l-1.9 4.4 4.4-1.9c6.4-1.7 10.7-6.9 11.2-13.8z"/><path d="M20.6 3.4c-7 .3-12.1 4.2-13.7 11.3l-1.9 4.4 4.4-1.9c6.4-1.7 10.7-6.9 11.2-13.8z"/><path d="M4.9 19.7l9.7-9.8"/><path d="M9.4 15.1h4.3M11.5 12.9h4"/>',
+    'kobitapunjo': '<path class="t" d="M12 11.6c0-4.3 3-7.2 8-7.6.1 4.8-3.2 7.9-8 7.6z"/><path class="t" d="M12 14.6c0-3.3-2.4-5.6-7-5.6.1 3.6 2.6 5.9 7 5.6z"/><path d="M12 11.6c0-4.3 3-7.2 8-7.6.1 4.8-3.2 7.9-8 7.6z"/><path d="M12 14.6c0-3.3-2.4-5.6-7-5.6.1 3.6 2.6 5.9 7 5.6z"/><path d="M12 21v-9.4M12 11.6l4.8-4.3M12 14.6L8.4 11.4M8.6 21h6.8"/>',
+    'kothasahityo': '<path class="t" d="M12 6.2C9.8 4.7 6.8 4.2 3.8 4.4v13.9c3-.2 6 .3 8.2 1.8z"/><path class="t" d="M12 6.2c2.2-1.5 5.2-2 8.2-1.8v13.9c-3-.2-6 .3-8.2 1.8z" style="fill-opacity:.08"/><path d="M12 6.2C9.8 4.7 6.8 4.2 3.8 4.4v13.9c3-.2 6 .3 8.2 1.8z"/><path d="M12 6.2c2.2-1.5 5.2-2 8.2-1.8v13.9c-3-.2-6 .3-8.2 1.8z"/><path d="M12 6.2v13.9"/><path d="M6.3 8.6c1.5 0 3 .3 4.2.9M6.3 11.8c1.5 0 3 .3 4.2.9M13.5 9.5c1.2-.6 2.7-.9 4.2-.9M13.5 12.7c1.2-.6 2.7-.9 4.2-.9"/>',
+    'jibonisahityo': '<circle class="t" cx="12" cy="8" r="3.7"/><path class="t" d="M4.5 20.5c0-4 3.4-6.7 7.5-6.7s7.5 2.7 7.5 6.7z"/><circle cx="12" cy="8" r="3.7"/><path d="M4.5 20.5c0-4 3.4-6.7 7.5-6.7s7.5 2.7 7.5 6.7"/><path d="M3.5 20.5h17"/>',
+    'somalochona': '<circle class="t" cx="10.5" cy="10.5" r="6.6"/><circle cx="10.5" cy="10.5" r="6.6"/><path d="M15.4 15.4l5.1 5.1" style="stroke-width:2.2"/><path d="M7.4 9.4a3.5 3.5 0 0 1 2.6-2.2"/><path d="M8 12.6l1.6 1.5 3-3.4"/>',
+    'alapon': '<path class="t" d="M12.5 8h6.4a2 2 0 0 1 2 2v4.8a2 2 0 0 1-2 2h-.4v3l-3.6-3h-2.4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z"/><path d="M15 8V6.5a2 2 0 0 0-2-2H5.5a2 2 0 0 0-2 2v5.2a2 2 0 0 0 2 2h.4v3.1l3.7-3.1H10"/><path d="M12.5 8h6.4a2 2 0 0 1 2 2v4.8a2 2 0 0 1-2 2h-.4v3l-3.6-3h-2.4a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2z"/><circle class="f" cx="6.6" cy="9.1" r=".75"/><circle class="f" cx="9.1" cy="9.1" r=".75"/>',
+    'shilposomachar': '<path class="t" d="M12 3.2a8.8 8.8 0 1 0 0 17.6c1.2 0 1.9-.9 1.6-1.9-.4-1.2.4-2.2 1.6-2.2H17a3.9 3.9 0 0 0 3.8-4c-.2-5.2-4.2-9.5-8.8-9.5z"/><path d="M12 3.2a8.8 8.8 0 1 0 0 17.6c1.2 0 1.9-.9 1.6-1.9-.4-1.2.4-2.2 1.6-2.2H17a3.9 3.9 0 0 0 3.8-4c-.2-5.2-4.2-9.5-8.8-9.5z"/><circle class="f" cx="7.6" cy="11.4" r="1.15"/><circle class="f" cx="10.4" cy="7.4" r="1.15"/><circle class="f" cx="15.2" cy="7.9" r="1.15"/><circle class="f" cx="17" cy="12.2" r="1.15"/>',
 }
-CAT_ICON_DEFAULT = '<path d="M3 12V5a1 1 0 0 1 1-1h7l9 9-8 8z"/><circle cx="8" cy="9" r="1.3"/>'
+CAT_ICON_DEFAULT = '<path class="t" d="M3.5 12.2V5.3a1 1 0 0 1 1-1h6.9l8.6 8.6-7.9 7.9z"/><path d="M3.5 12.2V5.3a1 1 0 0 1 1-1h6.9l8.6 8.6-7.9 7.9z"/><circle cx="8.2" cy="9" r="1.3"/>'
 
 
 def cat_ico(c, size=22):
     """বিভাগের আসল ভেক্টর আইকন (ইমোজি নয়); রঙ ব্র্যান্ড-সবুজ (CSS-এ)"""
     p = CAT_ICON_PATHS.get(c.get("slug"), CAT_ICON_DEFAULT)
-    return ('<svg class="cat-ico" viewBox="0 0 24 24" width="' + str(size) + '" height="' + str(size) + '" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>")
+    return ('<svg class="cat-ico" viewBox="0 0 24 24" width="' + str(size) + '" height="' + str(size) + '" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>")
 
 
 def cat_url(slug):

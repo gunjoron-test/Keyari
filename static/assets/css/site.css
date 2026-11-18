@@ -1158,3 +1158,11 @@ body.single .entry-content { font-size: 20px; line-height: 1.95; }
 .topic-mini__icon, .topic-card__ico { display: inline-grid; place-items: center; color: var(--accent); }
 .topic-card__ico { vertical-align: middle; margin-right: 4px; }
 .pill-lg .cat-ico { display: inline-block; vertical-align: middle; margin-right: 4px; }
+
+/* বিভাগের আইকন: দুই-স্তরের (সরু রেখা + হালকা সবুজ ছায়া) */
+.cat-ico .t { fill: currentColor; fill-opacity: .17; stroke: none; }
+.cat-ico .f { fill: currentColor; stroke: none; }
+.topic-mini__icon .cat-ico { width: 28px; height: 28px; }
+.topic-mini { transition: transform .2s, box-shadow .2s; }
+.topic-mini:hover { transform: translateY(-2px); }
+.topic-mini:hover .cat-ico .t { fill-opacity: .3; }
