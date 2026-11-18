@@ -947,8 +947,8 @@ def banner_slider(fname="slides.json", kind="banner"):
     interval = int(float(cfg.get("interval", 6) or 6) * 1000) if (cfg.get("autoplay", True) and len(items) > 1) else 0
     style = ("--bn-d:1880/496;" if kind == "ad" else "--bn-d:2244/592;")
     tag = '<span class="ad-slider__tag">' + esc(cfg.get("label") or "বিজ্ঞাপন") + "</span>" if (kind == "ad" and cfg.get("show_label", True)) else ""
-    cls = "ad-slider banner-slider container" if kind == "ad" else "banner-slider container"
-    aria = "বিজ্ঞাপন" if kind == "ad" else "প্রধান ব্যানার"
+    cls = "ad-slider banner-slider container" if kind == "ad" else ("banner-slider banner-slider--ayojon container" if kind == "ayojon" else "banner-slider container")
+    aria = "বিজ্ঞাপন" if kind == "ad" else ("আয়োজন" if kind == "ayojon" else "প্রধান ব্যানার")
     return ('<section class="' + cls + '" aria-label="' + aria + '" style="' + style + '">'
             '<div class="slider" data-slider data-interval="' + str(interval) + '"><div class="slider__track">' + slides + "</div>" + tag + controls + "</div></section>")
 
@@ -1059,6 +1059,8 @@ def build_home():
     <div class="cta__actions"><a class="btn btn--light" href="{u("/বিশেষ-বার্তা/")}">লেখা পাঠানোর নীতিমালা</a>
     <button class="btn btn--ghost" type="button" data-copy="{esc(S.get("email"))}">{icon("copy", 16)} {esc(S.get("email"))}</button></div>
   </div></section>''')
+        if page == 1:
+            parts.append(banner_slider("ayojon_slides.json", "ayojon"))
         path = "/" if page == 1 else f"/page/{page}/"
         prev_p = None if page == 1 else ("/" if page == 2 else f"/page/{page - 1}/")
         next_p = f"/page/{page + 1}/" if page < total else None

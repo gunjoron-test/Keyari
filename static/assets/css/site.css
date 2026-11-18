@@ -1126,3 +1126,18 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 .footer__social .social-ico svg { width: 20px; height: 20px; }
 .footer__social { gap: 12px; }
 @media (max-width: 767.98px) { .sf__top { align-items: center; } }
+
+/* ---------- ফুটার: কাছাকাছি লেখা, সাধারণ রেখার রঙ ---------- */
+.sf__line { height: 1px; background: var(--line); }
+.sf__heading { line-height: 1.25; }
+.sf__follow { gap: 8px; }
+.sf__follow .footer__social, .sf__editor .footer__social { margin-top: 0; }
+.sf__editor { gap: 2px; }
+.sf__role { line-height: 1.4; margin-bottom: 8px; }
+.sf__brand { gap: 6px; }
+.sf__brand .footer__logo { margin-bottom: 2px; }
+.sf__tagline { line-height: 1.5; }
+.sf__notice { line-height: 1.6; }
+
+/* ---------- হোমের নিচের আয়োজন-স্লাইডার (ধারাবাহিকের পরে, ফুটারের ওপরে) ---------- */
+.banner-slider--ayojon { margin-top: 8px; margin-bottom: 56px; }

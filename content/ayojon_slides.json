@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "autoplay": true,
+  "interval": 6,
+  "items": [
+    {
+      "id": "ay-1",
+      "image": "/uploads/banners/slide-ayojon.webp",
+      "alt": "চলমান আয়োজন: রাজা যায় রাজা আসে — দশ লেখকের দশটি গদ্য-কলাম।",
+      "link": "/আয়োজন/",
+      "new_tab": false,
+      "active": true,
+      "start": "",
+      "end": ""
+    }
+  ]
+}

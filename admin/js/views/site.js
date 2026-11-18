@@ -411,10 +411,12 @@ export function commentsView(view) {
 // ==================================================================== মুখপাতার স্লাইডার (ব্যানার)
 const BANNER = {
   slides: { key: 'slides', title: 'মুখপাতার স্লাইডার', desc: 'হেডারের নিচে ঘুরতে থাকা ব্যানার — যত খুশি স্লাইড যোগ করা যায় (৫০টি বা তারও বেশি)', ratio: '2244/592', sizeD: '২২৪৪×৫৯২ পিক্সেল (প্রায় ৩.৮ : ১)', toggle: 'মুখপাতায় স্লাইডার দেখান', save: 'স্লাইডার হালনাগাদ', def: { enabled: true, autoplay: true, interval: 6, items: [] } },
+  ayojon: { key: 'ayojon_slides', title: 'আয়োজন-স্লাইডার', desc: 'মুখপাতার একদম নিচে (ধারাবাহিকের পরে, ফুটারের ওপরে) ঘুরতে থাকা আয়োজনের ব্যানার — যত খুশি স্লাইড যোগ করা যায়', ratio: '2244/592', sizeD: '২২৪৪×৫৯২ পিক্সেল (প্রায় ৩.৮ : ১)', toggle: 'মুখপাতার নিচে আয়োজন-স্লাইডার দেখান', save: 'আয়োজন-স্লাইডার হালনাগাদ', def: { enabled: true, autoplay: true, interval: 6, items: [] } },
   ads: { key: 'ads', title: 'বিজ্ঞাপন', desc: 'মুখপাতার মাঝখানে (হিরোর নিচে) দেখানো বিজ্ঞাপন-ব্যানার — ম্যাগাজিন, বই বা যেকোনো প্রচারের জন্য যত খুশি যোগ করা যায়', ratio: '1880/496', sizeD: '১৮৮০×৪৯৬ পিক্সেল (প্রায় ৩.৮ : ১)', toggle: 'মুখপাতায় বিজ্ঞাপন দেখান', save: 'বিজ্ঞাপন হালনাগাদ', def: { enabled: true, autoplay: true, interval: 7, show_label: true, items: [] } },
 };
 export const slidesView = (view) => bannerEditor(view, 'slides');
 export const adsView = (view) => bannerEditor(view, 'ads');
+export const ayojonSlidesView = (view) => bannerEditor(view, 'ayojon');
 
 function bannerEditor(view, kind) {
   const B = BANNER[kind];

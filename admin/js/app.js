@@ -217,7 +217,7 @@ async function route() {
   $$('.side__link').forEach((a) => a.classList.toggle('is-active', a.dataset.r === pathPart || (a.dataset.r === parts[0] && parts.length === 1)));
   $('[data-side]').classList.remove('is-open');
   const n = $('[data-n-posts]'); if (n) n.textContent = bn(S.posts.filter((p) => p.status !== 'trash').length);
-  const title = { dashboard: 'ড্যাশবোর্ড', posts: 'লেখাসমূহ', media: 'মিডিয়া', pages: 'পাতাসমূহ', ayojon: 'আয়োজন', categories: 'বিভাগ', authors: 'লেখক', comments: 'মন্তব্য', home: 'মুখপাতার বিন্যাস', slides: 'স্লাইডার', ads: 'বিজ্ঞাপন', menu: 'মেনু', styles: 'স্টাইল শিট', seo: 'SEO', deploy: 'প্রকাশের অবস্থা', settings: 'সেটিংস', users: 'ব্যবহারকারী', import: 'আমদানি ও ব্যাকআপ' }[parts[0]] || '';
+  const title = { dashboard: 'ড্যাশবোর্ড', posts: 'লেখাসমূহ', media: 'মিডিয়া', pages: 'পাতাসমূহ', ayojon: 'আয়োজন', 'ayojon-slider': 'আয়োজন-স্লাইডার', categories: 'বিভাগ', authors: 'লেখক', comments: 'মন্তব্য', home: 'মুখপাতার বিন্যাস', slides: 'স্লাইডার', ads: 'বিজ্ঞাপন', menu: 'মেনু', styles: 'স্টাইল শিট', seo: 'SEO', deploy: 'প্রকাশের অবস্থা', settings: 'সেটিংস', users: 'ব্যবহারকারী', import: 'আমদানি ও ব্যাকআপ' }[parts[0]] || '';
   document.body.classList.remove('in-editor');
   setTop(`<div class="top__crumb"><span class="top__kicker">সম্পাদনা কক্ষ</span><h1 class="top__title">${esc(title)}</h1></div>`);
   view.innerHTML = '<div class="empty"><span class="spinner"></span></div>';
@@ -243,6 +243,7 @@ async function route() {
       case 'styles': guard('styles', () => Site.stylesView(view)); break;
       case 'slides': guard('home', () => Site.slidesView(view)); break;
       case 'ads': guard('home', () => Site.adsView(view)); break;
+      case 'ayojon-slider': guard('ayojon', () => Site.ayojonSlidesView(view)); break;
       case 'settings': guard('settings', () => Site.settingsView(view)); break;
       case 'users': guard('users', () => Site.usersView(view)); break;
       case 'comments': guard('comments', () => Site.commentsView(view)); break;

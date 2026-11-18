@@ -121,6 +121,7 @@ export function pagesView(view) {
 
 export function ayojonView(view) {
   view.innerHTML = `<div class="page-head"><div><h1>আয়োজন</h1><p>বিশেষ থিম্যাটিক সংখ্যা — সক্রিয় আয়োজনটি মুখপাতা ও /আয়োজন/ পাতায় দেখায়</p></div><a class="btn" href="#/ayojon/new">＋ নতুন আয়োজন</a></div>
+  <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px"><div><b>মুখপাতার নিচের আয়োজন-স্লাইডার</b><p class="help" style="margin-top:4px">ধারাবাহিকের পরে, ফুটারের ঠিক ওপরে যে ব্যানার-স্লাইডার ঘোরে — এখান থেকে যত খুশি স্লাইড যোগ, বদল বা বাদ দিন (এখন ${bn(((S.ayojon_slides && S.ayojon_slides.items) || []).length)}টি)।</p></div><a class="btn" href="#/ayojon-slider">স্লাইডার সম্পাদনা করুন →</a></div>
   <div class="card" style="padding:0"><table class="table"><thead><tr><th class="hide-sm"></th><th>শিরোনাম</th><th>সংখ্যা</th><th>লেখা</th><th>অবস্থা</th></tr></thead><tbody>
   ${[...S.ayojon].sort((a, b) => (b.number || 0) - (a.number || 0)).map((a) => `<tr><td class="hide-sm">${a.banner?.src ? `<img class="thumb" src="${esc(imgUrl(a.banner.src))}" alt="">` : ''}</td><td><a class="t-title" href="#/ayojon/${encodeURIComponent(a.id)}">${esc(a.title)}</a> ${a.active ? '<span class="badge badge--published">সক্রিয়</span>' : ''}</td>
   <td>${bn(a.number || '')}</td><td>${bn((a.posts || []).length)}টি</td><td>${statusBadge(a.status || 'published')}</td></tr>`).join('') || '<tr><td colspan="5" class="empty">কোনো আয়োজন নেই</td></tr>'}
