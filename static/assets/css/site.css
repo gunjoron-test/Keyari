@@ -1239,3 +1239,6 @@ html { overflow-x: clip; }
 /* ---------- লেখার পাতা: লেখা ছবির বাঁ কিনারা থেকে একটু ডানে, লেখকের আরও লেখার কাছাকাছি (লেখার মাপ একই) ---------- */
 @media (min-width: 992px) { .entry-layout { padding-left: calc(var(--gutter) + 28px); } }
 @media (min-width: 1201px) { .entry-layout { padding-left: calc(var(--gutter) + 48px); } }
+
+/* লেখার পাতা: লেখার ঘর ডান দিকে বেড়ে লেখকের আরও লেখার কাছে (মাঝের ফাঁক কম) */
+@media (min-width: 1201px) { .entry-layout { grid-template-columns: minmax(0, 1fr) 370px; gap: 44px; } }
