@@ -1024,3 +1024,32 @@ html.hdr-compact { --header-h: var(--header-compact); }
   .site-header { transition: transform .3s ease, box-shadow .3s; }
   .site-header.is-hidden { transform: translateY(-100%); }
 }
+
+/* ---------- লেখকের নামের বাঁয়ে ছোট গোল ছবি (সব জায়গায়) ---------- */
+.aname { display: inline-flex; align-items: center; gap: .45em; vertical-align: middle; max-width: 100%; }
+.aname__t { min-width: 0; }
+.avatar--xs { width: 1.5em; height: 1.5em; font-size: .72em; flex: none; border-radius: 50%; object-fit: cover; aspect-ratio: 1 / 1; display: inline-grid; place-items: center; }
+.avatar--xs.avatar--ph { font-size: .72em; font-weight: 700; line-height: 1; }
+img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
+.card-o__author .aname, .ay-card__author .aname, .mini__author .aname, .more-by__meta .aname { gap: .4em; }
+.card-o__author .avatar--xs.avatar--ph { background: rgba(255, 255, 255, .85); color: #29294B; }
+
+/* ---------- লেখার পাতা: হেডার বাঁয়ে, ওপরে ছবি+লেখক • তারিখ ---------- */
+.entry-header { text-align: left; padding-top: 36px; }
+.entry-byline { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 15px; color: var(--text-muted); }
+.entry-byline .entry-author { font-size: 16px; }
+.entry-byline__dot { opacity: .7; }
+.entry-byline time { font-size: 14.5px; }
+.entry-header .entry-title { max-width: 920px; margin: 14px 0 12px; }
+.entry-header .entry-subtitle { margin: 0 0 10px; max-width: 760px; }
+.entry-header .entry-translator { margin: 0 0 4px; }
+.entry-header .entry-ayojon { margin: 10px 0 0; }
+.entry-byline .fs-inline { margin-left: auto; }
+@media (min-width: 992px) { .entry-byline .fs-inline { display: none; } }
+@media (max-width: 991.98px) {
+  .entry-byline .fs-inline { display: inline-flex; gap: 0; align-items: center; height: 34px; padding: 0 2px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
+  .entry-byline .fs-inline button { width: 38px; height: 32px; border: 0; background: none; color: var(--text); display: grid; place-items: center; border-radius: 999px; }
+  .entry-byline .fs-inline button svg { width: 18px; height: 18px; }
+  .entry-byline .fs-inline button:disabled { opacity: .3; }
+  .entry-byline .fs-inline__sep { width: 1px; height: 16px; background: var(--line); }
+}

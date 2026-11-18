@@ -381,7 +381,7 @@ def meta_line(p, author=True, date=True, read=True):
     parts = []
     if author:
         a = p["_author"]
-        parts.append(f'<a class="meta__author" href="{u("/author/" + a["slug"] + "/")}">{esc(a["name"])}</a>')
+        parts.append(f'<a class="meta__author" href="{u("/author/" + a["slug"] + "/")}">{aname(a)}</a>')
     if date:
         parts.append(f'<time class="meta__date" datetime="{p["_date"].isoformat()}">{bn_date(p["_date"])}</time>')
     return '<div class="meta">' + '<span class="meta__dot" aria-hidden="true">·</span>'.join(parts) + "</div>"
@@ -427,7 +427,7 @@ def series_card(s):
     <p class="card-g__cat">ধারাবাহিক · {bn(len(s["posts"]))}টি পর্ব</p>
     <h3 class="card-g__title"><a href="{url}">{esc(s["name"])}</a></h3>
     <p class="card__excerpt clamp-3">{esc(first["_long"])}</p>
-    <p class="card-g__by"><a class="card__author" href="{u("/author/" + first["_author"]["slug"] + "/")}">{esc(first["_author"]["name"])}</a><span aria-hidden="true"> · </span><time datetime="{last["_date"].isoformat()}">{bn_date(last["_date"])}</time></p>
+    <p class="card-g__by"><a class="card__author" href="{u("/author/" + first["_author"]["slug"] + "/")}">{aname(first["_author"])}</a><span aria-hidden="true"> · </span><time datetime="{last["_date"].isoformat()}">{bn_date(last["_date"])}</time></p>
   </div>
 </article>'''
 
@@ -442,7 +442,7 @@ def card_g(p):
     {cat_html}
     <h3 class="card-g__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
     <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
-    <p class="card-g__by"><a class="card__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{esc(p["_author"]["name"])}</a><span aria-hidden="true"> · </span><time datetime="{p["_date"].isoformat()}">{bn_date(p["_date"])}</time></p>
+    <p class="card-g__by"><a class="card__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{aname(p["_author"])}</a><span aria-hidden="true"> · </span><time datetime="{p["_date"].isoformat()}">{bn_date(p["_date"])}</time></p>
   </div>
 </article>'''
 
@@ -451,7 +451,7 @@ def card_v(p, show_date=True, heading="h3"):
     return f'''<article class="card-v">
   <div class="card-v__media"><a href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["cover"].get("alt") or p["title"], "card-v__img", sizes="(max-width: 767px) 100vw, 400px")}</a>
   <div class="card-v__pills">{pills(p, "pill pill--img")}</div></div>
-  {('<p class="card__meta"><a class="card__author" href="' + u("/author/" + p["_author"]["slug"] + "/") + '">' + esc(p["_author"]["name"]) + '</a> · ' + bn_date(p["_date"]) + '</p>') if show_date else ''}
+  {('<p class="card__meta"><a class="card__author" href="' + u("/author/" + p["_author"]["slug"] + "/") + '">' + aname(p["_author"]) + '</a> · ' + bn_date(p["_date"]) + '</p>') if show_date else ''}
   <{heading} class="card-v__title"><a href="{p["_url"]}">{esc(p["title"])}</a></{heading}>
   <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
 </article>'''
@@ -460,7 +460,7 @@ def card_v(p, show_date=True, heading="h3"):
 def card_small(p):
     return f'''<article class="card-s">
   <div class="card-s__body">
-    <a class="card-s__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{esc(p["_author"]["name"])}</a>
+    <a class="card-s__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{aname(p["_author"])}</a>
     <h3 class="card-s__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
     <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
     <div class="card-s__pills">{pills(p, "pill pill--soft")}</div>
@@ -474,7 +474,7 @@ def card_overlay(p):
   {img_tag(p["cover"].get("src"), p["title"], "card-o__img", sizes="370px")}
   <span class="card-o__shade"></span>
   <span class="card-o__body"><span class="badge">{esc(CAT[p["_cats"][0]]["name"]) if p["_cats"] else ""}</span>
-  <span class="card-o__title">{esc(p["title"])}</span><span class="card-o__author">{esc(p["_author"]["name"])}</span></span>
+  <span class="card-o__title">{esc(p["title"])}</span><span class="card-o__author">{aname(p["_author"])}</span></span>
 </a>'''
 
 
@@ -540,7 +540,7 @@ def author_more_widget(a, exclude):
         '<li class="more-by__item"><a class="more-by__media" href="' + x["_url"] + '" tabindex="-1" aria-hidden="true">'
         + img_tag(x["cover"].get("src"), x["title"], "more-by__img", 112, 112, sizes="88px") + '</a>'
         '<div class="more-by__txt"><a class="more-by__title" href="' + x["_url"] + '">' + esc(x["title"]) + '</a>'
-        '<span class="more-by__meta">' + esc(x["_author"]["name"]) + " · " + bn_date(x["_date"]) + "</span></div></li>"
+        '<span class="more-by__meta">' + aname(x["_author"], 18) + " · " + bn_date(x["_date"]) + "</span></div></li>"
         for x in items)
     return ('<div class="widget more-by"><h2 class="more-by__head">' + (esc(a["name"]) + " — আরও লেখা" if all(x in mine for x in items) else "আরও লেখা") + '</h2><ul class="more-by__list">' + lis + "</ul>"
             '<a class="more-by__all" href="' + u("/author/" + a["slug"] + "/") + '">সব লেখা দেখুন ' + icon("right", 15) + "</a></div>")
@@ -567,7 +567,7 @@ def sidebar(exclude=None, minimal=True, author=None):
         featured += pool[::step][: 4 - len(featured)]
     feat_html = "".join(
         f'<li class="mini"><a class="mini__media" href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["title"], "mini__img", 96, 96, sizes="96px")}</a>'
-        f'<div><a class="mini__title" href="{p["_url"]}">{esc(p["title"])}</a><span class="mini__author">{esc(p["_author"]["name"])}</span></div></li>'
+        f'<div><a class="mini__title" href="{p["_url"]}">{esc(p["title"])}</a><span class="mini__author">{aname(p["_author"])}</span></div></li>'
         for p in featured)
     cat_list = "".join(
         f'<li><a href="{cat_url(c["slug"])}"><span>{esc(c.get("icon", ""))} {esc(c["name"])}</span><span class="count">{bn(cat_count(c["slug"]))}</span></a></li>'
@@ -878,7 +878,7 @@ def breadcrumb(items):
     ld = {"@type": "BreadcrumbList", "itemListElement": [
         {"@type": "ListItem", "position": i + 1, "name": label, **({"item": absu(path)} if path else {})}
         for i, (label, path) in enumerate(items)]}
-    return f'<nav class="breadcrumb" aria-label="অবস্থান"><ol>{"".join(lis)}</ol></nav>', ld
+    return "", ld  # দৃশ্যমান পথ-লিংক বাদ; শুধু সার্চ ইঞ্জিনের জন্য JSON-LD
 
 
 # ------------------------------------------------------------------ pages
@@ -965,7 +965,7 @@ def build_home():
     <a class="hero__media" href="{main["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(main["cover"].get("src"), main["cover"].get("alt") or main["title"], "hero__img", eager=True, sizes="(max-width: 991px) 100vw, 720px")}</a>
     <span class="badge badge--img">{esc(CAT[main["_cats"][0]]["name"]) if main["_cats"] else ""}</span>
     <div class="hero__body">
-      <a class="card__author" href="{u("/author/" + main["_author"]["slug"] + "/")}">{esc(main["_author"]["name"])}</a>
+      <a class="card__author" href="{u("/author/" + main["_author"]["slug"] + "/")}">{aname(main["_author"])}</a>
       <h2 class="hero__title"><a href="{main["_url"]}">{esc(main["title"])}</a></h2>
       <p class="hero__excerpt clamp-3">{esc(main.get("subtitle") or main["_long"])}</p>
       <p class="card__meta">{bn_date(main["_date"])}</p>
@@ -985,7 +985,7 @@ def build_home():
         if page == 1 and on("ayojon") and AYOJON:
             a = AYOJON[0]
             aps = [POST_BY_ID[i] for i in a.get("posts", []) if i in POST_BY_ID]
-            cards = "".join(f'<a class="ay-card" href="{p["_url"]}">{img_tag(p["cover"].get("src"), p["title"], "ay-card__img", sizes="260px")}<span class="ay-card__title">{esc(p["title"])}</span><span class="ay-card__author">{esc(p["_author"]["name"])}</span></a>' for p in aps)
+            cards = "".join(f'<a class="ay-card" href="{p["_url"]}">{img_tag(p["cover"].get("src"), p["title"], "ay-card__img", sizes="260px")}<span class="ay-card__title">{esc(p["title"])}</span><span class="ay-card__author">{aname(p["_author"])}</span></a>' for p in aps)
             parts.append(f'''<section class="ayojon-band" aria-labelledby="ay-h">
   <div class="container ayojon-band__inner">
     <div class="ayojon-band__intro">
@@ -1026,16 +1026,6 @@ def build_home():
             parts.append(f'''<section class="series-block container" aria-label="ধারাবাহিক">
   {section_head(sections.get("series", {}).get("title", "ধারাবাহিক"), u("/ধারাবাহিক/"))}
   {more_grid(items, len(ser), "feed__list more-grid")}</section>''')
-        if page == 1 and on("authors"):
-            n = sections.get("authors", {}).get("count", 12)
-            top_authors = sorted([a for a in AUTHORS if a["_posts"]], key=lambda a: (-len(a["_posts"]), a["name"]))[:n]
-            items = "".join(
-                '<a class="author-chip" href="' + u("/author/" + a["slug"] + "/") + '"><span class="author-chip__ring">' + avatar(a, 120) + '</span>'
-                '<span class="author-chip__name">' + esc(a["name"]) + '</span>'
-                '<span class="author-chip__sub">' + author_sub(a) + '</span></a>' for a in top_authors)
-            parts.append(f'''<section class="authors-strip container" aria-label="লেখক পরিচিতি">
-  {section_head(sections.get("authors", {}).get("title", "লেখক পরিচিতি"), u("/লেখক-তালিকা/"), "সব লেখক")}
-  <div class="authors-strip__list">{items}</div></section>''')
         if page == 1 and on("cta"):
             c = sections.get("cta", {})
             parts.append(f'''<section class="cta container" aria-labelledby="cta-h">
@@ -1062,6 +1052,17 @@ def author_sub(a):
     if parts:
         return '<span class="author-chip__dot" aria-hidden="true">•</span>'.join(parts)
     return "লেখক"
+
+
+def aname(a, size=22):
+    """লেখকের নামের বাঁয়ে ছোট গোল ছবি (ছবি না থাকলে নামের প্রথম অক্ষর) + নাম"""
+    if a.get("photo"):
+        av = '<img class="avatar avatar--xs" src="' + asset(a["photo"]) + '" alt="" width="' + str(size) + '" height="' + str(size) + '" loading="lazy">'
+    else:
+        initial = (a.get("name") or "?").strip()[:1]
+        hue = sum(ord(ch) for ch in a.get("slug", "x")) % 360
+        av = '<span class="avatar avatar--xs avatar--ph" style="--h:' + str(hue) + '" aria-hidden="true">' + esc(initial) + "</span>"
+    return '<span class="aname">' + av + '<span class="aname__t">' + esc(a["name"]) + "</span></span>"
 
 
 def avatar(a, size=64):
@@ -1218,14 +1219,15 @@ def build_post(p):
     content = f'''<article class="entry" itemscope itemtype="https://schema.org/Article">
   <header class="entry-header container">
     {bc_html}
-    <a class="entry-author" href="{u("/author/" + a["slug"] + "/")}">{esc(a["name"])}</a>
+    <div class="entry-byline">
+      <a class="entry-author" href="{u("/author/" + a["slug"] + "/")}">{aname(a, 28)}</a>
+      <span class="entry-byline__dot" aria-hidden="true">•</span>
+      <time datetime="{p["_date"].isoformat()}" itemprop="datePublished">{bn_date(p["_date"])}</time>
+      <span class="fs-inline" role="group" aria-label="লেখার আকার"><button type="button" data-fs="-1" aria-label="লেখা ছোট করুন">{A_MINUS}</button><span class="fs-inline__sep" aria-hidden="true"></span><button type="button" data-fs="1" aria-label="লেখা বড় করুন">{A_PLUS}</button></span>
+    </div>
     <h1 class="entry-title" itemprop="headline">{esc(p["title"])}</h1>
     {f'<p class="entry-subtitle">{esc(p["subtitle"])}</p>' if p.get("subtitle") else ""}
     {f'<p class="entry-translator">অনুবাদ : {esc(p["translator"])}</p>' if p.get("translator") else ""}
-    <div class="entry-meta">
-      <span>{icon("calendar", 16)} <time datetime="{p["_date"].isoformat()}" itemprop="datePublished">{bn_date(p["_date"])}</time></span>
-      <span class="fs-inline" role="group" aria-label="লেখার আকার"><button type="button" data-fs="-1" aria-label="লেখা ছোট করুন">{A_MINUS}</button><span class="fs-inline__sep" aria-hidden="true"></span><button type="button" data-fs="1" aria-label="লেখা বড় করুন">{A_PLUS}</button></span>
-    </div>
     {ay}
     <figure class="entry-cover">{img_tag(cover.get("src"), cover.get("alt") or p["title"], "entry-cover__img", eager=True, sizes="(max-width: 1296px) 100vw, 1248px")}
     {f'<figcaption>{esc(cover["caption"])}</figcaption>' if cover.get("caption") else ""}</figure>
@@ -1244,7 +1246,7 @@ def build_post(p):
       <div class="{body_cls}" itemprop="articleBody">{body}</div>
       {series_html}
       <footer class="entry-footer">
-        <div class="entry-footer__by"><a class="meta__author" href="{u("/author/" + a["slug"] + "/")}">{esc(a["name"])}</a> · {bn_date(p["_date"])}</div>
+        <div class="entry-footer__by"><a class="meta__author" href="{u("/author/" + a["slug"] + "/")}">{aname(a)}</a> · {bn_date(p["_date"])}</div>
         <div class="entry-footer__cats">{cats_html}</div>
         {f'<div class="entry-footer__tags">{tags_html}</div>' if tags_html else ""}
       </footer>
@@ -1536,7 +1538,7 @@ def build_tags():
 
 
 def build_search():
-    idx = [{"t": p["title"], "a": p["_author"]["name"], "c": " ".join(CAT[c]["name"] for c in p["_cats"]),
+    idx = [{"t": p["title"], "a": p["_author"]["name"], "ap": asset(p["_author"].get("photo", "")) if p["_author"].get("photo") else "", "as": p["_author"].get("slug", ""), "c": " ".join(CAT[c]["name"] for c in p["_cats"]),
             "e": p["excerpt"][:200], "u": p["_url"], "i": asset(p["cover"].get("src", "")), "d": bn_date(p["_date"]),
             "g": " ".join(p.get("tags", []))} for p in POSTS]
     (DIST / "search-index.json").write_text(json.dumps(idx, ensure_ascii=False, separators=(",", ":")), "utf-8")

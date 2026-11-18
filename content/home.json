@@ -46,12 +46,6 @@
       "title": "ধারাবাহিক"
     },
     {
-      "type": "authors",
-      "enabled": true,
-      "title": "লেখক পরিচিতি",
-      "count": 12
-    },
-    {
       "type": "cta",
       "enabled": false,
       "title": "আপনার লেখা পাঠান",

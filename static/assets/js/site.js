@@ -478,7 +478,7 @@
           var it = x.it;
           return '<article class="card-v"><div class="card-v__media"><a href="' + it.u + '" tabindex="-1">' +
             (it.i ? '<img class="card-v__img" data-lz src="' + esc(it.i) + '" alt="' + esc(it.t) + '" loading="lazy" width="1169" height="658">' : '<div class="ph"><span>কেয়ারি</span></div>') +
-            '</a></div><p class="card__meta"><span class="card__author">' + esc(it.a) + '</span> · ' + esc(it.d) + ' · ' + esc(it.c) + '</p>' +
+            '</a></div><p class="card__meta"><span class="card__author"><span class="aname">' + (it.ap ? '<img class="avatar avatar--xs" src="' + esc(it.ap) + '" alt="" width="22" height="22" loading="lazy">' : '<span class="avatar avatar--xs avatar--ph" style="--h:' + (function (sl) { var h = 0; for (var q = 0; q < sl.length; q++) h += sl.charCodeAt(q); return h % 360; })(it.as || 'x') + '" aria-hidden="true">' + esc((it.a || '?').charAt(0)) + '</span>') + '<span class="aname__t">' + esc(it.a) + '</span></span></span> · ' + esc(it.d) + ' · ' + esc(it.c) + '</p>' +
             '<h2 class="card-v__title"><a href="' + it.u + '">' + esc(it.t) + '</a></h2><p class="card__excerpt clamp-3">' + esc(it.e) + '</p></article>';
         }).join('');
         if (total > 1 && pagesEl) {
