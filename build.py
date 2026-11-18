@@ -428,7 +428,6 @@ def translator_line(p):
 def card_h(p, eager=False):
     return f'''<article class="card-h">
   <a class="card-h__media" href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["cover"].get("alt") or p["title"], "card-h__img", eager=eager, sizes="(max-width: 575px) 100vw, 400px")}</a>
-  <div class="card-h__pills">{pills(p, "pill pill--img")}</div>
   <div class="card-h__body">
     <a class="card__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{esc(p["_author"]["name"])}</a>
     <h3 class="card-h__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
@@ -483,7 +482,7 @@ def card_g(p):
 def card_v(p, show_date=True, heading="h3"):
     return f'''<article class="card-v">
   <div class="card-v__media"><a href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["cover"].get("alt") or p["title"], "card-v__img", sizes="(max-width: 767px) 100vw, 400px")}</a>
-  <div class="card-v__pills">{pills(p, "pill pill--img")}</div></div>
+</div>
   {('<p class="card__meta"><a class="card__author" href="' + u("/author/" + p["_author"]["slug"] + "/") + '">' + aname(p["_author"]) + '</a> · ' + bn_date(p["_date"]) + '</p>') if show_date else ''}
   <{heading} class="card-v__title"><a href="{p["_url"]}">{esc(p["title"])}</a></{heading}>
   <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
@@ -496,7 +495,6 @@ def card_small(p):
     <a class="card-s__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{aname(p["_author"])}</a>
     <h3 class="card-s__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
     <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
-    <div class="card-s__pills">{pills(p, "pill pill--soft")}</div>
   </div>
   <a class="card-s__media" href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["title"], "card-s__img", 160, 160, sizes="160px")}</a>
 </article>'''
@@ -506,8 +504,7 @@ def card_overlay(p):
     return f'''<a class="card-o" href="{p["_url"]}">
   {img_tag(p["cover"].get("src"), p["title"], "card-o__img", sizes="370px")}
   <span class="card-o__shade"></span>
-  <span class="card-o__body"><span class="badge">{esc(CAT[p["_cats"][0]]["name"]) if p["_cats"] else ""}</span>
-  <span class="card-o__title">{esc(p["title"])}</span><span class="card-o__author">{aname(p["_author"])}</span></span>
+  <span class="card-o__body"><span class="card-o__title">{esc(p["title"])}</span><span class="card-o__author">{aname(p["_author"])}</span></span>
 </a>'''
 
 
@@ -1015,7 +1012,6 @@ def build_home():
             parts.append(f'''<section class="hero container" aria-label="প্রধান লেখা">
   <article class="hero__main">
     <a class="hero__media" href="{main["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(main["cover"].get("src"), main["cover"].get("alt") or main["title"], "hero__img", eager=True, sizes="(max-width: 991px) 100vw, 720px")}</a>
-    <span class="badge badge--img">{esc(CAT[main["_cats"][0]]["name"]) if main["_cats"] else ""}</span>
     <div class="hero__body">
       <a class="card__author" href="{u("/author/" + main["_author"]["slug"] + "/")}">{aname(main["_author"])}</a>
       <h2 class="hero__title"><a href="{main["_url"]}">{esc(main["title"])}</a></h2>
@@ -1299,7 +1295,6 @@ def build_post(p):
       <div class="{body_cls}" itemprop="articleBody">{body}</div>
       {series_html}
       {share_row(p)}
-      {f'<div class="entry-footer__tags">{tags_html}</div>' if tags_html else ""}
       {comments_html(p)}
     </div>
     {sidebar(exclude=p, author=a)}
