@@ -521,25 +521,20 @@ def slider_posts():
 
 
 def author_more_widget(a, exclude):
-    """লেখার পাতার ডানে: এই লেখকের আরও লেখা (কমপক্ষে ৩টি, ওপর-নিচ সাজানো)"""
+    """লেখার পাতার ডানে: শুধু এই লেখকেরই আরও লেখা। প্রথম ৩টি দেখায়, বাকিগুলো 'আরও দেখুন'-এ একই জায়গায় খোলে।"""
     mine = [x for x in a.get("_posts", []) if x is not exclude]
-    items = mine[:5]
-    if len(items) < 3:  # লেখকের লেখা কম হলে আগে একই বিভাগের, তারপর সর্বশেষ লেখা দিয়ে ভরা
-        for same_cat in (True, False):
-            for x in POSTS:
-                if len(items) >= 3:
-                    break
-                if x is exclude or x in items:
-                    continue
-                if same_cat and not (exclude["_top"] and exclude["_top"] in x["_cats"]):
-                    continue
-                items.append(x)
-    if not items:
+    if not mine:
         return ""
-    cards = "".join(card_g(x) for x in items[:3])
-    return ('<div class="widget more-by more-by--cards"><h2 class="more-by__head">' + (esc(a["name"]) + " — আরও লেখা" if all(x in mine for x in items[:3]) else "আরও লেখা") + '</h2>'
-            '<div class="more-by__cards">' + cards + "</div>"
-            '<a class="more-by__all" href="' + u("/author/" + a["slug"] + "/") + '">সব লেখা দেখুন ' + icon("right", 15) + "</a></div>")
+    shown = mine[:12]
+    cards = "".join(card_g(x) for x in shown)
+    btn = ""
+    if len(shown) > 3:
+        btn = '<div class="more-wrap"><button class="btn btn--ghost more-btn" type="button" data-more aria-expanded="false">আরও দেখুন</button></div>'
+    all_link = ""
+    if len(mine) > len(shown):
+        all_link = '<a class="more-by__all" href="' + u("/author/" + a["slug"] + "/") + '">' + esc(a["name"]) + "-এর সব লেখা " + icon("right", 15) + "</a>"
+    return ('<div class="widget more-by more-by--cards"><h2 class="more-by__head">লেখকের আরও লেখা</h2>'
+            '<div class="more-by__cards" data-more-grid>' + cards + "</div>" + btn + all_link + "</div>")
 
 
 def sidebar(exclude=None, minimal=True, author=None):

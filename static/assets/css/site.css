@@ -1067,3 +1067,6 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 .more-by--cards .more-by__head { font-size: 19px; margin-bottom: 18px; padding-bottom: 12px; }
 .more-by__cards { display: flex; flex-direction: column; gap: 30px; }
 .more-by--cards .more-by__all { margin-top: 18px; }
+
+.more-by__cards:not(.is-open) > :nth-child(n+4) { display: none; }
+.more-by--cards .more-wrap { margin-top: 26px; justify-content: flex-start; }
