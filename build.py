@@ -792,7 +792,7 @@ def footer():
         {f'<p class="sf__notice">{notice}</p>' if notice else ""}
       </div>
       <div class="sf__follow">
-        {f'<p class="sf__heading">সাথে থাকুন</p>{soc}' if soc else ""}
+        {f'<p class="sf__heading">সাথে থাকুন</p><p class="sf__sub">নতুন লেখার খবর সবার আগে পেতে আমাদের সাথে যুক্ত থাকুন।</p>{soc}' if soc else ""}
       </div>
       <div class="sf__editor">
         {ed_name}

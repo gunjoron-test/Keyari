@@ -1242,3 +1242,32 @@ html { overflow-x: clip; }
 
 /* লেখার পাতা: লেখার ঘর ডান দিকে বেড়ে লেখকের আরও লেখার কাছে (মাঝের ফাঁক কম) */
 @media (min-width: 1201px) { .entry-layout { grid-template-columns: minmax(0, 1fr) 370px; gap: 44px; } }
+
+/* ---------- ফুটার রিডিজাইন: তিন কলাম, পাতলা বিভাজক রেখা, বাঁ-সারিবদ্ধ, পরিচ্ছন্ন ---------- */
+.sf__top { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); gap: 0; align-items: stretch; padding: 52px 0 44px; }
+.sf__brand, .sf__follow, .sf__editor { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; text-align: left; padding-top: 0; min-width: 0; max-width: none; }
+.sf__brand { padding-right: 48px; gap: 10px; }
+.sf__follow { padding: 0 44px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); gap: 8px; min-width: 0; }
+.sf__editor { padding-left: 44px; gap: 4px; }
+.sf__brand .footer__logo img { width: 88px; }
+.sf__tagline { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.55; }
+.sf__notice { font-size: 13.5px; line-height: 1.8; color: var(--text-muted); max-width: 440px; }
+.sf__heading { font-size: 18px; font-weight: 700; line-height: 1.3; }
+.sf__heading::after { margin: 9px 0 0; width: 28px; }
+.sf__sub { font-size: 13.5px; line-height: 1.75; color: var(--text-muted); max-width: 280px; margin-top: 6px; }
+.sf__follow .footer__social, .sf__editor .footer__social { justify-content: flex-start; margin-top: 12px; gap: 20px; }
+.footer__social .social-ico { width: 22px; height: 22px; }
+.footer__social .social-ico svg { width: 20px; height: 20px; }
+.sf__editor-name { font-size: 20px; font-weight: 700; line-height: 1.35; }
+.sf__role { font-size: 13.5px; color: var(--text-muted); margin-bottom: 0; }
+.sf__line { margin-top: 0; }
+@media (max-width: 991.98px) {
+  .sf__top { grid-template-columns: 1fr; padding: 36px 0 28px; }
+  .sf__brand, .sf__follow, .sf__editor { align-items: center; text-align: center; padding: 26px 0; border: 0; }
+  .sf__brand { padding-top: 0; }
+  .sf__follow { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .sf__editor { padding-bottom: 0; }
+  .sf__heading::after { margin-left: auto; margin-right: auto; }
+  .sf__sub, .sf__notice { max-width: none; }
+  .sf__follow .footer__social, .sf__editor .footer__social { justify-content: center; }
+}
