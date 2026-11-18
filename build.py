@@ -152,6 +152,26 @@ for c in CATS:
 TOP_CATS = sorted([c for c in CATS if not c.get("parent")], key=lambda x: x.get("order", 99))
 
 
+CAT_ICON_PATHS = {
+    "kothamukh": '<path d="M12 3l5 6-5 12-5-12z"/><path d="M12 9v5"/><circle cx="12" cy="14.5" r="1"/>',
+    "rochonaboli": '<path d="M8 4h10a2 2 0 0 1 2 2v1H8z"/><path d="M8 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V7"/><path d="M10 11h6M10 15h6"/>',
+    "godyolekha": '<path d="M20 4c-6 0-11 4-12 11l-3 5"/><path d="M20 4c0 6-4 10-11 11"/><path d="M9 15h5"/>',
+    "kobitapunjo": '<path d="M12 21v-8"/><path d="M12 13c0-4 3-7 8-7 0 4-3 7-8 7z"/><path d="M12 15c0-3-2.5-5.5-7-5.5 0 3.5 2.5 5.5 7 5.5z"/>',
+    "kothasahityo": '<path d="M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2 2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z"/><path d="M12 6v14"/>',
+    "jibonisahityo": '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+    "somalochona": '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.5-4.5"/><path d="M8.5 11h5"/>',
+    "alapon": '<path d="M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3.5V15H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M17 9h2.5a1.5 1.5 0 0 1 1.5 1.5v5a1.5 1.5 0 0 1-1.5 1.5H19v2.5L15.5 17H12"/>',
+    "shilposomachar": '<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.5-1.9-.4-1.2.4-2.1 1.5-2.1H17a4 4 0 0 0 4-4c0-5-4-10-9-10z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15.5" cy="8" r="1"/>',
+}
+CAT_ICON_DEFAULT = '<path d="M3 12V5a1 1 0 0 1 1-1h7l9 9-8 8z"/><circle cx="8" cy="9" r="1.3"/>'
+
+
+def cat_ico(c, size=22):
+    """বিভাগের আসল ভেক্টর আইকন (ইমোজি নয়); রঙ ব্র্যান্ড-সবুজ (CSS-এ)"""
+    p = CAT_ICON_PATHS.get(c.get("slug"), CAT_ICON_DEFAULT)
+    return ('<svg class="cat-ico" viewBox="0 0 24 24" width="' + str(size) + '" height="' + str(size) + '" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>")
+
+
 def cat_url(slug):
     c = CAT.get(slug)
     if not c:
@@ -1003,7 +1023,7 @@ def build_home():
         if page == 1:
             parts.append(banner_slider("ads.json", "ad"))
         if page == 1 and on("category_pills"):
-            pills_html = "".join(f'<a class="pill-lg" href="{cat_url(c["slug"])}"><span aria-hidden="true">{esc(c.get("icon", ""))}</span>{esc(c["name"])}</a>'
+            pills_html = "".join(f'<a class="pill-lg" href="{cat_url(c["slug"])}"><span aria-hidden="true">{cat_ico(c, 20)}</span>{esc(c["name"])}</a>'
                                  for c in TOP_CATS if c.get("home_pill", True))
             parts.append(f'''<section class="topics container" aria-labelledby="topics-h">
   <h2 class="sec-label sec-label--center" id="topics-h">{esc(sections.get("category_pills", {}).get("title", "পছন্দসই বিষয়ে লেখা পড়ুন"))}</h2>
@@ -1372,7 +1392,7 @@ def build_categories():
         kids = "".join(f'<li><a href="{cat_url(k["slug"])}">{esc(k["name"])}</a> <span class="count">{bn(cat_count(k["slug"]))}</span></li>' for k in c["children"])
         cards += f'''<article class="topic-card">
   <a class="topic-card__media" href="{cat_url(c["slug"])}" tabindex="-1" aria-hidden="true">{img_tag(latest[0]["cover"].get("src") if latest else "", c["name"], "topic-card__img", sizes="400px")}</a>
-  <div class="topic-card__body"><h2 class="topic-card__title"><a href="{cat_url(c["slug"])}"><span aria-hidden="true">{esc(c.get("icon", ""))}</span> {esc(c["name"])}</a></h2>
+  <div class="topic-card__body"><h2 class="topic-card__title"><a href="{cat_url(c["slug"])}"><span class="topic-card__ico" aria-hidden="true">{cat_ico(c, 22)}</span> {esc(c["name"])}</a></h2>
   <p class="archive-desc">{esc(c.get("description", ""))}</p><p class="card__meta">{bn(cat_count(c["slug"]))}টি লেখা</p>
   {f'<ul class="topic-card__kids">{kids}</ul>' if kids else ""}</div></article>'''
     bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("বিষয়সূচি", "/বিষয়সূচি/")])
@@ -1447,7 +1467,7 @@ def build_pages():
                         ("বাগানের কেয়ারি", "শখের বাগানে বাখারির বেড়ায় বিশেষিত যে অংশ, তারও নাম কেয়ারি।", "🌱"),
                         ("প্রেম-প্রযত্ন", "প্রিয় মানুষ, প্রিয় জিনিসের প্রতি যে প্রেম-প্রযত্ন, তাতেও থাকে কেয়ারির ছাপ।", "♡")]
             mean_html = "".join(f'<div class="meaning"><span class="meaning__icon" aria-hidden="true">{ic}</span><h2 class="meaning__title">{t}</h2><p>{d}</p></div>' for t, d, ic in meanings)
-            cats = "".join(f'<a class="topic-mini" href="{cat_url(c["slug"])}"><span class="topic-mini__icon" aria-hidden="true">{esc(c.get("icon", ""))}</span><span>{esc(c["name"])}</span><span class="count">{bn(cat_count(c["slug"]))}টি লেখা</span></a>' for c in TOP_CATS)
+            cats = "".join(f'<a class="topic-mini" href="{cat_url(c["slug"])}"><span class="topic-mini__icon" aria-hidden="true">{cat_ico(c, 24)}</span><span>{esc(c["name"])}</span><span class="count">{bn(cat_count(c["slug"]))}টি লেখা</span></a>' for c in TOP_CATS)
             content = f'''<div class="container page page--about">{bc_html}
 <header class="page-hero"><h1 class="page-title">{esc(pg["title"])}</h1><p class="page-lead">{esc(S.get("tagline"))}</p></header>
 {f'<figure class="page-banner">{img_tag(banner.get("src"), banner.get("alt") or pg["title"], "page-banner__img", eager=True)}</figure>' if banner.get("src") else ""}

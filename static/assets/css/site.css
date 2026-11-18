@@ -1152,3 +1152,9 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 /* ---------- শুধু লেখার (আর্টিকেল) পাতায়: পড়ার লেখা আরেকটু বড় ---------- */
 body.single .entry-content { font-size: 20px; line-height: 1.95; }
 @media (max-width: 767.98px) { body.single .entry-content { font-size: 19px; } }
+
+/* বিভাগের আসল ভেক্টর আইকন — ব্র্যান্ড-সবুজ */
+.cat-ico { color: var(--accent); flex: none; display: block; }
+.topic-mini__icon, .topic-card__ico { display: inline-grid; place-items: center; color: var(--accent); }
+.topic-card__ico { vertical-align: middle; margin-right: 4px; }
+.pill-lg .cat-ico { display: inline-block; vertical-align: middle; margin-right: 4px; }
