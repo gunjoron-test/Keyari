@@ -12,7 +12,7 @@
   --bg-start: #FDFDFF;
   --bg-end: #F8F7FF;
   --surface: #FFFFFF;
-  --header-bg: rgba(253, 253, 255, .92);
+  --header-bg: #FDFDFF;
   --highlight: #F2F2F6;
   --menu-link: #222222;
   --btn: linear-gradient(180deg, #80D3B2 0%, #00A664 100%);
@@ -41,7 +41,7 @@
   --bg-start: #18181B;
   --bg-end: #18181B;
   --surface: #222226;
-  --header-bg: rgba(24, 24, 27, .92);
+  --header-bg: #18181B;
   --highlight: #2E2E33;
   --menu-link: #EDEDF2;
   --btn: linear-gradient(180deg, #2BC489 0%, #00955A 100%);
@@ -1204,3 +1204,6 @@ html { overflow-x: clip; }
 .tone-1 { --tone: var(--tone-1); } .tone-2 { --tone: var(--tone-2); } .tone-3 { --tone: var(--tone-3); } .tone-4 { --tone: var(--tone-4); }
 .tone-5 { --tone: var(--tone-5); } .tone-6 { --tone: var(--tone-6); } .tone-7 { --tone: var(--tone-7); } .tone-8 { --tone: var(--tone-8); }
 .tone-9 { --tone: var(--tone-9); } .tone-10 { --tone: var(--tone-10); } .tone-11 { --tone: var(--tone-11); } .tone-12 { --tone: var(--tone-12); }
+
+/* হেডার: সাধারণ, কোনো গ্লাস/ঝাপসা প্রভাব ছাড়া */
+.site-header { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: var(--header-bg) !important; }
