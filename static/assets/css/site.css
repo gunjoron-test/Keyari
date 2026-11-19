@@ -388,9 +388,9 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 .entry-content > * + * { margin-top: 0; }
 /* :where() দিয়ে নিচু অগ্রাধিকার — অনুচ্ছেদ স্টাইল (.ps-*) ও ইনলাইন সারিবদ্ধতা এগুলোকে বদলাতে পারে */
 :where(.entry-content) p { margin: 0 0 1.6em; }
-:where(.entry-content) :where(p, li, blockquote) { text-align: justify; text-justify: inter-character; }
+:where(.entry-content) :where(p, li, blockquote) { text-align: justify; text-justify: inter-word; }
 :where(.entry-content.no-justify) :where(p, li, blockquote) { text-align: left; }
-.card__excerpt, .hero__excerpt, .archive-desc, .author-box__bio, .footer__desc, .editor-card + p, .ay-card__title { text-align: justify; text-justify: inter-character; }
+.card__excerpt, .hero__excerpt, .archive-desc, .author-box__bio, .footer__desc, .editor-card + p, .ay-card__title { text-align: justify; text-justify: inter-word; }
 .entry-content h2, .entry-content h3, .entry-content h4, .entry-content h5, .entry-content h6 { margin: 1.8em 0 .7em; line-height: 1.4; }
 .entry-content h2 { font-size: 1.45em; }
 .entry-content h3 { font-size: 1.25em; }
@@ -1395,3 +1395,13 @@ html { overflow-x: clip; }
 .card-s__media { flex: 0 0 clamp(150px, 42%, 240px); }
 @media (max-width: 575.98px) { .card-s__media { flex: none; align-self: stretch; } }
 .card-s__cat { margin: 0 0 2px; }
+
+/* ---------- সব জায়গায় জাস্টিফাই: ফাঁক শব্দে শব্দে (অক্ষরে অক্ষরে নয়); হাইফেন-ভাঙা নেই ---------- */
+.card__excerpt, .hero__excerpt, .archive-desc, .author-box__bio, .author-hero__bio, .card-g__body p, .page-lead, .entry-content p, .entry-content li, .entry-content blockquote, .cm__text {
+  text-align: justify; text-justify: inter-word; word-spacing: normal; letter-spacing: normal; hyphens: manual;
+}
+
+/* ---------- হিরোর ডানের ছবি: আগের উচ্চতা, দুই পাশে চওড়া (১৬:৯) ---------- */
+.card-s__media { flex: 0 0 clamp(170px, 50%, 270px); }
+.card-s__img, .card-s .ph { width: 100%; height: auto; aspect-ratio: 16 / 9; }
+@media (max-width: 575.98px) { .card-s__media { flex: none; align-self: stretch; } }
