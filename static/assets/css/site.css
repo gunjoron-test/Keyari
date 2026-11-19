@@ -1823,3 +1823,7 @@ body.sx-open { overflow: hidden; }
   .banner-slider .slider__arrow { top: calc(50% - 10px); }
 }
 @media (max-width: 640px) { .ad-slider { margin-bottom: 60px; } }
+
+/* হিরো সেকশনেও অন্য সেকশনের মতো হালকা রঙিন পটি (পুরো প্রস্থ); পরের সেকশনের পটির সঙ্গে সরাসরি লাগানো */
+.home .hero.tone { padding-bottom: 0; margin-top: 64px; margin-bottom: 80px; }
+@media (max-width: 640px) { .home .hero.tone { margin-top: 56px; margin-bottom: 80px; } }

@@ -1125,7 +1125,7 @@ def build_home():
             parts.append("<noscript><style>.more-grid>*{display:block!important}.feed__list>*{display:flex!important}.more-wrap{display:none!important}</style></noscript>")
             parts.append(banner_slider())
         if page == 1 and on("hero") and main:
-            parts.append(f'''<section class="hero container" aria-label="প্রধান লেখা">
+            parts.append(f'''<section class="hero container tone tone-8" aria-label="প্রধান লেখা">
   <article class="hero__main">
     <a class="hero__media" href="{main["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(main["cover"].get("src"), main["cover"].get("alt") or main["title"], "hero__img", eager=True, sizes="(max-width: 991px) 100vw, 720px")}</a>
     <div class="hero__body">
