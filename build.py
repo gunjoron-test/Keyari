@@ -1462,7 +1462,6 @@ def build_authors():
                  f'<div><dt>সর্বশেষ প্রকাশ</dt><dd>{bn_date(latest)}</dd></div>')
         header_html = f'''<div class="author-hero__ring">{avatar(a, 144)}</div>
 <div class="author-hero__main">
-  <p class="author-hero__kicker">লেখক</p>
   <h1 class="author-hero__name">{esc(a["name"])}</h1>
   {f'<p class="author-hero__bio">{esc(a["bio"])}</p>' if a.get("bio") else ""}
   <dl class="author-stats">{stats}</dl>
@@ -1477,7 +1476,7 @@ def build_authors():
         archive_page(path=path, title=a["name"], items=posts, header_html=header_html, active="বাতায়ন", per=per_page,
                      header_cls="author-hero", before_grid=before,
                      card_fn=lambda p: card_g(p).replace('<article class="card-g">', f'<article class="card-g" data-cat="{p["_top"] or ""}">', 1),
-                     crumbs=[("মুখপাতা", "/"), ("লেখক তালিকা", "/লেখক-তালিকা/"), (a["name"], path)],
+                     crumbs=[("মুখপাতা", "/"), ("লেখকতালিকা", "/লেখক-তালিকা/"), (a["name"], path)],
                      description=a.get("bio") or f'{a["name"]}-এর লেখা — {SITE}', ld_type="ProfilePage")
     # লেখক তালিকা
     with_posts = sorted([a for a in AUTHORS if a["_posts"]], key=lambda a: a["name"])
@@ -1485,13 +1484,13 @@ def build_authors():
 <span class="author-card__name">{esc(a["name"])}</span>
 <span class="author-card__bio clamp-2">{esc(a.get("bio") or "")}</span>
 <span class="author-card__count">{bn(len(a["_posts"]))}টি লেখা</span></a>''' for a in with_posts)
-    bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("লেখক তালিকা", "/লেখক-তালিকা/")])
+    bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("লেখকতালিকা", "/লেখক-তালিকা/")])
     body = f'''<div class="container archive">{bc_html}
-<header class="archive-header"><p class="sec-label">বাতায়ন</p><h1 class="archive-title">লেখক তালিকা</h1>
+<header class="archive-header"><h1 class="archive-title">লেখকতালিকা</h1>
 
 <label class="sr-only" for="af">লেখক খুঁজুন</label><input class="filter-input" id="af" type="search" placeholder="লেখকের নাম লিখুন…" data-filter=".author-card"></header>
 <div class="author-grid">{cards}</div></div>'''
-    write("/লেখক-তালিকা/", layout(title="লেখক তালিকা", description=f"{SITE}-এর সব লেখকের তালিকা, পরিচিতি ও লেখা।",
+    write("/লেখক-তালিকা/", layout(title="লেখকতালিকা", description=f"{SITE}-এর সব লেখকের তালিকা, পরিচিতি ও লেখা।",
                                 path="/লেখক-তালিকা/", body=body, active="বাতায়ন", ld=[bc_ld]))
 
 

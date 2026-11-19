@@ -1445,3 +1445,9 @@ html { overflow-x: clip; }
 .more-btn .more-ico { transition: transform .3s cubic-bezier(.22,.61,.36,1); }
 .more-btn.is-open .more-ico { transform: rotate(180deg); }
 .more-by__none { color: var(--text-muted); font-size: 15px; line-height: 1.7; padding: 6px 0; }
+
+/* লেখকের প্রোফাইল ছবির বৃত্ত-রেখা: ব্র্যান্ড-সবুজ */
+.author-card .avatar { outline: 2.5px solid var(--accent); outline-offset: 3px; }
+.author-hero__ring { border: 3px solid var(--accent); }
+.avatar--xs { box-shadow: 0 0 0 1.5px var(--accent); }
+.author-box__who .avatar { box-shadow: 0 0 0 4px var(--surface), 0 0 0 6px var(--accent); }
