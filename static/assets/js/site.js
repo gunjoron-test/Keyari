@@ -389,14 +389,21 @@
       if (asMenu) asMenuSet(asMenu.hidden);
       else if (asRun) asStop(); else asStart();
     });
-    if (asPlay) asPlay.addEventListener('click', function () { if (asRun) asStop(); else asStart(); });
+    if (asPlay) asPlay.addEventListener('click', function () { if (asRun) asStop(); else { asStart(); if (asRun) asMenuSet(false); } });
     doc.addEventListener('pointerdown', function (e) { if (asMenu && !asMenu.hidden && !asBox.contains(e.target)) asMenuSet(false); });
     doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && asMenu && !asMenu.hidden && !asRun) asMenuSet(false); });
     asSlows.forEach(function (b) { b.addEventListener('click', function () { if (asIdx > 0) { asIdx--; store.set('keyari-as-speed', asIdx); asPaint(); } }); });
     asFasts.forEach(function (b) { b.addEventListener('click', function () { if (asIdx < LEVELS.length - 1) { asIdx++; store.set('keyari-as-speed', asIdx); asPaint(); } }); });
     $('[data-as-close]', asBox).addEventListener('click', asClose);
     // পাঠক নিজে স্ক্রল করলে: চাকা/কি-বোর্ডে সঙ্গে সঙ্গে মিশে যায়; আঙুলে টানলে টানার সময়টুকু থেমে থাকে
-    window.addEventListener('touchstart', function (e) { if (asRun && !asBox.contains(e.target)) asTouching = true; }, { passive: true });
+    var asTY = 0;
+    window.addEventListener('touchstart', function (e) { if (asRun && !asBox.contains(e.target)) { asTouching = true; asTY = e.touches[0].clientY; } }, { passive: true });
+    // আঙুল নিচের দিকে টানলে (লেখা ওপরে ফিরছে = উল্টো দিক) অটো-স্ক্রল থামে; ওপরের দিকে টানলে (সামনে এগোচ্ছে) থামে না, বাড়তি এগিয়ে চলতে থাকে
+    window.addEventListener('touchmove', function (e) {
+      if (asRun && asTouching && e.touches[0].clientY - asTY > 10) asStop();
+    }, { passive: true });
+    // পাতায় ট্যাপ / মাউস-ক্লিক করলে থামে (ডকের নিজের বোতামে নয়)
+    doc.addEventListener('click', function (e) { if (asRun && !asBox.contains(e.target)) asStop(); });
     window.addEventListener('touchend', function () { if (asTouching) { asTouching = false; asHoldUntil = performance.now() + 700; } }, { passive: true });
     window.addEventListener('wheel', function () { if (asRun) asHoldUntil = performance.now() + 250; }, { passive: true });
     doc.addEventListener('keydown', function (e) { if (asRun && e.key === 'Escape') asStop(); });
