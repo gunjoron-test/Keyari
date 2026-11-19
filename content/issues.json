@@ -54,61 +54,6 @@
       "date": "2026-05-01T09:00:00+06:00",
       "posts": [],
       "status": "published"
-    },
-    {
-      "id": "is-6",
-      "number": 6,
-      "slug": "sonkha-6",
-      "title": "ষষ্ঠ সংখ্যা",
-      "cover": "",
-      "summary": "",
-      "date": "2026-06-01T09:00:00+06:00",
-      "posts": [],
-      "status": "published"
-    },
-    {
-      "id": "is-7",
-      "number": 7,
-      "slug": "sonkha-7",
-      "title": "সপ্তম সংখ্যা",
-      "cover": "",
-      "summary": "",
-      "date": "2026-07-01T09:00:00+06:00",
-      "posts": [],
-      "status": "published"
-    },
-    {
-      "id": "is-8",
-      "number": 8,
-      "slug": "sonkha-8",
-      "title": "অষ্টম সংখ্যা",
-      "cover": "",
-      "summary": "",
-      "date": "2026-08-01T09:00:00+06:00",
-      "posts": [],
-      "status": "published"
-    },
-    {
-      "id": "is-9",
-      "number": 9,
-      "slug": "sonkha-9",
-      "title": "নবম সংখ্যা",
-      "cover": "",
-      "summary": "",
-      "date": "2026-09-01T09:00:00+06:00",
-      "posts": [],
-      "status": "published"
-    },
-    {
-      "id": "is-10",
-      "number": 10,
-      "slug": "sonkha-10",
-      "title": "দশম সংখ্যা",
-      "cover": "",
-      "summary": "",
-      "date": "2026-10-01T09:00:00+06:00",
-      "posts": [],
-      "status": "published"
     }
   ]
 }
