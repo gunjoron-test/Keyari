@@ -522,7 +522,7 @@ def video_section(tone):
     if not cards:
         return ""
     return f'''<section class="cat-block container video-block tone tone-{tone}" aria-label="ভিডিও">
-  {section_head(cfg.get("title") or "ভিডিও")}
+  {section_head(cfg.get("title") or "ভিডিও", u("/ভিডিও/"), "সব ভিডিও")}
   {more_grid("".join(cards), len(cards), "feed__list more-grid")}
 </section>'''
 
@@ -1732,6 +1732,20 @@ def build_series():
                      description=f'{s["name"]} — সব পর্ব একসাথে। {SITE}')
 
 
+def build_videos():
+    """/ভিডিও/ — অ্যাডমিনে যোগ করা সব ইউটিউব ভিডিও, ৩ কলামে"""
+    cfg = load("videos.json", {}) or {}
+    if cfg.get("enabled", True) is False:
+        return
+    cards = [c for c in (video_card(v) for v in cfg.get("items", []) if v.get("active", True) is not False) if c]
+    if not cards:
+        return
+    title = cfg.get("title") or "ভিডিও"
+    bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), (title, "/ভিডিও/")])
+    write("/ভিডিও/", layout(title=title, description=f"{SITE} — {title}", path="/ভিডিও/",
+                              body=f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">{esc(title)}</h1></header><div class="feed__list">{"".join(cards)}</div></div>', ld=[bc_ld]))
+
+
 def build_tags():
     tags = {}
     for p in POSTS:
@@ -1869,12 +1883,13 @@ def main():
     build_ayojon()
     build_issues()
     build_series()
+    build_videos()
     build_tags()
     build_search()
     build_404()
     build_feeds()
     extra = ["/বিষয়সূচি/", "/লেখক-তালিকা/", "/আয়োজন/", "/সংখ্যাগুচ্ছ/", "/ধারাবাহিক/"] + [f"/{p['slug']}/" for p in PAGES] + \
-            [ayojon_path(a) for a in AYOJON] + [issue_path(x) for x in ISSUES] + [f"/ধারাবাহিক/{s}/" for s in SERIES]
+            [ayojon_path(a) for a in AYOJON] + [issue_path(x) for x in ISSUES] + [f"/ধারাবাহিক/{s}/" for s in SERIES] + (["/ভিডিও/"] if (DIST / "ভিডিও" / "index.html").exists() else [])
     build_sitemaps(extra)
     (DIST / "version.json").write_text(json.dumps({"v": BUILD_ID}), encoding="utf-8")
     n = sum(1 for _ in DIST.rglob("*.html"))
