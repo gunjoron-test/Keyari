@@ -327,6 +327,7 @@
   // ---------- অটো-স্ক্রল (গতি কম-বেশি করা যায়; চলার সময়ও নিজে স্ক্রল করা যায়) ----------
   var asBox = $('[data-autoscroll]');
   if (asBox) {
+    if (asBox.parentNode !== doc.body) doc.body.appendChild(asBox);
     var asFab = $('[data-as-fab]', asBox), asPanel = $('#as-panel'), asSpeedEls = $$('[data-as-speed]', asBox);
     var asSlows = $$('[data-as-slower]', asBox), asFasts = $$('[data-as-faster]', asBox);
     var LEVELS = [0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3], BASE_PX = 36; // ১× = সেকেন্ডে ৩৬ পিক্সেল
@@ -351,20 +352,32 @@
       return docEnd || bodyEnd;
     };
     // মসৃণ স্ক্রল: অবস্থান দশমিকে (ভগ্নাংশ পিক্সেলে) রাখা হয় ও সময় ধরে হিসাব হয় — তাই ০.৫× গতিতেও ফ্রেমে ফ্রেমে সমান এগোয়, কাঁপে না
-    var asPos = 0, asSet = 0;
+    // ব্রাউজার স্ক্রল-অবস্থান পুরো পিক্সেলে কেটে নেয় (সাধারণ পর্দায়) — ০.৫× গতিতে তাই ৩-৪ ফ্রেম স্থির থেকে ১px লাফ দিত।
+    // সমাধান: পুরো অংশটুকু স্ক্রলে, আর দশমিক অংশটুকু (০–১px) GPU-র transform-এ দিয়ে লেখা ফ্রেমে ফ্রেমে সূক্ষ্মভাবে সরানো হয় → প্রতি ফ্রেমেই নড়ে, কাঁপে না
+    var asPos = 0, asSet = 0, asFx = [$('#main'), $('.site-footer')].filter(Boolean);
+    var asShift = function (f) {
+      var v = f ? 'translate3d(0,' + (-f).toFixed(3) + 'px,0)' : '';
+      for (var i = 0; i < asFx.length; i++) asFx[i].style.transform = v;
+    };
+    var asSmoothOn = function (on) {
+      for (var i = 0; i < asFx.length; i++) asFx[i].style.willChange = on ? 'transform' : '';
+      if (!on) asShift(0);
+    };
     var asFrame = function (t) {
       if (!asRun) return;
       var cur = window.scrollY || window.pageYOffset || 0;
       if (asLast) {
         var dt = Math.min(100, t - asLast) / 1000;
         if (asTouching || t <= asHoldUntil || Math.abs(cur - asSet) > 2.5) {
-          asPos = cur; asSet = cur; // পাঠক নিজে স্ক্রল করেছেন — তাঁর অবস্থান থেকেই আবার শুরু
+          asPos = cur; asSet = cur; asShift(0); // পাঠক নিজে স্ক্রল করেছেন — তাঁর অবস্থান থেকেই আবার শুরু
         } else {
           asPos += BASE_PX * LEVELS[asIdx] * dt;
-          asSet = asPos;
-          window.scrollTo({ top: asPos, left: 0, behavior: 'instant' });
+          var ip = Math.floor(asPos);
+          asSet = ip;
+          window.scrollTo({ top: ip, left: 0, behavior: 'instant' });
+          asShift(asPos - ip);
         }
-      } else { asPos = cur; asSet = cur; }
+      } else { asPos = cur; asSet = cur; asSmoothOn(true); }
       asLast = t;
       if (atEnd()) { asStop(); toast('লেখার শেষে পৌঁছেছেন'); return; }
       requestAnimationFrame(asFrame);
@@ -381,7 +394,7 @@
       asPanel.hidden = false; asBox.classList.add('has-panel');
       asPaint(); asWake(); requestAnimationFrame(asFrame);
     };
-    function asStop() { asRun = false; asPaint(); asWake(); }
+    function asStop() { asRun = false; asSmoothOn(false); asPaint(); asWake(); }
     var asClose = function () { asStop(); asPanel.hidden = true; asBox.classList.remove('has-panel'); };
     var asMenu = $('#as-menu'), asPlay = $('[data-as-play]', asBox), asDesk = window.matchMedia('(min-width: 768px)');
     var asMenuT;
