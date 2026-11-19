@@ -1799,3 +1799,9 @@ body.sx-open { overflow: hidden; }
 [data-scheme="dark"] .scheme-toggle::after { transform: translateX(32px); }
 .site-header.is-compact .scheme-toggle::after { left: 6px; }
 [data-scheme="dark"] .site-header.is-compact .scheme-toggle::after { transform: translateX(28px); }
+
+/* মোবাইল: অটো-স্ক্রল চলার সময় বই-বোতামের চারপাশে পিসির মতোই সবুজ ঢেউ (পালস) */
+@media (max-width: 767.98px) {
+  .autoscroll .autoscroll__fab { position: relative; }
+  .autoscroll.is-running .autoscroll__fab::after { display: block; content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 1.5px solid var(--accent); opacity: .5; animation: as-pulse 1.8s ease-out infinite; pointer-events: none; }
+}
