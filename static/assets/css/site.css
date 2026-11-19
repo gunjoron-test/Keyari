@@ -1973,3 +1973,19 @@ body.sx-open { overflow: hidden; }
 .mega__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
 .mega__col { padding: 2px 28px; border-left: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line)); min-width: 0; }
 .mega__col:first-child { border-left: 0; }
+
+/* ---------- সোশ্যাল/ইমেইল বোতাম: লেখার পাতার শেয়ার-সারির মতোই পুরো সাইটে (ফুটার, সম্পাদক, পরিবার, লেখক) ---------- */
+.sbtn { --sb: 38px; width: var(--sb); height: var(--sb); flex: none; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--text); display: grid; place-items: center; cursor: pointer; transition: transform .15s, box-shadow .2s, border-color .2s, background .2s, color .2s; }
+.sbtn svg { display: block; transition: fill .22s, stroke .22s; }
+.sbtn:hover, .sbtn:focus-visible, .site-footer .sbtn:hover { transform: translateY(-2px); background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 8px 20px rgba(0, 166, 100, .28); }
+.sbtn:hover .ico-stroke, .sbtn:focus-visible .ico-stroke { fill: #fff; stroke: none; }
+.sbtn:hover svg:not(.ico-stroke), .sbtn:focus-visible svg:not(.ico-stroke) { stroke: #fff; }
+.footer__social { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; }
+.footer__social .sbtn { --sb: 36px; }
+.member__social { gap: 10px; }
+.member__social a.sbtn { width: var(--sb); height: var(--sb); }
+.member__social a.sbtn:hover { color: #fff; }
+.author-hero__social { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.author-hero__social .sbtn { --sb: 40px; }
+@media (max-width: 575.98px) { .footer__social .sbtn { --sb: 40px; } .member__social a.sbtn { --sb: 40px; } }
+@media (max-width: 359.98px) { .footer__social { gap: 6px; } .footer__social .sbtn { --sb: 34px; } }

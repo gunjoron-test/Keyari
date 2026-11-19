@@ -905,8 +905,7 @@ def social_links():
         href = ((S.get("facebook") if k == "facebook" else soc.get(k)) or "").strip()
         if not href:
             continue
-        out.append('<a class="social-ico social-ico--' + k + '" href="' + esc(href) + '" target="_blank" rel="noopener me" aria-label="' + esc(label) + '" title="' + esc(label) + '">'
-                   + solid_svg(k, 20) + '</a>')
+        out.append(sbtn(k, href, label))
     return ('<div class="footer__social" aria-label="সোশ্যাল মিডিয়া">' + "".join(out) + "</div>") if out else ""
 
 
@@ -920,10 +919,10 @@ def editor_icons():
         if href:
             if k == "whatsapp" and not href.startswith("http"):
                 href = "https://wa.me/" + re.sub(r"\D", "", href)
-            out.append('<a class="social-ico" href="' + esc(href) + '" target="_blank" rel="noopener me" aria-label="সম্পাদকের ' + label + '" title="' + label + '">' + brand_svg(k, 15, "currentColor") + "</a>")
+            out.append(sbtn(k, href, "সম্পাদকের " + label))
     mail = (es.get("email") or S.get("email") or "").strip()
     if mail:
-        out.append('<a class="social-ico" href="mailto:' + esc(mail) + '" aria-label="সম্পাদককে ইমেইল" title="ইমেইল">' + solid_svg("mail", 15) + "</a>")
+        out.append(sbtn("mail", "mailto:" + mail, "সম্পাদককে ইমেইল", ext=False))
     return '<div class="footer__social footer__social--editor">' + "".join(out) + "</div>" if out else ""
 
 
@@ -1350,6 +1349,36 @@ def outline_svg(k, size=20):
 LINK_ICO = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
 
 
+_MAIL_GLYPH = "M4 4.6h16A2.1 2.1 0 0 1 22.1 6.7v10.6A2.1 2.1 0 0 1 20 19.4H4a2.1 2.1 0 0 1-2.1-2.1V6.7A2.1 2.1 0 0 1 4 4.6ZM3.3 6.9 12 13.2l8.7-6.3v1.9L12 15.1 3.3 8.8Z"
+# বোতামের ভেতরের চিহ্ন: key -> (viewBox, path, fill-rule, আকার px) — সব চিহ্ন চোখে সমান মাপের মনে হয় এমন করে বসানো
+GLYPHS = {
+    "facebook": (SHARE_GLYPH["facebook"][0], SHARE_GLYPH["facebook"][1], "nonzero", 20),
+    "telegram": (SHARE_GLYPH["telegram"][0], SHARE_GLYPH["telegram"][1], "nonzero", 19),
+    "x": ("0 0 24 24", BRAND["x"][1], "nonzero", 17),
+    "whatsapp": ("0 0 24 24", BRAND["whatsapp"][1], "nonzero", 20),
+    "youtube": ("0 3.2 24 17.6", BRAND["youtube"][1], "nonzero", 22),
+    "instagram": ("0 0 24 24", BRAND["instagram"][1], "nonzero", 19),
+    "linkedin": ("0 0 24 24", BRAND["linkedin"][1], "nonzero", 17),
+    "tiktok": ("0 0 24 24", BRAND["tiktok"][1], "nonzero", 17),
+    "mail": ("0 0 24 24", _MAIL_GLYPH, "evenodd", 21),
+}
+
+
+def glyph_svg(k):
+    if k == "link":
+        return LINK_ICO
+    vb, path, rule, size = GLYPHS[k]
+    return ('<svg class="ico-stroke" viewBox="' + vb + '" width="' + str(size) + '" height="' + str(size) + '" fill="currentColor" stroke="none" aria-hidden="true">'
+            '<path fill-rule="' + rule + '" clip-rule="' + rule + '" d="' + path + '"/></svg>')
+
+
+def sbtn(k, href, label, ext=True):
+    """পুরো সাইটে একই সোশ্যাল/ইমেইল বোতাম (ফুটার, সম্পাদক, পরিবার, লেখক): গোল, সরু বর্ডার, গাঢ় চিহ্ন; মাউস নিলে ব্র্যান্ড সবুজ"""
+    attrs = ' target="_blank" rel="noopener me"' if ext else ""
+    return '<a class="sbtn" href="' + esc(href) + '"' + attrs + ' aria-label="' + esc(label) + '" title="' + esc(label) + '">' + glyph_svg(k) + "</a>"
+
+
+
 def share_row(p):
     """লেখার শেষে শেয়ার-সারি (পাশের উল্লম্ব সারির বদলে)"""
     full = absu(p["_path"])
@@ -1635,7 +1664,7 @@ def build_authors():
         for k, ic in [("facebook", "facebook"), ("website", "link"), ("email", "mail")]:
             if a.get(k):
                 href = ("mailto:" + a[k]) if k == "email" else a[k]
-                social += f'<a class="social" href="{esc(href)}" target="_blank" rel="noopener" aria-label="{k}">{solid_svg(ic, 16) if ic in ("facebook", "mail") else icon(ic, 16)}</a>'
+                social += sbtn(ic, href, k, ext=(k != "email"))
         posts = a["_posts"]
         cat_counts = {}
         for p in posts:
@@ -1696,11 +1725,11 @@ def build_pages():
                     if v:
                         if k == "whatsapp" and not v.startswith("http"):
                             v = "https://wa.me/" + re.sub(r"\D", "", v)
-                        ico.append('<a href="' + esc(v) + '" target="_blank" rel="noopener me" aria-label="' + label + '" title="' + label + '">' + brand_svg(k, 18, "currentColor") + "</a>")
+                        ico.append(sbtn(k, v, label))
                 if (m.get("website") or "").strip():
-                    ico.append('<a href="' + esc(m["website"].strip()) + '" target="_blank" rel="noopener me" aria-label="ওয়েবসাইট" title="ওয়েবসাইট">' + icon("link", 18) + "</a>")
+                    ico.append(sbtn("link", m["website"].strip(), "ওয়েবসাইট"))
                 if (m.get("email") or "").strip():
-                    ico.append('<a href="mailto:' + esc(m["email"].strip()) + '" aria-label="ইমেইল" title="ইমেইল">' + solid_svg("mail", 18) + "</a>")
+                    ico.append(sbtn("mail", "mailto:" + m["email"].strip(), "ইমেইল", ext=False))
                 ph = {"name": m["name"], "slug": m.get("id", m["name"]), "photo": m.get("photo", "")}
                 cards += ('<article class="member">' + avatar(ph, 104)
                           + '<h3 class="member__name">' + esc(m["name"]) + "</h3>"
