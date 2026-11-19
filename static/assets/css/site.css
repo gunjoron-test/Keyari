@@ -1652,3 +1652,10 @@ body.sx-open { overflow: hidden; }
 @media (max-width: 767.98px) { .as-spd { display: none; } }
 
 @media (min-width: 768px) { .autoscroll.is-idle .autoscroll__size, .autoscroll.is-idle .autoscroll__fab { opacity: 1; } }
+
+/* কম্পিউটারে: পড়ার বোতাম ও "উপরে যান" বোতাম একই মাপ (৪৮px) ও একই সারিতে */
+@media (min-width: 768px) {
+  .autoscroll { right: 24px; bottom: 84px; }
+  .autoscroll__fab { width: 48px; height: 48px; box-shadow: var(--shadow); }
+  .autoscroll__size { height: 48px; }
+}
