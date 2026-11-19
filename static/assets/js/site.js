@@ -142,17 +142,79 @@
     if (!e.target.closest('.nav__item')) $$('.nav__item.is-open').forEach(function (o) { o.classList.remove('is-open'); });
   });
 
-  // ---------- সার্চ ড্রপডাউন ----------
+  // ---------- সার্চ (ঝাপসা পটভূমির ওপর) + রিয়েল-টাইম ফলাফল ----------
   var pop = $('#search-pop'), openBtn = $('[data-search-open]');
-  function closeSearch() { if (pop && !pop.hidden) { pop.hidden = true; openBtn && openBtn.setAttribute('aria-expanded', 'false'); } }
-  if (openBtn && pop) {
-    openBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (pop.hidden) { pop.hidden = false; openBtn.setAttribute('aria-expanded', 'true'); setTimeout(function () { $('input', pop).focus(); }, 20); }
-      else closeSearch();
+  var sxInput = pop && $('input[name="s"]', pop), sxRes = pop && $('[data-sx-results]', pop), sxClear = pop && $('[data-sx-clear]', pop);
+  var sxIdx = null, sxActive = -1, sxT;
+  var BNn = '০১২৩৪৫৬৭৮৯';
+  var sxNorm = function (s) { return String(s || '').toLowerCase().normalize('NFC').replace(/[‌‍]/g, '').replace(/[০-৯]/g, function (d) { return BNn.indexOf(d); }); };
+  var sxEsc = function (s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  function sxLoad(cb) {
+    if (sxIdx) return cb();
+    fetch(BASE + '/search-index.json').then(function (r) { return r.json(); }).then(function (d) { sxIdx = d; cb(); }).catch(function () { sxIdx = []; cb(); });
+  }
+  function sxRender() {
+    var q = sxInput.value.trim();
+    sxClear.hidden = !q;
+    sxActive = -1;
+    if (!q) { sxRes.hidden = true; sxRes.innerHTML = ''; return; }
+    var terms = sxNorm(q).split(/\s+/).filter(Boolean);
+    var scored = [];
+    (sxIdx || []).forEach(function (it) {
+      var t = sxNorm(it.t), a = sxNorm(it.a), c = sxNorm(it.c), e = sxNorm(it.e), g = sxNorm(it.g), sc = 0;
+      for (var k = 0; k < terms.length; k++) {
+        var w = terms[k], hit = false;
+        if (t.indexOf(w) > -1) { sc += t.indexOf(w) === 0 ? 14 : 10; hit = true; }
+        if (a.indexOf(w) > -1) { sc += 6; hit = true; }
+        if (c.indexOf(w) > -1 || g.indexOf(w) > -1) { sc += 4; hit = true; }
+        if (e.indexOf(w) > -1) { sc += 2; hit = true; }
+        if (!hit) return;
+      }
+      scored.push({ it: it, s: sc });
     });
-    $('[data-search-close]', pop).addEventListener('click', closeSearch);
-    doc.addEventListener('click', function (e) { if (!pop.contains(e.target)) closeSearch(); });
+    scored.sort(function (x, y) { return y.s - x.s; });
+    var top = scored.slice(0, 7);
+    sxRes.hidden = false;
+    if (!top.length) { sxRes.innerHTML = '<p class="sx__none">কোনো ফলাফল নেই।</p>'; return; }
+    var mark = function (txt) {
+      var out = sxEsc(txt);
+      terms.forEach(function (w) { if (!w) return; try { out = out.replace(new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'i'), '<mark>$1</mark>'); } catch (e) {} });
+      return out;
+    };
+    sxRes.innerHTML = top.map(function (x, n) {
+      var it = x.it;
+      return '<a class="sx__item" role="option" data-i="' + n + '" href="' + it.u + '">' +
+        '<span class="sx__thumb">' + (it.i ? '<img src="' + sxEsc(it.i) + '" alt="" loading="lazy">' : '') + '</span>' +
+        '<span class="sx__txt"><span class="sx__title">' + mark(it.t) + '</span>' +
+        '<span class="sx__meta">' + sxEsc(it.a) + (it.cl ? ' · ' + sxEsc(it.cl) : '') + '</span></span></a>';
+    }).join('') + '<a class="sx__all" href="' + BASE + '/search/?s=' + encodeURIComponent(q) + '">সব ফলাফল (' + bn(scored.length) + ') ›</a>';
+  }
+  function closeSearch() {
+    if (pop && !pop.hidden) { pop.hidden = true; doc.body.classList.remove('sx-open'); openBtn && openBtn.setAttribute('aria-expanded', 'false'); }
+  }
+  function openSearch() {
+    pop.hidden = false; doc.body.classList.add('sx-open'); openBtn && openBtn.setAttribute('aria-expanded', 'true');
+    sxLoad(function () { if (sxInput.value) sxRender(); });
+    setTimeout(function () { sxInput.focus(); sxInput.select(); }, 30);
+  }
+  if (openBtn && pop) {
+    openBtn.addEventListener('click', function (e) { e.stopPropagation(); if (pop.hidden) openSearch(); else closeSearch(); });
+    $$('[data-search-close]', pop).forEach(function (b) { b.addEventListener('click', closeSearch); });
+    sxInput.addEventListener('input', function () { clearTimeout(sxT); sxT = setTimeout(function () { sxLoad(sxRender); }, 40); });
+    sxClear.addEventListener('click', function () { sxInput.value = ''; sxRender(); sxInput.focus(); });
+    sxInput.addEventListener('keydown', function (e) {
+      var items = $$('.sx__item', sxRes);
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        if (!items.length) return;
+        e.preventDefault();
+        sxActive = (sxActive + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+        items.forEach(function (it, k) { it.classList.toggle('is-active', k === sxActive); });
+        items[sxActive].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter' && sxActive > -1 && items[sxActive]) {
+        e.preventDefault(); location.href = items[sxActive].getAttribute('href');
+      }
+    });
+    $('form', pop).addEventListener('submit', function (e) { if (!sxInput.value.trim()) e.preventDefault(); });
   }
 
   // ---------- অফ-ক্যানভাস মেনু ----------

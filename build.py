@@ -728,16 +728,21 @@ def header(active=""):
       {toggle}
       <a class="btn btn--fb" href="{esc(S.get("app_url") or "#")}"{app_attrs()}>বুক অ্যাপ</a>
     </div>
-    <div class="search-pop" id="search-pop" role="dialog" aria-label="অনুসন্ধান" hidden>
-      <button class="icon-btn search-pop__close" type="button" data-search-close aria-label="বন্ধ করুন">{icon("close", 18)}</button>
-      <form class="search-form" action="{u("/search/")}" method="get" role="search">
-        <label class="sr-only" for="hs">লেখা, লেখক বা বিষয় খুঁজুন</label>
-        <input id="hs" type="search" name="s" placeholder="লেখা, লেখক বা বিষয় খুঁজুন…" autocomplete="off" required>
-        <button class="btn" type="submit">খুঁজুন</button>
-      </form>
-    </div>
   </div>
 </header>
+<div class="sx" id="search-pop" role="dialog" aria-modal="true" aria-label="অনুসন্ধান" hidden>
+  <div class="sx__backdrop" data-search-close></div>
+  <div class="sx__panel">
+    <form class="sx__form" action="{u("/search/")}" method="get" role="search">
+      <span class="sx__ico" aria-hidden="true">{icon("search", 22)}</span>
+      <label class="sr-only" for="hs">লেখা, লেখক, বিষয়</label>
+      <input id="hs" type="search" name="s" placeholder="লেখা, লেখক, বিষয়…" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button class="sx__clear" type="button" data-sx-clear hidden aria-label="মুছুন">{icon("close", 16)}</button>
+      <button class="sx__esc" type="button" data-search-close aria-label="বন্ধ করুন">Esc</button>
+    </form>
+    <div class="sx__results" data-sx-results role="listbox" hidden></div>
+  </div>
+</div>
 <div class="offcanvas" id="offcanvas" aria-hidden="true" aria-label="মোবাইল মেনু" role="dialog">
   <div class="offcanvas__head">
     <a href="{u("/")}" class="site-logo">{logo_img()}</a>
@@ -1488,7 +1493,7 @@ def build_authors():
     body = f'''<div class="container archive">{bc_html}
 <header class="archive-header"><h1 class="archive-title">লেখকতালিকা</h1>
 
-<label class="sr-only" for="af">লেখক খুঁজুন</label><input class="filter-input" id="af" type="search" placeholder="লেখকের নাম লিখুন…" data-filter=".author-card"></header>
+<label class="sr-only" for="af">লেখক খুঁজুন</label><input class="filter-input" id="af" type="search" placeholder="লেখক খুঁজুন…" data-filter=".author-card"></header>
 <div class="author-grid">{cards}</div></div>'''
     write("/লেখক-তালিকা/", layout(title="লেখকতালিকা", description=f"{SITE}-এর সব লেখকের তালিকা, পরিচিতি ও লেখা।",
                                 path="/লেখক-তালিকা/", body=body, active="বাতায়ন", ld=[bc_ld]))
