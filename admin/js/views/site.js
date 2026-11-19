@@ -416,9 +416,9 @@ export function commentsView(view) {
 
 // ==================================================================== মুখপাতার স্লাইডার (ব্যানার)
 const BANNER = {
-  slides: { key: 'slides', title: 'মুখপাতার স্লাইডার', desc: 'হেডারের নিচে ঘুরতে থাকা ব্যানার — যত খুশি স্লাইড যোগ করা যায় (৫০টি বা তারও বেশি)', ratio: '2244/592', sizeD: '২২৪৪×৫৯২ পিক্সেল (প্রায় ৩.৮ : ১)', toggle: 'মুখপাতায় স্লাইডার দেখান', save: 'স্লাইডার হালনাগাদ', def: { enabled: true, autoplay: true, interval: 6, items: [] } },
-  ayojon: { key: 'ayojon_slides', title: 'আয়োজন-স্লাইডার', desc: 'মুখপাতার একদম নিচে (ধারাবাহিকের পরে, ফুটারের ওপরে) ঘুরতে থাকা আয়োজনের ব্যানার — যত খুশি স্লাইড যোগ করা যায়', ratio: '2244/592', sizeD: '২২৪৪×৫৯২ পিক্সেল (প্রায় ৩.৮ : ১)', toggle: 'মুখপাতার নিচে আয়োজন-স্লাইডার দেখান', save: 'আয়োজন-স্লাইডার হালনাগাদ', def: { enabled: true, autoplay: true, interval: 6, items: [] } },
-  ads: { key: 'ads', title: 'বিজ্ঞাপন', desc: 'মুখপাতার মাঝখানে (হিরোর নিচে) দেখানো বিজ্ঞাপন-ব্যানার — ম্যাগাজিন, বই বা যেকোনো প্রচারের জন্য যত খুশি যোগ করা যায়', ratio: '1880/496', sizeD: '১৮৮০×৪৯৬ পিক্সেল (প্রায় ৩.৮ : ১)', toggle: 'মুখপাতায় বিজ্ঞাপন দেখান', save: 'বিজ্ঞাপন হালনাগাদ', def: { enabled: true, autoplay: true, interval: 7, show_label: true, items: [] } },
+  slides: { key: 'slides', title: 'মুখপাতার স্লাইডার', desc: 'হেডারের নিচে ঘুরতে থাকা ব্যানার — যত খুশি স্লাইড যোগ করা যায় (৫০টি বা তারও বেশি)', ratio: '3/1', maxW: 2400, sizeD: '২৪০০ × ৮০০', toggle: 'মুখপাতায় স্লাইডার দেখান', save: 'স্লাইডার হালনাগাদ', def: { enabled: true, autoplay: true, interval: 6, items: [] } },
+  ayojon: { key: 'ayojon_slides', title: 'আয়োজন-স্লাইডার', desc: 'মুখপাতার একদম নিচে (ধারাবাহিকের পরে, ফুটারের ওপরে) ঘুরতে থাকা আয়োজনের ব্যানার — যত খুশি স্লাইড যোগ করা যায়', ratio: '3/1', maxW: 2400, sizeD: '২৪০০ × ৮০০', toggle: 'মুখপাতার নিচে আয়োজন-স্লাইডার দেখান', save: 'আয়োজন-স্লাইডার হালনাগাদ', def: { enabled: true, autoplay: true, interval: 6, items: [] } },
+  ads: { key: 'ads', title: 'বিজ্ঞাপন', desc: 'মুখপাতার মাঝখানে (হিরোর নিচে) দেখানো বিজ্ঞাপন-ব্যানার — ম্যাগাজিন, বই বা যেকোনো প্রচারের জন্য যত খুশি যোগ করা যায়', ratio: '7/2', maxW: 2000, sizeD: '১৯৬০ × ৫৬০', toggle: 'মুখপাতায় বিজ্ঞাপন দেখান', save: 'বিজ্ঞাপন হালনাগাদ', def: { enabled: true, autoplay: true, interval: 7, show_label: true, items: [] } },
 };
 export const slidesView = (view) => bannerEditor(view, 'slides');
 export const adsView = (view) => bannerEditor(view, 'ads');
@@ -477,7 +477,7 @@ function bannerEditor(view, kind) {
     const m = modal({
       title: isNew ? 'নতুন স্লাইড' : 'স্লাইড সম্পাদনা', wide: true,
       body: `<div><div>
-          <p class="label">ছবি (${B.sizeD.split(" ")[0]}) — মোবাইলেও এই ছবিটাই একই অনুপাতে দেখাবে, আলাদা ছবি লাগবে না</p><div class="cover-box" data-box="image" style="aspect-ratio:${B.ratio}" tabindex="0" role="button"></div>
+          <p class="label">ছবি <span class="help" style="font-weight:500;margin-left:6px">মাপ ${B.sizeD}</span></p><div class="cover-box" data-box="image" style="aspect-ratio:${B.ratio}" tabindex="0" role="button"></div>
           <div class="btn-row" style="margin:8px 0 16px"><label class="btn btn--light btn--sm" style="cursor:pointer">কম্পিউটার থেকে আপলোড<input type="file" accept="image/*" data-up-d hidden></label><button class="btn btn--light btn--sm" data-lib-d type="button">মিডিয়া থেকে বাছুন</button></div></div>
       </div>
         <div class="field"><label>বিকল্প লেখা (alt) — ছবিতে যা লেখা আছে তা এখানে লিখুন</label><input class="input" data-k="alt" value="${esc(it.alt || '')}" placeholder="যেমন: আপনার লেখা পাঠান — বিশেষ বার্তা পড়ে নিন"></div>
@@ -492,7 +492,7 @@ function bannerEditor(view, kind) {
     paint();
     const upload = async (file, key) => {
       if (!file) return;
-      try { toast('ছবি আপলোড হচ্ছে…'); const r = await imageChanges(file, 'slide', 2400); await commit('স্লাইডারের ছবি আপলোড', r.changes); it[key] = r.url; paint(); } catch (e) { toast('আপলোড ব্যর্থ: ' + e.message, 'err'); }
+      try { toast('ছবি আপলোড হচ্ছে…'); const r = await imageChanges(file, 'slide', B.maxW || 2400); await commit('স্লাইডারের ছবি আপলোড', r.changes); it[key] = r.url; paint(); } catch (e) { toast('আপলোড ব্যর্থ: ' + e.message, 'err'); }
     };
     $('[data-up-d]', m.el).onchange = (e) => upload(e.target.files[0], 'image');
     $('[data-lib-d]', m.el).onclick = async () => { const r = await pickMedia({ title: 'ছবি বাছুন' }); if (r && r.url) { it.image = r.url; paint(); } };

@@ -6,7 +6,7 @@
   "items": [
     {
       "id": "ad-1",
-      "image": "/uploads/banners/ad-advertise.webp",
+      "image": "/uploads/banners/ad-1-bijgyapon.jpg",
       "alt": "আপনার বিজ্ঞাপন এখানে — কেয়ারির পাঠকদের কাছে পৌঁছাতে যোগাযোগ করুন: thekeyari@gmail.com",
       "link": "mailto:thekeyari@gmail.com",
       "new_tab": false,
@@ -16,10 +16,20 @@
     },
     {
       "id": "ad-2",
-      "image": "/uploads/banners/ad-facebook.webp",
+      "image": "/uploads/banners/ad-2-facebook.jpg",
       "alt": "কেয়ারি এখন ফেসবুকে — নতুন লেখার খবর সবার আগে পেতে আমাদের পেজ ফলো করুন।",
       "link": "https://www.facebook.com/profile.php?id=61584421030620",
       "new_tab": true,
+      "active": true,
+      "start": "",
+      "end": ""
+    },
+    {
+      "id": "ad-3",
+      "image": "/uploads/banners/ad-3-video.jpg",
+      "alt": "কেয়ারি ভিডিও — বক্তব্য, আলোচনা ও সাহিত্য-আসর দেখুন।",
+      "link": "/ভিডিও/",
+      "new_tab": false,
       "active": true,
       "start": "",
       "end": ""

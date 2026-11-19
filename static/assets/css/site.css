@@ -679,7 +679,7 @@ img[data-lz], .ph { background: var(--highlight) url("../img/logo-placeholder.sv
 
 /* ---------- মুখপাতার ব্যানার-স্লাইডার (অ্যাডমিন থেকে নিয়ন্ত্রিত) ---------- */
 .banner-slider { margin-top: 28px; }
-.banner-slider .slider__track { aspect-ratio: var(--bn-d, 2244/592); border-radius: var(--radius-lg); background: var(--highlight); }
+.banner-slider .slider__track { aspect-ratio: var(--bn-d, 3/1); border-radius: var(--radius-lg); background: var(--highlight); }
 .banner-slider .slide > a, .banner-slider .slide > div { display: block; width: 100%; height: 100%; }
 .banner-slider .slide picture, .banner-slider .slide img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
 .banner-slider .slider__arrow { top: 50%; transform: translateY(-50%); width: 44px; height: 44px; background: rgba(255, 255, 255, .92); box-shadow: 0 4px 16px rgba(41, 41, 75, .18); opacity: 0; transition: opacity .2s, transform .2s; }
@@ -1805,3 +1805,6 @@ body.sx-open { overflow: hidden; }
   .autoscroll .autoscroll__fab { position: relative; }
   .autoscroll.is-running .autoscroll__fab::after { display: block; content: ""; position: absolute; inset: -3px; border-radius: 50%; border: 1.5px solid var(--accent); opacity: .5; animation: as-pulse 1.8s ease-out infinite; pointer-events: none; }
 }
+
+/* স্লাইডার/বিজ্ঞাপনে যেকোনো মাপের ছবি দিলে ফ্রেমে নিজে ফিট হয়: ছোট হলে বড় হয়, বড় হলে ছোট হয়; মাঝখান ধরে ভরে (cover) */
+.banner-slider .slide picture, .banner-slider .slide img { width: 100%; height: 100%; object-fit: cover; object-position: center; max-width: none; }
