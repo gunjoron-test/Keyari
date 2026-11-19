@@ -1444,3 +1444,4 @@ html { overflow-x: clip; }
 .more-btn { width: 48px; height: 48px; padding: 0; border-radius: 50%; display: inline-grid; place-items: center; }
 .more-btn .more-ico { transition: transform .3s cubic-bezier(.22,.61,.36,1); }
 .more-btn.is-open .more-ico { transform: rotate(180deg); }
+.more-by__none { color: var(--text-muted); font-size: 15px; line-height: 1.7; padding: 6px 0; }

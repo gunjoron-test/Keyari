@@ -582,7 +582,7 @@ def author_more_widget(a, exclude):
     """লেখার পাতার ডানে: শুধু এই লেখকেরই আরও লেখা। প্রথম ৩টি দেখায়, বাকিগুলো 'আরও দেখুন'-এ একই জায়গায় খোলে।"""
     mine = [x for x in a.get("_posts", []) if x is not exclude]
     if not mine:
-        return ""
+        return '<div class="widget more-by more-by--cards"><h2 class="more-by__head">লেখকের আরও লেখা</h2><p class="more-by__none">এই লেখকের আর লেখা নেই।</p></div>'
     shown = mine[:12]
     cards = "".join(card_g(x) for x in shown)
     btn = ""
