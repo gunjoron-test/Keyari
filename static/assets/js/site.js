@@ -153,6 +153,19 @@
     if (!e.target.closest('.nav__item')) $$('.nav__item.is-open').forEach(function (o) { o.classList.remove('is-open'); });
   });
 
+  // ---------- মেগা-মেনু: লিংকের নিচে থাকে; পর্দার কিনারা ছাড়িয়ে গেলে সামান্য সরে আসে ----------
+  $$('.nav__item.has-mega').forEach(function (it) {
+    var mega = $('.mega', it);
+    if (!mega) return;
+    var fit = function () {
+      mega.style.setProperty('--mx', '0px');
+      var r = it.getBoundingClientRect(), w = mega.offsetWidth, want = r.left + r.width / 2 - w / 2;
+      var min = 12, max = window.innerWidth - w - 12, got = Math.max(min, Math.min(max, want));
+      mega.style.setProperty('--mx', Math.round(got - want) + 'px');
+    };
+    it.addEventListener('mouseenter', fit); it.addEventListener('focusin', fit);
+  });
+
   // ---------- সার্চ (ঝাপসা পটভূমির ওপর) + রিয়েল-টাইম ফলাফল ----------
   var pop = $('#search-pop'), openBtn = $('[data-search-open]');
   var sxInput = pop && $('input[name="s"]', pop), sxRes = pop && $('[data-sx-results]', pop), sxClear = pop && $('[data-sx-clear]', pop);

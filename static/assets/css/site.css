@@ -1997,3 +1997,8 @@ body.sx-open { overflow: hidden; }
    বাতিল করতে চাইলে এই কমেন্ট থেকে "শেষ" কমেন্ট পর্যন্ত পুরো অংশ মুছে দিন (বা এই কমিটটা revert করুন) — আগের সমতল রঙ ফিরে আসবে। */
 .tone::before { background: linear-gradient(to bottom, var(--tone) 0%, transparent 100%); }
 /* ======================= [পরীক্ষামূলক-২] শেষ ======================= */
+
+/* মেগা-মেনু: এখন "বিষয়সূচি" লিংকের ঠিক নিচে (অন্য ড্রপডাউনের মতোই), পাতার মাঝখানে নয় */
+.nav__item.has-mega { position: relative; }
+.nav__item.has-mega > .mega, .site-header.is-compact .nav__item.has-mega > .mega { top: calc(100% + 10px); left: 50%; transform: translate(calc(-50% + var(--mx, 0px)), 6px); }
+.nav__item.has-mega:hover > .mega, .nav__item.has-mega.is-open > .mega { transform: translate(calc(-50% + var(--mx, 0px)), 0); }
