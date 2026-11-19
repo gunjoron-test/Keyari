@@ -674,7 +674,7 @@ def sidebar(exclude=None, minimal=True, author=None):
         f'<div><a class="mini__title" href="{p["_url"]}">{esc(p["title"])}</a><span class="mini__author">{aname(p["_author"])}</span></div></li>'
         for p in featured)
     cat_list = "".join(
-        f'<li><a href="{cat_url(c["slug"])}"><span>{cat_ico(c, 18)} {esc(c["name"])}</span><span class="count">{bn(cat_count(c["slug"]))}</span></a></li>'
+        f'<li><a href="{cat_url(c["slug"])}"><span>{esc(c["name"])}</span><span class="count">{bn(cat_count(c["slug"]))}</span></a></li>'
         for c in TOP_CATS)
     ay = ""
     if AYOJON:
@@ -1222,7 +1222,7 @@ def build_home():
   <div class="hero__side">{"".join(card_small(p) for p in side)}</div>
 </section>''')
         if page == 1 and on("category_pills"):
-            pills_html = "".join(f'<a class="pill-lg" href="{cat_url(c["slug"])}"><span aria-hidden="true">{cat_ico(c, 20)}</span>{esc(c["name"])}</a>'
+            pills_html = "".join(f'<a class="pill-lg" href="{cat_url(c["slug"])}">{esc(c["name"])}</a>'
                                  for c in TOP_CATS if c.get("home_pill", True))
             parts.append(f'''<section class="topics container" aria-labelledby="topics-h">
   <h2 class="sec-label sec-label--center" id="topics-h">{esc(sections.get("category_pills", {}).get("title", "পছন্দসই বিষয়ে লেখা পড়ুন"))}</h2>
@@ -1605,7 +1605,7 @@ def build_categories():
             sib = CAT[c["parent"]]["children"]
             siblings = "".join(f'<a class="pill-lg pill-lg--sm{" is-active" if k["slug"] == c["slug"] else ""}" href="{cat_url(k["slug"])}">{esc(k["name"])}</a>' for k in sib)
         header_html = f'''<p class="sec-label">{"উপ-বিভাগ" if c.get("parent") else "বিভাগ"} · {bn(len(items))}টি লেখা</p>
-<h1 class="archive-title">{('<span class="archive-title__ico">' + cat_ico(c, 34) + "</span>") if not c.get("parent") else ""}{esc(c["name"])}</h1>
+<h1 class="archive-title">{esc(c["name"])}</h1>
 {f'<p class="archive-desc">{esc(c["description"])}</p>' if c.get("description") else ""}
 {f'<div class="archive-kids">{kids or siblings}</div>' if (kids or siblings) else ""}'''
         archive_page(path=cat_path(c["slug"]), title=c.get("seo_title") or c["name"], items=items, crumbs=crumbs, header_html=header_html,
@@ -1617,7 +1617,7 @@ def build_categories():
         kids = "".join(f'<li><a href="{cat_url(k["slug"])}">{esc(k["name"])}</a> <span class="count">{bn(cat_count(k["slug"]))}</span></li>' for k in c["children"])
         cards += f'''<article class="topic-card">
   <a class="topic-card__media" href="{cat_url(c["slug"])}" tabindex="-1" aria-hidden="true">{img_tag(latest[0]["cover"].get("src") if latest else "", c["name"], "topic-card__img", sizes="400px")}</a>
-  <div class="topic-card__body"><h2 class="topic-card__title"><a href="{cat_url(c["slug"])}"><span class="topic-card__ico" aria-hidden="true">{cat_ico(c, 22)}</span> {esc(c["name"])}</a></h2>
+  <div class="topic-card__body"><h2 class="topic-card__title"><a href="{cat_url(c["slug"])}">{esc(c["name"])}</a></h2>
   <p class="archive-desc">{esc(c.get("description", ""))}</p><p class="card__meta">{bn(cat_count(c["slug"]))}টি লেখা</p>
   {f'<ul class="topic-card__kids">{kids}</ul>' if kids else ""}</div></article>'''
     bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("বিষয়সূচি", "/বিষয়সূচি/")])
