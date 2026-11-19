@@ -1151,7 +1151,7 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 
 /* ---------- শুধু লেখার (আর্টিকেল) পাতায়: পড়ার লেখা আরেকটু বড় ---------- */
 body.single .entry-content { font-size: var(--art-size, 20px); line-height: 1.95; }
-@media (max-width: 767.98px) { body.single .entry-content { font-size: 19px; } }
+@media (max-width: 767.98px) { body.single .entry-content { font-size: var(--art-size, 19px); } }
 
 /* বিভাগের আসল ভেক্টর আইকন — ব্র্যান্ড-সবুজ */
 .cat-ico { color: var(--accent); flex: none; display: block; }
@@ -1684,3 +1684,41 @@ body.sx-open { overflow: hidden; }
 .sx__thumb--av { width: 44px; height: 44px; border-radius: 50%; background: none; }
 .sx__thumb--av .avatar { width: 100% !important; height: 100% !important; font-size: 18px !important; border-width: 1.5px; }
 .sx--authors .sx__results { max-height: min(62vh, 520px); }
+
+/* ---------- মোবাইল ডক: লেখা ছোট/বড় + প্লে/পজ + গতি + উপরে যান — সবই এক বারে ---------- */
+.as-plabel { display: none; }
+@media (max-width: 767.98px) {
+  .autoscroll .autoscroll__fab, .autoscroll .autoscroll__panel { display: none !important; }
+  .autoscroll .autoscroll__size, .autoscroll .autoscroll__size[hidden] { display: flex !important; align-items: center; gap: 2px; order: 1; height: 44px; padding: 0 0 0 4px; margin: 0; background: none; border: 0; box-shadow: none; animation: none; }
+  .autoscroll .as-m { width: 38px; height: 38px; border: 0; border-radius: 50%; background: transparent; color: var(--text); display: grid; place-items: center; cursor: pointer; font-family: inherit; padding: 0; }
+  .autoscroll .as-m:active { background: var(--highlight); color: var(--accent-ink); }
+  .autoscroll .as-m:disabled { opacity: .3; }
+  .autoscroll .as-fz { font-weight: 700; line-height: 1; }
+  .autoscroll .as-fz--s { font-size: 14px; }
+  .autoscroll .as-fz--l { font-size: 20px; }
+  .autoscroll .as-m-sep { width: 1px; height: 20px; background: var(--line); margin: 0 4px; }
+  .autoscroll .autoscroll__play { width: auto; min-width: 38px; padding: 0 13px 0 11px; gap: 7px; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: var(--highlight); color: var(--accent-ink); }
+  .autoscroll .autoscroll__play .ap-pause { display: none; }
+  .autoscroll .as-plabel { display: inline; font-size: 14px; font-weight: 700; line-height: 1; white-space: nowrap; }
+  .autoscroll.is-running .autoscroll__play { width: 38px; padding: 0; background: var(--accent); color: #fff; }
+  .autoscroll.is-running .autoscroll__play .ap-play, .autoscroll.is-running .as-plabel { display: none; }
+  .autoscroll.is-running .autoscroll__play .ap-pause { display: block; }
+  .autoscroll .as-spd { display: none; align-items: center; gap: 0; padding: 0; margin-left: 4px; border: 0; }
+  .autoscroll.is-running .as-spd { display: inline-flex; }
+  .autoscroll .as-m--sm { width: 30px; height: 30px; }
+  .autoscroll .as-spd__v { min-width: 32px; text-align: center; font-size: 14px; font-weight: 700; color: var(--accent-ink); }
+  .autoscroll .autoscroll__top { order: 3; margin-left: auto; flex: none; }
+}
+@media (max-width: 359.98px) {
+  .autoscroll .as-m { width: 34px; height: 34px; }
+  .autoscroll .as-m--sm { width: 26px; height: 26px; }
+  .autoscroll .autoscroll__play { padding: 0 10px 0 8px; }
+  .autoscroll .as-plabel { font-size: 13px; }
+  .autoscroll .as-spd__v { min-width: 28px; font-size: 13px; }
+  .autoscroll .as-m-sep { margin: 0 2px; }
+  .autoscroll.is-running .autoscroll__play { width: 34px; }
+}
+@media (max-width: 359.98px) {
+  .autoscroll .autoscroll__play { width: auto; min-width: 34px; display: inline-flex; }
+  .autoscroll.is-running .autoscroll__play { width: 34px; padding: 0; }
+}

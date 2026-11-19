@@ -406,7 +406,7 @@
   // ---------- কম্পিউটারে লেখার পাতা: লেখা ছোট/বড় (মনে রাখে) ----------
   var fzDown = $('[data-fz-down]'), fzUp = $('[data-fz-up]');
   if (fzDown && fzUp) {
-    var FZ = [16, 18, 20, 22, 24, 26], fzI = parseInt(store.get('keyari-fz'), 10);
+    var FZ = window.matchMedia('(max-width: 767.98px)').matches ? [15, 17, 19, 21, 23, 25] : [16, 18, 20, 22, 24, 26], fzI = parseInt(store.get('keyari-fz'), 10);
     if (!(fzI >= 0 && fzI < FZ.length)) fzI = 2;
     var fzPaint = function () {
       root.style.setProperty('--art-size', FZ[fzI] + 'px');
