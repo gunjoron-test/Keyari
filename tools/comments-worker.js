@@ -102,6 +102,29 @@ export default {
       return json(env, req, { ok: true, id, status: 'pending' });
     }
 
+    // ---------- পড়ার সংখ্যা: লেখা পড়া হলে গোনা (একই আইপি থেকে একই লেখা ৩০ মিনিটে একবার) ----------
+    if (url.pathname === '/view' && req.method === 'POST') {
+      let b;
+      try { b = await req.json(); } catch (e) { return json(env, req, { error: 'ভুল অনুরোধ' }, 400); }
+      const post = safe(b.post);
+      if (!post) return json(env, req, { error: 'লেখা চেনা যায়নি' }, 400);
+      const ip = req.headers.get('cf-connecting-ip') || 'x';
+      const rk = 'vr:' + (await sha(ip + '|' + post));
+      if (await env.COMMENTS.get(rk)) return json(env, req, { ok: true, counted: false });
+      await env.COMMENTS.put(rk, '1', { expirationTtl: 1800 });
+      const key = 'v:' + post;
+      const cur = await env.COMMENTS.getWithMetadata(key);
+      const n = ((cur.metadata && cur.metadata.n) || 0) + 1;
+      await env.COMMENTS.put(key, String(n), { metadata: { n } });
+      return json(env, req, { ok: true, counted: true });
+    }
+    if (url.pathname === '/views' && req.method === 'GET') {
+      const keys = await listAll(env, 'v:');
+      const views = {};
+      keys.forEach((k) => { views[k.name.slice(2)] = (k.metadata && k.metadata.n) || 0; });
+      return json(env, req, { views }, 200, { 'cache-control': 'public, max-age=120' });
+    }
+
     // ---------- অ্যাডমিন ----------
     if (url.pathname.startsWith('/admin/')) {
       if (!isAdmin(req, env)) return json(env, req, { error: 'অনুমতি নেই' }, 401);

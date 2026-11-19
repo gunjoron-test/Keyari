@@ -316,6 +316,20 @@
     fsPaint();
   }
 
+  // ---------- পড়ার সংখ্যা: লেখায় ৮ সেকেন্ড থাকলে একবার গোনা (এক সেশনে একবার) ----------
+  var vArt = $('[data-views]');
+  if (vArt) {
+    var vKey = 'keyari-v-' + vArt.getAttribute('data-post');
+    var vDone = false; try { vDone = !!sessionStorage.getItem(vKey); } catch (e) {}
+    if (!vDone) {
+      setTimeout(function () {
+        if (doc.hidden) return;
+        try { sessionStorage.setItem(vKey, '1'); } catch (e) {}
+        fetch(vArt.getAttribute('data-views-endpoint') + '/view', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ post: vArt.getAttribute('data-post') }), keepalive: true }).catch(function () {});
+      }, 8000);
+    }
+  }
+
   // ---------- নিজস্ব মন্তব্য (অনুমোদনসাপেক্ষ) ----------
   var cm = $('[data-cm]');
   if (cm) {

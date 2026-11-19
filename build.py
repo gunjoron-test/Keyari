@@ -20,6 +20,7 @@ import re
 import shutil
 import sys
 import urllib.parse
+import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -240,6 +241,37 @@ for p in POSTS:
 
 POSTS.sort(key=post_sort_key, reverse=True)
 POST_BY_ID = {p["id"]: p for p in POSTS}
+
+
+def views_endpoint():
+    c = (S.get("comments") or {})
+    return ((c.get("native") or {}).get("endpoint") or "").strip().rstrip("/")
+
+
+def safe_id(pid):
+    return re.sub(r"[^A-Za-z0-9_-]", "_", str(pid))
+
+
+def load_views():
+    """মন্তব্য-সার্ভার (Worker) থেকে লেখাভিত্তিক পড়ার সংখ্যা; সংযোগ না থাকলে ফাঁকা (তখন পছন্দ-চিহ্নিত, তারপর সর্বশেষ লেখা)"""
+    ep = views_endpoint()
+    if not ep or os.environ.get("KEYARI_NO_NET"):
+        return {}
+    try:
+        req = urllib.request.Request(ep + "/views", headers={"User-Agent": "keyari-build"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            data = json.loads(r.read().decode("utf-8"))
+        return {str(k): int(v) for k, v in (data.get("views") or {}).items()}
+    except Exception as e:  # noqa
+        print("  ⚠ পড়ার সংখ্যা আনা যায়নি:", e)
+        return {}
+
+
+VIEWS = load_views()
+
+
+def view_count(p):
+    return VIEWS.get(safe_id(p["id"]), 0)
 
 PAGES = [p for p in load_dir("pages") if is_live(p) or p.get("status") == "published"]
 ISSUES = sorted([x for x in (load("issues.json", {}) or {}).get("items", []) if x.get("status", "published") == "published"],
@@ -995,6 +1027,11 @@ def build_home():
             side.append(p)
     hero_ids = {id(main)} | {id(p) for p in side}
     feed = [p for p in POSTS if id(p) not in hero_ids]
+    # পাঠকের পছন্দ: বেশি পড়া লেখা আগে; সমান হলে নতুন আগে। পড়ার সংখ্যা না থাকলে পছন্দ-চিহ্নিত লেখা আগে, তারপর সর্বশেষ
+    if any(view_count(p) for p in feed):
+        feed.sort(key=lambda p: -view_count(p))
+    else:
+        feed.sort(key=lambda p: 0 if p.get("pick") else 1)
     total = max(1, math.ceil(len(feed) / per))
     sections = {s["type"]: s for s in HOME.get("sections", [])}
 
@@ -1046,7 +1083,7 @@ def build_home():
   </div>
   <div class="container"><div class="hscroll" tabindex="0" aria-label="আয়োজনের লেখাসমূহ">{cards}</div></div>
 </section>''')
-        feed_title = sections.get("feed", {}).get("title", "সর্বশেষ লেখা")
+        feed_title = sections.get("feed", {}).get("title", "পাঠকের পছন্দ")
         parts.append(f'''<div class="container feed-wrap{" feed-wrap--top" if page > 1 else " tone tone-1"}">
   <section class="feed" aria-labelledby="feed-h">
     {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), u("/page/2/") if (page == 1 and total > 1) else None, "সব দেখুন", h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
@@ -1273,7 +1310,9 @@ def build_post(p):
         if aobj:
             ay = f'<p class="entry-ayojon">আয়োজন : <a href="{u(ayojon_path(aobj))}">{esc(aobj["title"])}</a></p>'
     toc = toc_from(body) if layout_opts.get("toc") else ""
-    content = f'''<article class="entry" itemscope itemtype="https://schema.org/Article">
+    vep = views_endpoint()
+    views_attr = (' data-views data-views-endpoint="' + esc(vep) + '" data-post="' + esc(safe_id(p["id"])) + '"') if vep else ""
+    content = f'''<article class="entry"{views_attr} itemscope itemtype="https://schema.org/Article">
   <header class="entry-header container">
     {bc_html}
     <div class="entry-byline">

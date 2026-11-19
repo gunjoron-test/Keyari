@@ -27,7 +27,7 @@
     {
       "type": "feed",
       "enabled": true,
-      "title": "সর্বশেষ লেখা"
+      "title": "পাঠকের পছন্দ"
     },
     {
       "type": "category_blocks",
