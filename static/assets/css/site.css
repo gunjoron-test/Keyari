@@ -1382,3 +1382,15 @@ html { overflow-x: clip; }
   .footer__social { gap: 6px; }
   .sf__follow .footer__social, .sf__editor .footer__social { margin-top: 0; }
 }
+
+/* হিরোর ডানের কার্ড: ছবি পুরোটা (১৬:৯) দেখায়, কাটা পড়ে না */
+.card-s__media { flex: none; align-self: flex-start; }
+.card-s__img, .card-s .ph { width: 220px; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-md); background-size: 40px auto; }
+.card-s { align-items: flex-start; }
+.hero__cat { margin: 0 0 8px; }
+@media (max-width: 575.98px) { .card-s__media { align-self: stretch; } .card-s__img, .card-s .ph { width: 100%; } }
+.card-s__media { flex: 0 0 clamp(140px, 38%, 220px); }
+.card-s__img, .card-s .ph { width: 100%; }
+@media (max-width: 575.98px) { .card-s__media { flex: none; align-self: stretch; } }
+.card-s__media { flex: 0 0 clamp(150px, 42%, 240px); }
+@media (max-width: 575.98px) { .card-s__media { flex: none; align-self: stretch; } }
