@@ -1253,10 +1253,20 @@ A_MINUS = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="c
 SHARE_ICO = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>'
 
 
+SHARE_GLYPH = {
+    # শেয়ার-বোতামের জন্য বৃত্তহীন, পরিষ্কার চিহ্ন (বোতাম নিজেই গোল): ফেসবুকের "f" ও টেলিগ্রামের কাগজের-বিমান
+    "facebook": ("2.6 2.85 19.5 19.5", "M13.6 21v-7.6h2.55l.4-3h-2.95V8.5c0-.87.24-1.46 1.5-1.46H16.7V4.37A21 21 0 0 0 14.4 4.25c-2.27 0-3.83 1.39-3.83 3.93v2.2H8v3h2.57V21z"),
+    "telegram": ("3.6 5.1 14.9 14.9", "M16.906 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"),
+}
+
+
 def outline_svg(k, size=20):
     """একরঙা ভরাট আইকন; মাউস নিলে CSS-এ সাদা হয়ে সবুজ বোতামে বসে"""
-    path = BRAND[k][1]
-    return '<svg class="ico-stroke" viewBox="0 0 24 24" width="' + str(size) + '" height="' + str(size) + '" fill="currentColor" stroke="none" aria-hidden="true"><path d="' + path + '"/></svg>'
+    vb, path = SHARE_GLYPH.get(k, ("0 0 24 24", BRAND[k][1]))
+    return '<svg class="ico-stroke" viewBox="' + vb + '" width="' + str(size) + '" height="' + str(size) + '" fill="currentColor" stroke="none" aria-hidden="true"><path d="' + path + '"/></svg>'
+
+
+LINK_ICO = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
 
 
 def share_row(p):
@@ -1270,7 +1280,7 @@ def share_row(p):
   <a class="share-row__btn" href="https://x.com/intent/post?url={url}&text={t}" target="_blank" rel="noopener" aria-label="এক্স-এ শেয়ার" title="এক্স">{outline_svg("x", 18)}</a>
   <a class="share-row__btn" href="https://api.whatsapp.com/send?text={t}%20{url}" target="_blank" rel="noopener" aria-label="হোয়াটসঅ্যাপে শেয়ার" title="হোয়াটসঅ্যাপ">{outline_svg("whatsapp", 20)}</a>
   <a class="share-row__btn" href="https://t.me/share/url?url={url}&text={t}" target="_blank" rel="noopener" aria-label="টেলিগ্রামে শেয়ার" title="টেলিগ্রাম">{outline_svg("telegram", 20)}</a>
-  <button class="share-row__btn" type="button" data-copy="{esc(full)}" aria-label="লিংক কপি করুন" title="লিংক কপি"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></button>
+  <button class="share-row__btn" type="button" data-copy="{esc(full)}" aria-label="লিংক কপি করুন" title="লিংক কপি">{LINK_ICO}</button>
 </div>'''
 
 
