@@ -504,7 +504,7 @@ def video_card(v):
     if not vid:
         return ""
     title = (v.get("title") or "").strip() or yt_title(vid) or "ভিডিও"
-    play = '<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.53.85l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>'
+    play = '<svg viewBox="1 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.53.85l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>'
     return f'''<article class="card-g vid" data-vid="{vid}">
   <button class="card-g__media vid__media" type="button" aria-label="চালান: {esc(title)}">
     <img class="card-g__img" src="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" alt="" loading="lazy" decoding="async">

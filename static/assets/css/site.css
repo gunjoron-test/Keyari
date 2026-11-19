@@ -1573,7 +1573,7 @@ body.sx-open { overflow: hidden; }
 .vid__media .card-g__img { height: 100%; display: block; }
 .vid__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.35)); pointer-events: none; }
 .vid__play { position: absolute; left: 50%; top: 50%; z-index: 1; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 50%; background: rgba(255,255,255,.94); color: var(--accent); display: grid; place-items: center; box-shadow: 0 8px 24px rgba(0,0,0,.28); transition: transform .3s cubic-bezier(.22,.61,.36,1), background .3s, color .3s; }
-.vid__play svg { margin-left: 3px; }
+.vid__play svg { margin: 0; display: block; }
 .vid:hover .vid__play { transform: scale(1.1); background: var(--accent); color: #fff; }
 .vid__media:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .vid__media iframe { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; border: 0; }
