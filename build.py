@@ -1311,7 +1311,9 @@ def build_post(p):
     <svg class="as-ico as-ico--play" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6.5l5 5 5-5M7 12.5l5 5 5-5"/></svg>
     <svg class="as-ico as-ico--pause" viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><rect x="7" y="6" width="3.6" height="12" rx="1.2"/><rect x="13.4" y="6" width="3.6" height="12" rx="1.2"/></svg>
     <span class="autoscroll__tip" aria-hidden="true">অটো-স্ক্রল</span>
+    <span class="autoscroll__label" data-as-label>অটো-স্ক্রল</span>
   </button>
+  <button class="autoscroll__top" type="button" data-as-top aria-label="উপরে যান" title="উপরে যান"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14l6-6 6 6"/></svg></button>
 </div>
   <section class="read-next container" aria-labelledby="rn-h">
     <h2 class="read-next__title" id="rn-h">আরও পড়ুন</h2>

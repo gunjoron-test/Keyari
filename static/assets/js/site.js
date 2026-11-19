@@ -235,6 +235,7 @@
       asFab.setAttribute('aria-pressed', asRun ? 'true' : 'false');
       asFab.setAttribute('aria-label', asRun ? 'অটো-স্ক্রল থামান' : 'অটো-স্ক্রল চালু করুন');
       asFab.title = asRun ? 'থামান' : 'অটো-স্ক্রল — নিজে নিজে পড়ে যান';
+      var lb = $('[data-as-label]', asBox); if (lb) lb.textContent = asRun ? 'থামান' : 'অটো-স্ক্রল';
     };
     var atEnd = function () {
       var docEnd = window.innerHeight + window.scrollY >= doc.documentElement.scrollHeight - 2;
@@ -279,6 +280,18 @@
     window.addEventListener('wheel', function () { if (asRun) asHoldUntil = performance.now() + 250; }, { passive: true });
     doc.addEventListener('keydown', function (e) { if (asRun && e.key === 'Escape') asStop(); });
     doc.addEventListener('visibilitychange', function () { if (doc.hidden && asRun) asStop(); });
+    // মোবাইলে নিচের ডক: স্ক্রল করলে নিচ থেকে উঠে আসে; লেখার শুরুর কাছে থাকলে লুকিয়ে থাকে
+    var topBtn = $('[data-as-top]', asBox);
+    if (topBtn) topBtn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    var dockTick = false;
+    var dockUpdate = function () {
+      var show = window.scrollY > 320 || asRun;
+      asBox.classList.toggle('is-shown', show);
+      doc.body.classList.toggle('dock-on', show);
+      dockTick = false;
+    };
+    window.addEventListener('scroll', function () { if (!dockTick) { dockTick = true; requestAnimationFrame(dockUpdate); } }, { passive: true });
+    dockUpdate();
     asPaint();
   }
 
