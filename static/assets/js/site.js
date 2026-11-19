@@ -293,24 +293,43 @@
     var interval = iv === null ? 5000 : +iv;
     var counter = $('.slider__count', sl);
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function go(n) {
-      i = (n + slides.length) % slides.length;
-      slides.forEach(function (s, k) { s.classList.toggle('is-active', k === i); s.setAttribute('aria-hidden', k === i ? 'false' : 'true'); $$('a', s).forEach(function (a) { a.tabIndex = k === i ? 0 : -1; }); });
-      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === i); d.setAttribute('aria-current', k === i ? 'true' : 'false'); });
-      if (counter) counter.textContent = bn(i + 1) + ' / ' + bn(slides.length);
+    // ব্যানার/বিজ্ঞাপনে ফেডের বদলে পাশ থেকে স্লাইড: ডানে চাপলে ডান দিক থেকে ঢোকে, বাঁয়ে চাপলে বাঁ দিক থেকে
+    var slideMode = !!sl.closest('.banner-slider'), busy = null;
+    function paint(n) {
+      slides.forEach(function (s, k) { s.setAttribute('aria-hidden', k === n ? 'false' : 'true'); $$('a', s).forEach(function (a) { a.tabIndex = k === n ? 0 : -1; }); });
+      dots.forEach(function (d, k) { d.classList.toggle('is-active', k === n); d.setAttribute('aria-current', k === n ? 'true' : 'false'); });
+      if (counter) counter.textContent = bn(n + 1) + ' / ' + bn(slides.length);
     }
-    function play() { if (reduce || !interval) return; stop(); t = setInterval(function () { go(i + 1); }, interval); }
+    function settle() {
+      clearTimeout(busy); busy = null;
+      slides.forEach(function (s, k) { s.classList.toggle('is-active', k === i); s.style.transition = ''; s.style.transform = ''; });
+    }
+    function go(n, dir) {
+      var to = (n + slides.length) % slides.length;
+      if (to === i && slides[i].classList.contains('is-active') && !busy) { paint(i); return; }
+      if (!slideMode || reduce || !dir || to === i) { i = to; settle(); paint(i); return; }
+      settle();
+      var cur = slides[i], nxt = slides[to];
+      nxt.style.transition = 'none'; nxt.style.transform = 'translate3d(' + (dir * 100) + '%,0,0)'; nxt.classList.add('is-active');
+      void nxt.offsetWidth;
+      var tr = 'transform .7s cubic-bezier(.22,.61,.36,1)';
+      cur.style.transition = tr; nxt.style.transition = tr;
+      cur.style.transform = 'translate3d(' + (-dir * 100) + '%,0,0)'; nxt.style.transform = 'translate3d(0,0,0)';
+      i = to; paint(i);
+      busy = setTimeout(settle, 760);
+    }
+    function play() { if (reduce || !interval) return; stop(); t = setInterval(function () { go(i + 1, 1); }, interval); }
     function stop() { clearInterval(t); }
-    dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); play(); }); });
+    dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k, k > i ? 1 : -1); play(); }); });
     var prev = $('.slider__arrow--prev', sl), next = $('.slider__arrow--next', sl);
-    prev && prev.addEventListener('click', function () { go(i - 1); play(); });
-    next && next.addEventListener('click', function () { go(i + 1); play(); });
+    prev && prev.addEventListener('click', function () { go(i - 1, -1); play(); });
+    next && next.addEventListener('click', function () { go(i + 1, 1); play(); });
     sl.addEventListener('mouseenter', stop); sl.addEventListener('mouseleave', play);
     sl.addEventListener('focusin', stop); sl.addEventListener('focusout', play);
     var x0 = null;
     sl.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
-    sl.addEventListener('touchend', function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) { go(i + (dx < 0 ? 1 : -1)); play(); } x0 = null; });
-    go(0); play();
+    sl.addEventListener('touchend', function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) { go(i + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); play(); } x0 = null; });
+    i = 0; settle(); paint(0); play();
   });
 
   // ---------- কপি ----------

@@ -1808,3 +1808,18 @@ body.sx-open { overflow: hidden; }
 
 /* স্লাইডার/বিজ্ঞাপনে যেকোনো মাপের ছবি দিলে ফ্রেমে নিজে ফিট হয়: ছোট হলে বড় হয়, বড় হলে ছোট হয়; মাঝখান ধরে ভরে (cover) */
 .banner-slider .slide picture, .banner-slider .slide img { width: 100%; height: 100%; object-fit: cover; object-position: center; max-width: none; }
+
+/* ---------- স্লাইডার: পাশ থেকে স্লাইড (ফেড নয়) + ডট স্লাইডারের নিচে ---------- */
+.banner-slider .slide { opacity: 1; transition: none; will-change: transform; }
+.banner-slider .slider__dots { position: static; transform: none; left: auto; bottom: auto; display: flex; justify-content: center; align-items: center; gap: 8px; margin: 14px 0 0; padding: 0; height: 8px; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.banner-slider .slider__dot { width: 8px; height: 8px; background: var(--text-muted); opacity: .35; border-radius: 8px; }
+.banner-slider .slider__dot.is-active { width: 26px; background: var(--accent); opacity: 1; }
+.banner-slider .slider__arrow { top: calc(50% - 11px); }
+.banner-slider + .hero { margin-top: 48px; }
+.ad-slider { margin-bottom: 58px; }
+@media (max-width: 640px) {
+  .banner-slider .slider__dots { margin-top: 12px; }
+  .banner-slider + .hero { margin-top: 40px; }
+  .banner-slider .slider__arrow { top: calc(50% - 10px); }
+}
+@media (max-width: 640px) { .ad-slider { margin-bottom: 60px; } }
