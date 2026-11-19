@@ -156,7 +156,7 @@
   // ---------- সার্চ (ঝাপসা পটভূমির ওপর) + রিয়েল-টাইম ফলাফল ----------
   var pop = $('#search-pop'), openBtn = $('[data-search-open]');
   var sxInput = pop && $('input[name="s"]', pop), sxRes = pop && $('[data-sx-results]', pop), sxClear = pop && $('[data-sx-clear]', pop);
-  var sxIdx = null, sxActive = -1, sxT;
+  var sxIdx = null, sxActive = -1, sxT, sxMode = 'posts';
   var BNn = '০১২৩৪৫৬৭৮৯';
   var sxNorm = function (s) { return String(s || '').toLowerCase().normalize('NFC').replace(/[‌‍]/g, '').replace(/[০-৯]/g, function (d) { return BNn.indexOf(d); }); };
   var sxEsc = function (s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
@@ -168,6 +168,7 @@
     var q = sxInput.value.trim();
     sxClear.hidden = !q;
     sxActive = -1;
+    if (sxMode === 'authors') { sxAuthors(q); return; }
     if (!q) { sxRes.hidden = true; sxRes.innerHTML = ''; return; }
     var terms = sxNorm(q).split(/\s+/).filter(Boolean);
     var scored = [];
@@ -200,16 +201,44 @@
         '<span class="sx__meta">' + sxEsc(it.a) + (it.cl ? ' · ' + sxEsc(it.cl) : '') + '</span></span></a>';
     }).join('') + '<a class="sx__all" href="' + BASE + '/search/?s=' + encodeURIComponent(q) + '">সব ফলাফল (' + bn(scored.length) + ') ›</a>';
   }
-  function closeSearch() {
-    if (pop && !pop.hidden) { pop.hidden = true; doc.body.classList.remove('sx-open'); openBtn && openBtn.setAttribute('aria-expanded', 'false'); }
+  // লেখকতালিকা পাতা: একই ঝাপসা বক্সে লেখক খোঁজা (পাতার কার্ড থেকেই, রিয়েল-টাইম)
+  function sxAuthors(q) {
+    var terms = sxNorm(q).split(/\s+/).filter(Boolean);
+    var list = $$('.author-card').filter(function (c) {
+      var t = sxNorm(c.textContent);
+      return terms.every(function (w) { return t.indexOf(w) > -1; });
+    });
+    sxRes.hidden = false;
+    if (!list.length) { sxRes.innerHTML = '<p class="sx__none">কোনো লেখক পাওয়া যায়নি।</p>'; return; }
+    sxRes.innerHTML = list.map(function (c, n) {
+      var av = c.querySelector('.avatar'), nm = c.querySelector('.author-card__name'), ct = c.querySelector('.author-card__count');
+      return '<a class="sx__item" role="option" data-i="' + n + '" href="' + c.getAttribute('href') + '">' +
+        '<span class="sx__thumb sx__thumb--av">' + (av ? av.outerHTML : '') + '</span>' +
+        '<span class="sx__txt"><span class="sx__title">' + sxEsc(nm ? nm.textContent : '') + '</span>' +
+        '<span class="sx__meta">' + sxEsc(ct ? ct.textContent : '') + '</span></span></a>';
+    }).join('');
   }
-  function openSearch() {
+  function closeSearch() {
+    if (pop && !pop.hidden) { sxSetMode('posts'); pop.hidden = true; doc.body.classList.remove('sx-open'); openBtn && openBtn.setAttribute('aria-expanded', 'false'); }
+  }
+  function sxSetMode(m) {
+    if (sxMode === m) return;
+    sxMode = m; sxInput.value = ''; sxClear.hidden = true; sxRes.hidden = true; sxRes.innerHTML = '';
+    sxInput.placeholder = m === 'authors' ? 'লেখক খুঁজুন…' : 'লেখা, লেখক, বিষয়…';
+    pop.classList.toggle('sx--authors', m === 'authors');
+  }
+  function openSearch(mode) {
+    sxSetMode(mode === 'authors' ? 'authors' : 'posts');
     pop.hidden = false; doc.body.classList.add('sx-open'); openBtn && openBtn.setAttribute('aria-expanded', 'true');
-    sxLoad(function () { if (sxInput.value) sxRender(); });
+    sxLoad(function () { if (sxInput.value || sxMode === 'authors') sxRender(); });
     setTimeout(function () { sxInput.focus(); sxInput.select(); }, 30);
   }
   if (openBtn && pop) {
     openBtn.addEventListener('click', function (e) { e.stopPropagation(); if (pop.hidden) openSearch(); else closeSearch(); });
+    $$('[data-author-search]').forEach(function (inp) {
+      var go = function () { inp.blur(); openSearch('authors'); };
+      inp.addEventListener('focus', go); inp.addEventListener('click', go);
+    });
     $$('[data-search-close]', pop).forEach(function (b) { b.addEventListener('click', closeSearch); });
     sxInput.addEventListener('input', function () { clearTimeout(sxT); sxT = setTimeout(function () { sxLoad(sxRender); }, 40); });
     sxClear.addEventListener('click', function () { sxInput.value = ''; sxRender(); sxInput.focus(); });
@@ -225,7 +254,7 @@
         e.preventDefault(); location.href = items[sxActive].getAttribute('href');
       }
     });
-    $('form', pop).addEventListener('submit', function (e) { if (!sxInput.value.trim()) e.preventDefault(); });
+    $('form', pop).addEventListener('submit', function (e) { if (sxMode === 'authors' || !sxInput.value.trim()) e.preventDefault(); });
   }
 
   // ---------- অফ-ক্যানভাস মেনু ----------

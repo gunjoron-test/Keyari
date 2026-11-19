@@ -1567,7 +1567,7 @@ def build_authors():
     body = f'''<div class="container archive">{bc_html}
 <header class="archive-header"><h1 class="archive-title">লেখকতালিকা</h1>
 
-<label class="sr-only" for="af">লেখক খুঁজুন</label><input class="filter-input" id="af" type="search" placeholder="লেখক খুঁজুন…" data-filter=".author-card"></header>
+<label class="sr-only" for="af">লেখক খুঁজুন</label><input class="filter-input" id="af" type="search" placeholder="লেখক খুঁজুন…" data-author-search autocomplete="off"></header>
 <div class="author-grid">{cards}</div></div>'''
     write("/লেখক-তালিকা/", layout(title="লেখকতালিকা", description=f"{SITE}-এর সব লেখকের তালিকা, পরিচিতি ও লেখা।",
                                 path="/লেখক-তালিকা/", body=body, active="বাতায়ন", ld=[bc_ld]))

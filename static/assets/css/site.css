@@ -1679,3 +1679,8 @@ body.sx-open { overflow: hidden; }
   .sf__editor { padding: 6px 6px; }
   .sf__link { font-size: 12px; overflow-wrap: normal; word-break: keep-all; white-space: nowrap; }
 }
+
+/* লেখক খোঁজা (লেখকতালিকা): একই ঝাপসা বক্স, গোল ছবি */
+.sx__thumb--av { width: 44px; height: 44px; border-radius: 50%; background: none; }
+.sx__thumb--av .avatar { width: 100% !important; height: 100% !important; font-size: 18px !important; border-width: 1.5px; }
+.sx--authors .sx__results { max-height: min(62vh, 520px); }
