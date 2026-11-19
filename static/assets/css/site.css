@@ -1561,3 +1561,9 @@ body.sx-open { overflow: hidden; }
   .sf__follow .sf__heading { flex: 0 0 100%; margin-bottom: 2px; }
   .sf__follow .footer__social { margin-top: 0; }
 }
+
+/* মোবাইল ফুটার: সম্পাদক|যোগাযোগ — বাক্স/পটভূমি/বাইরের দাগ ছাড়া, শুধু মাঝের সরু দাগ */
+@media (max-width: 575.98px) {
+  .sf__editor, .sf__contact { background: none; border: 0; border-radius: 0; padding: 6px 10px; }
+  .sf__contact { border-left: 1px solid var(--line); }
+}
