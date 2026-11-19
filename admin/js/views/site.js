@@ -562,3 +562,56 @@ export function issuesView(view) {
   }
   draw();
 }
+
+
+// ==================================================================== কেয়ারি পরিবার
+export function familyView(view) {
+  const cfg = clone(S.family && Array.isArray(S.family.items) ? S.family : { items: [] });
+  const draw = () => {
+    view.innerHTML = `<div class="page-head"><div><h1>কেয়ারি পরিবার</h1><p>"আমাদের কথা" পাতার নিচে যাঁদের নাম, ছবি ও পরিচয় দেখাবে — যত খুশি যোগ করা যায়, ওপর-নিচ করে ক্রম বদলানো যায়</p></div>
+      <div class="btn-row"><button class="btn btn--light" data-add>＋ নতুন সদস্য</button><button class="btn" data-save>সংরক্ষণ</button></div></div>
+      <div class="card" style="padding:0"><table class="table"><thead><tr><th class="hide-sm"></th><th>নাম</th><th>পদবি</th><th>অবস্থা</th><th>ক্রম</th><th></th></tr></thead><tbody>
+      ${cfg.items.map((m, i) => `<tr data-i="${i}"><td class="hide-sm">${m.photo ? `<img class="thumb" style="border-radius:50%" src="${esc(imgUrl(m.photo))}" alt="">` : `<span class="badge">${esc((m.name || '?').slice(0, 1))}</span>`}</td><td><b>${esc(m.name)}</b></td><td>${esc(m.role || '')}</td>
+        <td>${m.active === false ? '<span class="badge badge--draft">লুকানো</span>' : '<span class="badge badge--published">দেখাচ্ছে</span>'}</td>
+        <td><button class="btn btn--ghost btn--sm" data-up="${i}" ${i === 0 ? 'disabled' : ''}>↑</button> <button class="btn btn--ghost btn--sm" data-down="${i}" ${i === cfg.items.length - 1 ? 'disabled' : ''}>↓</button></td>
+        <td><button class="btn btn--ghost btn--sm" data-ed="${i}">সম্পাদনা</button> <button class="btn btn--ghost btn--sm" data-del="${i}" style="color:#c0392b">মুছুন</button></td></tr>`).join('') || '<tr><td colspan="6" class="empty">এখনো কোনো সদস্য নেই</td></tr>'}
+      </tbody></table></div>`;
+    $$('img', view).forEach(imgFallback);
+    $$('[data-ed]', view).forEach((b) => (b.onclick = () => edit(+b.dataset.ed)));
+    $$('[data-del]', view).forEach((b) => (b.onclick = async () => { if (!(await confirmBox('এই সদস্যকে তালিকা থেকে সরাবেন?', { danger: true, ok: 'সরান' }))) return; cfg.items.splice(+b.dataset.del, 1); draw(); }));
+    $$('[data-up]', view).forEach((b) => (b.onclick = () => { const i = +b.dataset.up; [cfg.items[i - 1], cfg.items[i]] = [cfg.items[i], cfg.items[i - 1]]; draw(); }));
+    $$('[data-down]', view).forEach((b) => (b.onclick = () => { const i = +b.dataset.down; [cfg.items[i + 1], cfg.items[i]] = [cfg.items[i], cfg.items[i + 1]]; draw(); }));
+    $('[data-add]', view).onclick = () => edit(-1);
+    $('[data-save]', view).onclick = async () => { S.family = cfg; await saveSingle('family', 'কেয়ারি পরিবার হালনাগাদ'); };
+  };
+  function edit(idx) {
+    const isNew = idx < 0;
+    const it = isNew ? { id: uid('fm'), name: '', role: '', photo: '', bio: '', email: '', facebook: '', instagram: '', whatsapp: '', linkedin: '', x: '', website: '', active: true } : clone(cfg.items[idx]);
+    const f = (k, label, ph = '', type = 'text') => `<div class="field"><label>${label}</label><input class="input" type="${type}" data-k="${k}" value="${esc(it[k] || '')}" placeholder="${esc(ph)}"></div>`;
+    const m = modal({
+      title: isNew ? 'নতুন সদস্য' : 'সদস্যের প্রোফাইল', wide: true,
+      body: `<div class="grid2"><div>
+          <p class="label">প্রোফাইল ছবি</p><div class="cover-box" data-box style="aspect-ratio:1/1;max-width:200px;border-radius:50%;overflow:hidden" tabindex="0" role="button"></div>
+          <div class="btn-row" style="margin:8px 0 14px"><label class="btn btn--light btn--sm" style="cursor:pointer">আপলোড<input type="file" accept="image/*" data-up hidden></label><button class="btn btn--light btn--sm" type="button" data-lib>মিডিয়া থেকে</button><button class="btn btn--ghost btn--sm" type="button" data-rm>সরান</button></div>
+          <label class="check"><input type="checkbox" data-k="active" ${it.active !== false ? 'checked' : ''}> পাতায় দেখাবে</label></div>
+        <div>${f('name', 'নাম', 'যেমন: মুজিব হাসান')}${f('role', 'পদবি / পরিচয়', 'যেমন: সম্পাদক ও প্রকাশক')}
+          <div class="field"><label>সংক্ষিপ্ত পরিচিতি (ঐচ্ছিক)</label><textarea class="textarea" rows="3" data-k="bio" placeholder="দুই-তিন লাইনে">${esc(it.bio || '')}</textarea></div></div></div>
+        <p class="label" style="margin-top:6px">যোগাযোগ ও সোশ্যাল লিংক (যেগুলো দেবেন শুধু সেগুলোর আইকন দেখাবে)</p>
+        <div class="grid2">${f('email', 'ইমেইল', '', 'email')}${f('facebook', 'ফেসবুক', 'https://…', 'url')}${f('instagram', 'ইনস্টাগ্রাম', 'https://…', 'url')}${f('whatsapp', 'হোয়াটসঅ্যাপ', 'নম্বর (8801…) বা wa.me লিংক')}${f('linkedin', 'লিংকডইন', 'https://…', 'url')}${f('x', 'এক্স / টুইটার', 'https://…', 'url')}${f('website', 'ওয়েবসাইট', 'https://…', 'url')}</div>`,
+      foot: '<button class="btn btn--light" data-no>বাতিল</button><button class="btn" data-ok>ঠিক আছে</button>',
+    });
+    const paint = () => { const b = $('[data-box]', m.el); b.innerHTML = it.photo ? `<img src="${esc(imgUrl(it.photo))}" alt="" style="width:100%;height:100%;object-fit:cover">` : '<span>ছবি নেই</span>'; const im = $('img', b); im && imgFallback(im); };
+    paint();
+    $$('[data-k]', m.el).forEach((el) => el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => { it[el.dataset.k] = el.type === 'checkbox' ? el.checked : el.value; }));
+    $('[data-up]', m.el).onchange = async (e) => { const fl = e.target.files[0]; if (!fl) return; try { toast('ছবি আপলোড হচ্ছে…'); const r = await imageChanges(fl, 'family', 900); await commit('কেয়ারি পরিবারের ছবি আপলোড', r.changes); it.photo = r.url; paint(); } catch (er) { toast('আপলোড ব্যর্থ: ' + er.message, 'err'); } };
+    $('[data-lib]', m.el).onclick = async () => { const r = await pickMedia({ title: 'ছবি বাছুন' }); if (r && r.url) { it.photo = r.url; paint(); } };
+    $('[data-rm]', m.el).onclick = () => { it.photo = ''; paint(); };
+    $('[data-no]', m.el).onclick = () => m.close();
+    $('[data-ok]', m.el).onclick = () => {
+      if (!(it.name || '').trim()) { toast('নাম লিখুন', 'err'); return; }
+      if (isNew) cfg.items.push(it); else cfg.items[idx] = it;
+      m.close(); draw();
+    };
+  }
+  draw();
+}

@@ -1507,19 +1507,32 @@ def build_pages():
         banner = pg.get("banner") or {}
         bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), (pg["title"], path)])
         if tpl == "about":
-            meanings = [("সিঁথি", "মাথার কেশদামে সযত্নে কাটা হয় যে সিঁথি, তার নাম কেয়ারি।", MEAN_ICONS[0]),
-                        ("বাগানের কেয়ারি", "শখের বাগানে বাখারির বেড়ায় বিশেষিত যে অংশ, তারও নাম কেয়ারি।", MEAN_ICONS[1]),
-                        ("প্রেম-প্রযত্ন", "প্রিয় মানুষ, প্রিয় জিনিসের প্রতি যে প্রেম-প্রযত্ন, তাতেও থাকে কেয়ারির ছাপ।", MEAN_ICONS[2])]
-            mean_html = "".join(f'<div class="meaning"><span class="meaning__icon" aria-hidden="true">{ic}</span><h2 class="meaning__title">{t}</h2><p>{d}</p></div>' for t, d, ic in meanings)
-            cats = "".join(f'<a class="topic-mini" href="{cat_url(c["slug"])}"><span class="topic-mini__icon" aria-hidden="true">{cat_ico(c, 24)}</span><span>{esc(c["name"])}</span><span class="count">{bn(cat_count(c["slug"]))}টি লেখা</span></a>' for c in TOP_CATS)
+            members = [m for m in (load("family.json", {}) or {}).get("items", []) if m.get("active", True) is not False and m.get("name")]
+            cards = ""
+            for m in members:
+                ico = []
+                for k, label in [("facebook", "ফেসবুক"), ("instagram", "ইনস্টাগ্রাম"), ("whatsapp", "হোয়াটসঅ্যাপ"), ("linkedin", "লিংকডইন"), ("x", "এক্স")]:
+                    v = (m.get(k) or "").strip()
+                    if v:
+                        if k == "whatsapp" and not v.startswith("http"):
+                            v = "https://wa.me/" + re.sub(r"\D", "", v)
+                        ico.append('<a href="' + esc(v) + '" target="_blank" rel="noopener me" aria-label="' + label + '" title="' + label + '">' + brand_svg(k, 18, "currentColor") + "</a>")
+                if (m.get("website") or "").strip():
+                    ico.append('<a href="' + esc(m["website"].strip()) + '" target="_blank" rel="noopener me" aria-label="ওয়েবসাইট" title="ওয়েবসাইট">' + icon("link", 18) + "</a>")
+                if (m.get("email") or "").strip():
+                    ico.append('<a href="mailto:' + esc(m["email"].strip()) + '" aria-label="ইমেইল" title="ইমেইল">' + icon("mail", 18) + "</a>")
+                ph = {"name": m["name"], "slug": m.get("id", m["name"]), "photo": m.get("photo", "")}
+                cards += ('<article class="member">' + avatar(ph, 104)
+                          + '<h3 class="member__name">' + esc(m["name"]) + "</h3>"
+                          + (('<p class="member__role">' + esc(m["role"]) + "</p>") if m.get("role") else "")
+                          + (('<p class="member__bio">' + esc(m["bio"]) + "</p>") if m.get("bio") else "")
+                          + (('<div class="member__social">' + "".join(ico) + "</div>") if ico else "") + "</article>")
+            fam_head = section_head("কেয়ারি পরিবার", h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="fam-h"')
+            family = ('<section class="family" aria-labelledby="fam-h">' + fam_head + '<div class="family__grid">' + cards + "</div></section>") if cards else ""
             content = f'''<div class="container page page--about">{bc_html}
 <header class="page-hero"><h1 class="page-title">{esc(pg["title"])}</h1><p class="page-lead">{esc(S.get("tagline"))}</p></header>
-{f'<figure class="page-banner">{img_tag(banner.get("src"), banner.get("alt") or pg["title"], "page-banner__img", eager=True)}</figure>' if banner.get("src") else ""}
-<div class="meanings">{mean_html}</div>
 <div class="entry-content entry-content--page">{body}</div>
-<section class="about-cats" aria-label="বিভাগসমূহ">{section_head("কেয়ারির শামিয়ানা", center=True)}<div class="topic-grid">{cats}</div></section>
-<section class="editor-card"><p class="sec-label">সম্পাদক</p><h2 class="editor-card__name">{esc(S.get("editor_name"))}</h2>
-<p><a href="mailto:{esc(S.get("email"))}">{esc(S.get("email"))}</a></p></section>
+{family}
 </div>'''
         elif tpl == "guidelines":
             toc = toc_from(body)

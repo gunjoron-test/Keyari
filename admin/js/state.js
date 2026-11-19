@@ -3,7 +3,7 @@ import { jsonText, toast, bn } from './util.js';
 
 export const S = {
   be: null, user: null, role: 'admin', cfg: {}, tree: [],
-  slides: { enabled: true, autoplay: true, interval: 6, items: [] }, ads: { enabled: true, autoplay: true, interval: 7, show_label: true, items: [] }, ayojon_slides: { enabled: true, autoplay: true, interval: 6, items: [] }, issues: { items: [] }, settings: {}, categories: [], authors: [], menu: { header: [], footer: [] }, home: {}, styles: {}, users: { users: [] },
+  slides: { enabled: true, autoplay: true, interval: 6, items: [] }, ads: { enabled: true, autoplay: true, interval: 7, show_label: true, items: [] }, ayojon_slides: { enabled: true, autoplay: true, interval: 6, items: [] }, issues: { items: [] }, family: { items: [] }, settings: {}, categories: [], authors: [], menu: { header: [], footer: [] }, home: {}, styles: {}, users: { users: [] },
   posts: [], pages: [], ayojon: [], media: [],
   dirty: false,
 };
@@ -18,7 +18,7 @@ export const can = (perm) => { const r = ROLES[S.role] || ROLES.contributor; ret
 
 const SINGLES = {
   settings: 'content/settings.json', categories: 'content/categories.json', authors: 'content/authors.json',
-  menu: 'content/menu.json', home: 'content/home.json', styles: 'content/styles.json', users: 'content/users.json', slides: 'content/slides.json', ads: 'content/ads.json', ayojon_slides: 'content/ayojon_slides.json', issues: 'content/issues.json',
+  menu: 'content/menu.json', home: 'content/home.json', styles: 'content/styles.json', users: 'content/users.json', slides: 'content/slides.json', ads: 'content/ads.json', ayojon_slides: 'content/ayojon_slides.json', issues: 'content/issues.json', family: 'content/family.json',
 };
 export const PATHS = SINGLES;
 
