@@ -1965,3 +1965,11 @@ body.sx-open { overflow: hidden; }
 
 /* বার্তা-বক্স (যেমন "কপি হয়েছে"): ব্র্যান্ড সবুজ #00A664 ব্যাকগ্রাউন্ড, সাদা লেখা */
 .toast { background: #00A664; color: #fff; font-weight: 600; border: 0; box-shadow: 0 10px 28px rgba(0, 166, 100, .32); }
+
+/* মেগা-মেনু (বিষয়সূচি): আয়োজন/বাতায়নের ড্রপডাউনের মতোই মেনুর ঠিক নিচে নামে; তিন কলামের মাঝে সরু দাগ, বিশাল ফাঁক নেই */
+.nav__item.has-mega > .mega { top: calc(50% + 29px); }
+.site-header.is-compact .nav__item.has-mega > .mega { top: calc(50% + 27px); }
+.mega { width: min(740px, calc(100vw - 48px)); padding: 26px 14px; }
+.mega__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
+.mega__col { padding: 2px 28px; border-left: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line)); min-width: 0; }
+.mega__col:first-child { border-left: 0; }
