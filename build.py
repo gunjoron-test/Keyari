@@ -1313,7 +1313,7 @@ def build_post(p):
     <span class="autoscroll__tip" aria-hidden="true">অটো-স্ক্রল</span>
     <span class="autoscroll__label" data-as-label>অটো-স্ক্রল</span>
   </button>
-  <button class="autoscroll__top" type="button" data-as-top aria-label="উপরে যান" title="উপরে যান"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14l6-6 6 6"/></svg></button>
+  <button class="autoscroll__top" type="button" data-as-top aria-label="উপরে যান" title="উপরে যান"><svg class="autoscroll__ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="20"/></svg><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14l6-6 6 6"/></svg></button>
 </div>
   <section class="read-next container" aria-labelledby="rn-h">
     <h2 class="read-next__title" id="rn-h">আরও পড়ুন</h2>

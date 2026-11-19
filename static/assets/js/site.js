@@ -51,7 +51,7 @@
 
   // ---------- স্মার্ট স্টিকি হেডার, প্রোগ্রেস, স্ক্রল-টপ ----------
   var header = $('[data-header]'), lastY = window.scrollY, toTop = $('[data-to-top]');
-  var ring = toTop && $('circle', toTop), bar = $('.read-progress span');
+  var dockRing = $('.autoscroll__ring circle'), ring = toTop && $('circle', toTop), bar = $('.read-progress span');
   var article = doc.body.classList.contains('single') ? $('.entry-content') : null;
   var ticking = false, compact = false;
   function setCompact(v) {
@@ -66,13 +66,16 @@
     if (v === hidden) return;
     hidden = v;
     header.classList.toggle('is-hidden', v);
+    doc.body.classList.toggle('hdr-off', v);
     if (v && typeof closeSearch === 'function') closeSearch();
   }
   // মোবাইলে পড়ার মাঝে পর্দা ছুঁলে (লিংক/বোতাম ছাড়া) হেডার ফিরে আসে
   doc.addEventListener('click', function (e) {
-    if (!header || !hidden || window.innerWidth >= 992) return;
-    if (e.target.closest('a, button, input, textarea, select, label, [data-autoscroll], .offcanvas')) return;
-    setHidden(false); lastY = window.scrollY;
+    if (!header || window.innerWidth >= 992) return;
+    if (e.target.closest('a, button, input, textarea, select, label, [data-autoscroll], .offcanvas, .cm, .share-row, .autoscroll')) return;
+    if (hidden) { setHidden(false); lastY = window.scrollY; return; }
+    // লেখার পাতায়: আবার ছুঁলে হেডার (ও সাথে নিচের ডক) চলে যায়; ছুঁলে আসে, আবার ছুঁলে যায়
+    if (doc.body.classList.contains('single') && window.scrollY > 140 && !(window.getSelection && String(window.getSelection()))) { setHidden(true); lastY = window.scrollY; }
   });
   function onScroll() {
     var y = window.scrollY, h = doc.documentElement.scrollHeight - window.innerHeight;
@@ -95,6 +98,7 @@
     } else lastY = y;
     var p = h > 0 ? Math.min(1, y / h) : 0;
     if (ring) ring.style.strokeDashoffset = String(138.2 * (1 - p));
+    if (dockRing) dockRing.style.strokeDashoffset = String(125.7 * (1 - p));
     if (toTop) toTop.classList.toggle('is-visible', y > 600);
     if (bar && article) {
       var r = article.getBoundingClientRect();
@@ -283,15 +287,7 @@
     // মোবাইলে নিচের ডক: স্ক্রল করলে নিচ থেকে উঠে আসে; লেখার শুরুর কাছে থাকলে লুকিয়ে থাকে
     var topBtn = $('[data-as-top]', asBox);
     if (topBtn) topBtn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
-    var dockTick = false;
-    var dockUpdate = function () {
-      var show = window.scrollY > 320 || asRun;
-      asBox.classList.toggle('is-shown', show);
-      doc.body.classList.toggle('dock-on', show);
-      dockTick = false;
-    };
-    window.addEventListener('scroll', function () { if (!dockTick) { dockTick = true; requestAnimationFrame(dockUpdate); } }, { passive: true });
-    dockUpdate();
+    doc.body.classList.toggle('dock-on', true);
     asPaint();
   }
 

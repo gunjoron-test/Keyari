@@ -1341,3 +1341,15 @@ html { overflow-x: clip; }
   .autoscroll .autoscroll__speed { order: 2; }
   .autoscroll [data-as-faster] { order: 3; }
 }
+
+/* ডক: হেডার লুকালেই ওঠে, হেডার ফিরলে নামে (অটো-স্ক্রল চলার সময় সবসময় থাকে); উপরে-যান বোতামে পড়ার অগ্রগতির বলয় */
+@media (max-width: 767.98px) {
+  .autoscroll.is-shown:not(.is-running) { transform: translateY(calc(100% + 24px)); opacity: 0; visibility: hidden; }
+  body.hdr-off .autoscroll, .autoscroll.is-running { transform: none; opacity: 1; visibility: visible; }
+  .autoscroll__top { position: relative; }
+  .autoscroll__ring { position: absolute; inset: 0; width: 44px; height: 44px; transform: rotate(-90deg); pointer-events: none; }
+  .autoscroll__ring circle { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 125.7; stroke-dashoffset: 125.7; transition: stroke-dashoffset .12s linear; }
+  .autoscroll__top svg:not(.autoscroll__ring) { position: relative; }
+}
+.autoscroll__ring { display: none; }
+@media (max-width: 767.98px) { .autoscroll__ring { display: block; } }
