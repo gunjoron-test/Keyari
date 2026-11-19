@@ -73,7 +73,7 @@ function loginScreen(localOk, err = '') {
 // ==================================================================== কাঠামো
 const NAV = [
   ['মূল', [['dashboard', 'dash', 'ড্যাশবোর্ড'], ['posts', 'posts', 'লেখাসমূহ', 'posts'], ['post/new', 'new', 'নতুন লেখা', 'posts'], ['media', 'media', 'মিডিয়া', 'media']]],
-  ['প্রকাশনা', [['pages', 'pages', 'পাতাসমূহ', 'pages'], ['ayojon', 'ayojon', 'আয়োজন', 'ayojon'], ['issues', 'ayojon', 'সংখ্যাগুচ্ছ', 'ayojon'], ['categories', 'cats', 'বিভাগ', 'categories'], ['authors', 'authors', 'লেখক', 'authors'], ['family', 'authors', 'কেয়ারি পরিবার', 'authors'], ['videos', 'ayojon', 'ভিডিও', 'ayojon'], ['comments', 'comments', 'মন্তব্য', 'comments']]],
+  ['প্রকাশনা', [['pages', 'pages', 'পাতাসমূহ', 'pages'], ['ayojon', 'ayojon', 'আয়োজন', 'ayojon'], ['issues', 'issues', 'সংখ্যাগুচ্ছ', 'ayojon'], ['categories', 'cats', 'বিভাগ', 'categories'], ['authors', 'authors', 'লেখক', 'authors'], ['family', 'authors', 'কেয়ারি পরিবার', 'authors'], ['videos', 'videos', 'ভিডিও', 'ayojon'], ['comments', 'comments', 'মন্তব্য', 'comments']]],
   ['নকশা', [['home', 'home', 'মুখপাতার বিন্যাস', 'home'], ['slides', 'slides', 'স্লাইডার', 'home'], ['ads', 'ads', 'বিজ্ঞাপন', 'home'], ['menu', 'menu2', 'মেনু', 'menu'], ['styles', 'styles', 'স্টাইল শিট', 'styles']]],
   ['ব্যবস্থাপনা', [['seo', 'seo', 'SEO ও র‍্যাংকিং', 'seo'], ['deploy', 'deploy', 'প্রকাশের অবস্থা', 'deploy'], ['settings', 'settings', 'সেটিংস', 'settings'], ['users', 'users', 'ব্যবহারকারী', 'users'], ['import', 'import', 'আমদানি ও ব্যাকআপ', 'import']]],
 ];
@@ -105,7 +105,9 @@ const IC = {
   new: '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
   media: '<rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 9"/>',
   pages: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
-  ayojon: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16v4M17 18h4"/>',
+  ayojon: '<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="m12 12.6.9 1.9 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3z"/>',
+  issues: '<path d="M5.5 4h10.5a2 2 0 0 1 2 2v14H7.5a2 2 0 0 1-2-2z"/><path d="M18 8h.5a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H18"/><path d="M9 8.5h5.5M9 12h5.5M9 15.5h3"/>',
+  videos: '<rect x="3" y="5" width="18" height="14" rx="3.2"/><path d="M10.2 9.3v5.4l4.6-2.7z"/>',
   cats: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
   authors: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 20a6.5 6.5 0 0 0-3-5.4"/>',
   comments: '<path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z"/>',
