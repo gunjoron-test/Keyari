@@ -350,16 +350,21 @@
       var bodyEnd = asBody ? asBody.getBoundingClientRect().bottom < window.innerHeight * 0.55 : false;
       return docEnd || bodyEnd;
     };
+    // মসৃণ স্ক্রল: অবস্থান দশমিকে (ভগ্নাংশ পিক্সেলে) রাখা হয় ও সময় ধরে হিসাব হয় — তাই ০.৫× গতিতেও ফ্রেমে ফ্রেমে সমান এগোয়, কাঁপে না
+    var asPos = 0, asSet = 0;
     var asFrame = function (t) {
       if (!asRun) return;
+      var cur = window.scrollY || window.pageYOffset || 0;
       if (asLast) {
-        var dt = Math.min(80, t - asLast) / 1000;
-        if (!asTouching && t > asHoldUntil) {
-          asAcc += BASE_PX * LEVELS[asIdx] * dt;
-          var step = Math.floor(asAcc);
-          if (step >= 1) { asAcc -= step; window.scrollBy(0, step); }
+        var dt = Math.min(100, t - asLast) / 1000;
+        if (asTouching || t <= asHoldUntil || Math.abs(cur - asSet) > 2.5) {
+          asPos = cur; // পাঠক নিজে স্ক্রল করেছেন — তাঁর অবস্থান থেকেই আবার শুরু
+        } else {
+          asPos += BASE_PX * LEVELS[asIdx] * dt;
+          asSet = asPos;
+          window.scrollTo({ top: asPos, left: 0, behavior: 'instant' });
         }
-      }
+      } else { asPos = cur; asSet = cur; }
       asLast = t;
       if (atEnd()) { asStop(); toast('লেখার শেষে পৌঁছেছেন'); return; }
       requestAnimationFrame(asFrame);
