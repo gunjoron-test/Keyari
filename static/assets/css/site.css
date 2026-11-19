@@ -1768,3 +1768,28 @@ body.sx-open { overflow: hidden; }
   .autoscroll .as-m--sm { width: 24px; height: 24px; }
   .autoscroll .as-spd__v { min-width: 26px; font-size: 12.5px; }
 }
+
+/* ---------- মোবাইল ডক: বই-বোতাম বাঁয়ে (ওপরে ভার্টিকেল পিল), "উপরে যান" আগের জায়গায় ডানে ---------- */
+@media (max-width: 767.98px) {
+  .autoscroll { left: 16px; right: 16px; width: auto; flex-direction: row; justify-content: space-between; align-items: flex-end; pointer-events: none; }
+  .autoscroll > * { pointer-events: auto; }
+  .autoscroll .autoscroll__fab { order: 1; }
+  .autoscroll .autoscroll__top { order: 2; }
+
+  .autoscroll .autoscroll__size, .autoscroll .autoscroll__size[hidden] { right: auto; left: 4px; bottom: 56px; width: 40px; height: auto; padding: 5px 0; flex-direction: column; align-items: center; gap: 1px; border-radius: 22px; animation-name: as-in-v; }
+  .autoscroll .autoscroll__size[hidden] { display: none !important; }
+  .autoscroll .as-m-sep { width: 16px; height: 1px; margin: 3px 0; }
+  .autoscroll .as-spd { flex-direction: column-reverse; align-items: center; margin: 3px 0 0; padding: 3px 0 0; border-left: 0; border-top: 1px solid var(--line); }
+  .autoscroll .as-spd__v { min-width: 0; padding: 2px 0; }
+}
+@keyframes as-in-v { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+@media (max-width: 359.98px) {
+  .autoscroll { left: 12px; right: 12px; }
+  .autoscroll .autoscroll__size, .autoscroll .autoscroll__size[hidden] { right: auto; left: 4px; }
+}
+@media (max-width: 767.98px) {
+  .autoscroll .as-spd { flex-direction: column; }
+  .autoscroll .as-spd [data-as-faster] { order: 1; }
+  .autoscroll .as-spd .as-spd__v { order: 2; }
+  .autoscroll .as-spd [data-as-slower] { order: 3; }
+}
