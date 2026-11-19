@@ -1353,3 +1353,32 @@ html { overflow-x: clip; }
 }
 .autoscroll__ring { display: none; }
 @media (max-width: 767.98px) { .autoscroll__ring { display: block; } }
+
+/* ---------- ফুটার: মিনিমাল ও কমপ্যাক্ট ---------- */
+.sf { margin-top: 8px; }
+.sf__top { padding: 28px 0 22px; }
+.sf__brand { gap: 6px; padding-right: 32px; }
+.sf__brand .footer__logo img { width: 64px; }
+.sf__tagline { font-size: 14px; font-weight: 600; line-height: 1.5; }
+.sf__notice { font-size: 12.5px; line-height: 1.6; max-width: 380px; }
+.sf__follow { padding: 0 32px; gap: 6px; }
+.sf__heading { font-size: 15px; }
+.sf__heading::after, .sf__sub { display: none; }
+.sf__follow .footer__social, .sf__editor .footer__social { margin-top: 6px; gap: 16px; }
+.footer__social .social-ico { width: 20px; height: 20px; }
+.footer__social .social-ico svg { width: 18px; height: 18px; }
+.sf__editor { padding-left: 32px; gap: 2px; }
+.sf__editor-name { font-size: 16px; }
+.sf__role { font-size: 12.5px; }
+.sf__bottom { font-size: 12.5px; padding: 12px 0 16px; }
+@media (max-width: 991.98px) {
+  .sf__top { padding: 24px 0 14px; }
+  .sf__brand, .sf__follow, .sf__editor { padding: 16px 0; }
+  .sf__brand { padding-top: 0; }
+}
+@media (max-width: 767.98px) {
+  .footer__social .social-ico { width: 40px; height: 40px; }
+  .footer__social .social-ico svg { width: 20px; height: 20px; }
+  .footer__social { gap: 6px; }
+  .sf__follow .footer__social, .sf__editor .footer__social { margin-top: 0; }
+}
