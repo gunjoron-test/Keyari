@@ -978,12 +978,14 @@ def layout(*, title, description, path, body, active="", og_image="", og_type="w
 <link rel="apple-touch-icon" href="{u("/assets/img/icon-180.png")}">
 <link rel="manifest" href="{u("/manifest.webmanifest")}">
 <link rel="alternate" type="application/rss+xml" title="{esc(SITE)} — ফিড" href="{u("/feed.xml")}">
-<link rel="preload" href="{u("/assets/fonts/NotoSerifByGunjoron-Regular.woff")}" as="font" type="font/woff" crossorigin>
-<link rel="preload" href="{u("/assets/fonts/NotoSerifByGunjoron-Bold.woff")}" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="{u("/assets/fonts/NotoSerifByGunjoron-Regular.woff")}?v={FONT_V}" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="{u("/assets/fonts/NotoSerifByGunjoron-Bold.woff")}?v={FONT_V}" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="{u("/assets/css/fonts.css")}?v={BUILD_ID}">
 <link rel="stylesheet" href="{u("/assets/css/site.css")}?v={BUILD_ID}">
 <link rel="stylesheet" href="{u("/assets/css/styles.css")}?v={BUILD_ID}">
 <script>(function(){{try{{var s=localStorage.getItem('keyari-scheme');if(!s)s=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-scheme',s);localStorage.removeItem('keyari-fs')}}catch(e){{}}}})();window.KEYARI={{base:"{BASE}"}};</script>
+<meta name="build" content="{BUILD_ID}">
+<script>(function(){{try{{var m=document.querySelector('meta[name=build]');if(!m||!window.fetch)return;var b=m.getAttribute('content');fetch("{u("/version.json")}?t="+Date.now(),{{cache:'no-store'}}).then(function(r){{return r.json()}}).then(function(j){{if(!j||!j.v||j.v===b)return;var k='keyari-rl';if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v);location.reload()}}).catch(function(){{}})}}catch(e){{}}}})();</script>
 {extra_head}
 {"".join(jsonld(x) for x in lds)}
 {analytics}
@@ -1000,6 +1002,19 @@ def layout(*, title, description, path, body, active="", og_image="", og_type="w
 
 
 BUILD_ID = NOW.strftime("%Y%m%d%H%M")
+
+
+def _font_version():
+    import hashlib
+    h = hashlib.sha1()
+    fd = STATIC / "assets" / "fonts"
+    for f in sorted(fd.glob("*.woff")):
+        h.update(f.name.encode("utf-8"))
+        h.update(f.read_bytes())
+    return h.hexdigest()[:10]
+
+
+FONT_V = _font_version()
 
 
 def write(path, content):
@@ -1814,6 +1829,9 @@ def build_sitemaps(extra_paths):
 def build_static():
     if STATIC.exists():
         shutil.copytree(STATIC, DIST, dirs_exist_ok=True)
+        _fc = DIST / "assets" / "css" / "fonts.css"
+        if _fc.exists():
+            _fc.write_text(_fc.read_text(encoding="utf-8").replace(".woff)", ".woff?v=" + FONT_V + ")"), encoding="utf-8")
     (DIST / "assets" / "css").mkdir(parents=True, exist_ok=True)
     (DIST / "assets" / "css" / "styles.css").write_text(style_css(), "utf-8")
     if ADMIN.exists():
@@ -1858,6 +1876,7 @@ def main():
     extra = ["/বিষয়সূচি/", "/লেখক-তালিকা/", "/আয়োজন/", "/সংখ্যাগুচ্ছ/", "/ধারাবাহিক/"] + [f"/{p['slug']}/" for p in PAGES] + \
             [ayojon_path(a) for a in AYOJON] + [issue_path(x) for x in ISSUES] + [f"/ধারাবাহিক/{s}/" for s in SERIES]
     build_sitemaps(extra)
+    (DIST / "version.json").write_text(json.dumps({"v": BUILD_ID}), encoding="utf-8")
     n = sum(1 for _ in DIST.rglob("*.html"))
     print(f"✔ {len(POSTS)}টি লেখা, {n}টি HTML পাতা তৈরি হলো ({(datetime.now() - t0).total_seconds():.1f} সেকেন্ড) → {DIST}")
 
