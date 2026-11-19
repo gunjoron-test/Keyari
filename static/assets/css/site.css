@@ -1423,3 +1423,18 @@ html { overflow-x: clip; }
 .hero__side .card-s:last-child { height: 172px; }
 .card-s__media { flex: 0 0 clamp(190px, 54%, 320px); }
 @media (max-width: 575.98px) { .hero__side .card-s, .hero__side .card-s:last-child { height: auto; } .card-s__media { flex: none; } }
+
+/* ---------- হিরো: তারিখ নামের পাশে; ডানের তিন কার্ড বাঁয়ের বড় কার্ডের ওপর-নিচ বরাবর, সমান ফাঁকে; লেখা ৪ লাইন ---------- */
+.hero__by { display: flex; align-items: center; flex-wrap: wrap; gap: 2px 6px; margin: 0 0 4px; font-size: 14px; color: var(--text-muted); }
+.hero__by .card__author { display: inline-flex; align-items: center; }
+@media (min-width: 992px) {
+  .home .hero { align-items: stretch; }
+  .hero__side { display: flex; flex-direction: column; justify-content: space-between; gap: 0; }
+  .hero__side .card-s, .hero__side .card-s:last-child { flex: 1 1 0; height: auto; min-height: 0; margin: 0; padding: 0 0 22px; border-bottom: 1px solid var(--line); }
+  .hero__side .card-s:not(:first-child) { padding-top: 22px; }
+  .hero__side .card-s:last-child { padding-bottom: 0; border-bottom: 0; }
+  .card-s__excerpt { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
+  .card-s__media { align-self: stretch; }
+  .card-s__img, .card-s .ph { height: 100%; min-height: 0; }
+}
+@media (max-width: 991.98px) { .card-s__excerpt { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; } }

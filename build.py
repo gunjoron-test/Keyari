@@ -522,7 +522,7 @@ def card_small(p):
     {('<p class="card-g__cat card-s__cat"><a href="' + cat_url(p["_sub"] or p["_top"]) + '">' + esc(CAT[p["_sub"] or p["_top"]]["name"]) + "</a></p>") if (p["_sub"] or p["_top"]) else ""}
     <a class="card-s__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{aname(p["_author"])}</a>
     <h3 class="card-s__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
-    <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
+    <p class="card__excerpt card-s__excerpt">{esc(p["_long"])}</p>
   </div>
   <a class="card-s__media" href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["title"], "card-s__img", 1169, 658, sizes="(max-width: 575px) 100vw, 220px")}</a>
 </article>'''
@@ -1050,10 +1050,9 @@ def build_home():
     <a class="hero__media" href="{main["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(main["cover"].get("src"), main["cover"].get("alt") or main["title"], "hero__img", eager=True, sizes="(max-width: 991px) 100vw, 720px")}</a>
     <div class="hero__body">
       {('<p class="card-g__cat hero__cat"><a href="' + cat_url(main["_sub"] or main["_top"]) + '">' + esc(CAT[main["_sub"] or main["_top"]]["name"]) + "</a></p>") if (main["_sub"] or main["_top"]) else ""}
-      <a class="card__author" href="{u("/author/" + main["_author"]["slug"] + "/")}">{aname(main["_author"])}</a>
+      <p class="hero__by"><a class="card__author" href="{u("/author/" + main["_author"]["slug"] + "/")}">{aname(main["_author"])}</a><span aria-hidden="true"> · </span><time datetime="{main["_date"].isoformat()}">{bn_date(main["_date"])}</time></p>
       <h2 class="hero__title"><a href="{main["_url"]}">{esc(main["title"])}</a></h2>
       <p class="hero__excerpt clamp-3">{esc(main.get("subtitle") or main["_long"])}</p>
-      <p class="card__meta">{bn_date(main["_date"])}</p>
     </div>
   </article>
   <div class="hero__side">{"".join(card_small(p) for p in side)}</div>
