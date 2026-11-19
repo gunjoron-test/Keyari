@@ -1609,3 +1609,17 @@ body.sx-open { overflow: hidden; }
   .autoscroll.is-running .autoscroll__fab .as-ico--tri { display: none; }
   .autoscroll__tip { content: none; }
 }
+
+/* কম্পিউটারে: একটাই বোতাম (Aa); চাপলে মেনু — লেখা ছোট/বড় ও প্লে/পজ অটো-স্ক্রল */
+.autoscroll__play .ap-pause { display: none; }
+@media (min-width: 768px) {
+  .autoscroll__size[hidden] { display: none; }
+  .autoscroll__size { animation: as-in .28s cubic-bezier(.22,.61,.36,1) both; }
+  .autoscroll__fab .as-ico--pause, .autoscroll.is-running .autoscroll__fab .as-ico--pause { display: none; }
+  .autoscroll.is-running .autoscroll__fab .as-ico--tri { display: block; }
+  .autoscroll.is-menu .autoscroll__fab { background: var(--highlight); }
+  .autoscroll.is-running .autoscroll__play .ap-play { display: none; }
+  .autoscroll.is-running .autoscroll__play .ap-pause { display: block; }
+  .autoscroll.is-running .autoscroll__play { color: var(--accent-ink); }
+}
+@media (max-width: 767.98px) { .autoscroll__size { display: none !important; } }

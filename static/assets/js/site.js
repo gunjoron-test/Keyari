@@ -313,6 +313,7 @@
       asFab.setAttribute('aria-pressed', asRun ? 'true' : 'false');
       asFab.setAttribute('aria-label', asRun ? 'অটো-স্ক্রল থামান' : 'অটো-স্ক্রল চালু করুন');
       asFab.title = asRun ? 'থামান' : 'অটো-স্ক্রল — নিজে নিজে পড়ে যান';
+      var pb = $('[data-as-play]', asBox); if (pb) { pb.setAttribute('aria-label', asRun ? 'অটো-স্ক্রল থামান' : 'অটো-স্ক্রল চালু করুন'); pb.title = asRun ? 'থামান' : 'অটো-স্ক্রল'; }
       var lb = $('[data-as-label]', asBox); if (lb) lb.textContent = asRun ? 'থামান' : 'অটো-স্ক্রল';
     };
     var atEnd = function () {
@@ -348,7 +349,15 @@
     };
     function asStop() { asRun = false; asPaint(); asWake(); }
     var asClose = function () { asStop(); asPanel.hidden = true; asBox.classList.remove('has-panel'); };
-    asFab.addEventListener('click', function () { if (asRun) asStop(); else asStart(); });
+    var asMenu = $('#as-menu'), asPlay = $('[data-as-play]', asBox), asDesk = window.matchMedia('(min-width: 768px)');
+    var asMenuSet = function (v) { if (!asMenu) return; asMenu.hidden = !v; asBox.classList.toggle('is-menu', v); asFab.setAttribute('aria-expanded', v ? 'true' : 'false'); };
+    asFab.addEventListener('click', function () {
+      if (asDesk.matches && asMenu) asMenuSet(asMenu.hidden);
+      else if (asRun) asStop(); else asStart();
+    });
+    if (asPlay) asPlay.addEventListener('click', function () { if (asRun) asStop(); else asStart(); });
+    doc.addEventListener('pointerdown', function (e) { if (asMenu && !asMenu.hidden && !asBox.contains(e.target)) asMenuSet(false); });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && asMenu && !asMenu.hidden && !asRun) asMenuSet(false); });
     asSlow.addEventListener('click', function () { if (asIdx > 0) { asIdx--; store.set('keyari-as-speed', asIdx); asPaint(); } });
     asFast.addEventListener('click', function () { if (asIdx < LEVELS.length - 1) { asIdx++; store.set('keyari-as-speed', asIdx); asPaint(); } });
     $('[data-as-close]', asBox).addEventListener('click', asClose);
