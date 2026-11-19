@@ -812,7 +812,7 @@ def footer():
             links.append('<a href="' + u(l["url"]) + '">' + esc(l["label"]) + "</a>")
     link_row = ('<nav class="footer__links" aria-label="ফুটার লিংক">' + "".join(links) + "</nav>") if links else ""
     editor = esc(S.get("editor_name") or "")
-    role = esc(S.get("editor_role") or "সম্পাদক ও প্রকাশক")
+    role = esc(S.get("editor_role") or "সম্পাদক, প্রকাশক")
     ed_name = ('<p class="sf__editor-name">' + editor + "</p>") if editor else ""
     tagline = esc(S.get("tagline") or "")
     notice = esc(S.get("footer_notice") or "")
