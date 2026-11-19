@@ -1438,3 +1438,9 @@ html { overflow-x: clip; }
   .card-s__img, .card-s .ph { height: 100%; min-height: 0; }
 }
 @media (max-width: 991.98px) { .card-s__excerpt { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; } }
+
+/* হিরোর নিচের বাড়তি রেখা বাদ; 'আরও দেখুন' এখন শুধু তীর (নিচমুখী → খুললে ঊর্ধ্বমুখী) */
+.home .hero { border-bottom: 0; }
+.more-btn { width: 48px; height: 48px; padding: 0; border-radius: 50%; display: inline-grid; place-items: center; }
+.more-btn .more-ico { transition: transform .3s cubic-bezier(.22,.61,.36,1); }
+.more-btn.is-open .more-ico { transform: rotate(180deg); }

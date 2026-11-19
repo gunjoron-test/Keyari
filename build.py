@@ -476,7 +476,7 @@ def more_grid(items_html, n, cls="more-grid"):
     """৩ কলামের গ্রিড: কম্পিউটারে প্রথম ৬টি (২ সারি), মোবাইলে প্রথম ৩টি; বাকিগুলো 'আরও দেখুন'-এ একই পাতায় খোলে"""
     btn = ""
     if n > 3:
-        btn = '<div class="more-wrap' + (" more-wrap--m" if n <= 6 else "") + '"><button class="btn btn--ghost more-btn" type="button" data-more aria-expanded="false">আরও দেখুন</button></div>'
+        btn = '<div class="more-wrap' + (" more-wrap--m" if n <= 6 else "") + '"><button class="btn btn--ghost more-btn" type="button" data-more aria-expanded="false" aria-label="আরও দেখুন"><svg class="more-ico" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div>'
     return '<div class="' + cls + '" data-more-grid>' + items_html + "</div>" + btn
 
 
@@ -559,7 +559,7 @@ def pagination(cur, total, base):
     return f'<nav class="pagination" aria-label="পাতা নম্বর">{"".join(out)}</nav>'
 
 
-def section_head(title, link=None, link_label="সব দেখুন", center=False, h="h2"):
+def section_head(title, link=None, link_label="সব লেখা", center=False, h="h2"):
     more = f'<a class="sec-head__more" href="{link}">{link_label} {icon("right", 16)}</a>' if link else ""
     return f'<div class="sec-head{" sec-head--center" if center else ""}"><{h} class="sec-head__title">{esc(title)}</{h}>{more}</div>'
 
@@ -587,7 +587,7 @@ def author_more_widget(a, exclude):
     cards = "".join(card_g(x) for x in shown)
     btn = ""
     if len(shown) > 3:
-        btn = '<div class="more-wrap"><button class="btn btn--ghost more-btn" type="button" data-more aria-expanded="false">আরও দেখুন</button></div>'
+        btn = '<div class="more-wrap"><button class="btn btn--ghost more-btn" type="button" data-more aria-expanded="false" aria-label="আরও দেখুন"><svg class="more-ico" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div>'
     all_link = ""
     if len(mine) > len(shown):
         all_link = '<a class="more-by__all" href="' + u("/author/" + a["slug"] + "/") + '">' + esc(a["name"]) + "-এর সব লেখা " + icon("right", 15) + "</a>"
@@ -1083,7 +1083,7 @@ def build_home():
         feed_title = sections.get("feed", {}).get("title", "পাঠকের পছন্দ")
         parts.append(f'''<div class="container feed-wrap{" feed-wrap--top" if page > 1 else " tone tone-1"}">
   <section class="feed" aria-labelledby="feed-h">
-    {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), u("/page/2/") if (page == 1 and total > 1) else None, "সব দেখুন", h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
+    {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), u("/page/2/") if (page == 1 and total > 1) else None, "সব লেখা", h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
     {more_grid("".join(card_g(p) for p in chunk), len(chunk), "feed__list more-grid")}
     {pagination(page, total, "/") if page > 1 else ""}
   </section>

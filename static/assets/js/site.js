@@ -8,7 +8,8 @@
     var wrap = b.parentNode, grid = wrap.previousElementSibling;
     if (!grid) return;
     var open = grid.classList.toggle('is-open');
-    b.textContent = open ? 'কম দেখান' : 'আরও দেখুন';
+    b.classList.toggle('is-open', open);
+    b.setAttribute('aria-label', open ? 'কম দেখান' : 'আরও দেখুন');
     b.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (!open) {
       var sec = grid.closest('section') || grid;
