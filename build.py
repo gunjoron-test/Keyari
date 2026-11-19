@@ -818,6 +818,8 @@ def footer():
     notice = esc(S.get("footer_notice") or "")
     logo_src = asset(S.get("logo") or "/assets/img/logo.svg")
     soc = social_links()
+    phone = (S.get("phone") or "").strip()
+    phone_tel = re.sub(r"[^0-9+]", "", phone)
     return f'''<footer class="site-footer sf">
   <div class="container">
     <div class="sf__top">
@@ -826,13 +828,18 @@ def footer():
         {f'<p class="sf__tagline">{tagline}</p>' if tagline else ""}
         {f'<p class="sf__notice">{notice}</p>' if notice else ""}
       </div>
-      <div class="sf__follow">
-        {f'<p class="sf__heading">সাথে থাকুন</p><p class="sf__sub">নতুন লেখার খবর সবার আগে পেতে আমাদের সাথে যুক্ত থাকুন।</p>{soc}' if soc else ""}
-      </div>
       <div class="sf__editor">
         {ed_name}
         <p class="sf__role">{role}</p>
         {editor_icons()}
+      </div>
+      <div class="sf__contact">
+        <p class="sf__heading">যোগাযোগ</p>
+        {f'<a class="sf__link" href="tel:{esc(phone_tel)}">{esc(phone)}</a>' if phone else ""}
+        {f'<a class="sf__link" href="mailto:{esc(S.get("email"))}">{esc(S.get("email"))}</a>' if S.get("email") else ""}
+      </div>
+      <div class="sf__follow">
+        {f'<p class="sf__heading">সাথে থাকুন</p>{soc}' if soc else ""}
       </div>
     </div>
     {link_row}

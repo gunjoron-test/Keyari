@@ -1521,3 +1521,24 @@ body.sx-open { overflow: hidden; }
 .page--about { max-width: 940px; margin-inline: auto; padding-left: var(--gutter) !important; padding-right: var(--gutter); }
 .page--about .entry-content--page { max-width: none; margin-inline: 0; }
 .family__grid { justify-content: start; }
+
+/* ---------- ফুটার: ৪ কলাম (বাঁয়ে লোগো-লেখা | সম্পাদক | যোগাযোগ | সাথে থাকুন), পাতলা বিভাজক, কলামের ভেতর মাঝ-সারিবদ্ধ ---------- */
+.sf__top { grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); align-items: stretch; padding: 28px 0 24px; }
+.sf__brand { justify-content: center; align-items: flex-start; text-align: left; padding-right: 36px; }
+.sf__editor, .sf__contact, .sf__follow { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px; padding: 6px 24px; border-left: 1px solid var(--line); border-right: 0; min-width: 0; }
+.sf__editor .sf__editor-name { text-align: center; }
+.sf__editor .footer__social, .sf__follow .footer__social { justify-content: center; margin-top: 8px; }
+.sf__contact .sf__heading, .sf__follow .sf__heading { margin-bottom: 4px; }
+.sf__heading::after { display: none; }
+.sf__link { font-size: 13.5px; line-height: 1.7; color: var(--text); overflow-wrap: anywhere; }
+.sf__link:hover { color: var(--accent-ink); }
+@media (max-width: 991.98px) {
+  .sf__top { grid-template-columns: 1fr 1fr; gap: 0; }
+  .sf__brand { grid-column: 1 / -1; align-items: center; text-align: center; padding: 0 0 18px; }
+  .sf__editor, .sf__contact, .sf__follow { border-left: 0; border-top: 1px solid var(--line); padding: 18px 12px; }
+  .sf__follow { grid-column: 1 / -1; }
+}
+@media (max-width: 575.98px) {
+  .sf__top { grid-template-columns: 1fr; }
+  .sf__editor, .sf__contact, .sf__follow { padding: 18px 0; }
+}
