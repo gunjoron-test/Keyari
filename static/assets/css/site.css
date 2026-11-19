@@ -1489,3 +1489,6 @@ body.sx-open { overflow: hidden; }
   .sx__esc { display: none; }
   .sx__thumb { width: 64px; height: 42px; }
 }
+/* ছোট লেখক-ছবির সবুজ রেখা এখন ছবির ভেতরের বর্ডার (বাইরের ছায়া নয়), তাই কোনো ঘেরা জায়গায় কেটে যায় না */
+.avatar--xs { box-shadow: none !important; border: 1.5px solid var(--accent); box-sizing: border-box; }
+.card-s__body { padding-left: 2px; }
