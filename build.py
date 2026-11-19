@@ -1057,8 +1057,6 @@ def build_home():
   </article>
   <div class="hero__side">{"".join(card_small(p) for p in side)}</div>
 </section>''')
-        if page == 1:
-            parts.append(banner_slider("ads.json", "ad"))
         if page == 1 and on("category_pills"):
             pills_html = "".join(f'<a class="pill-lg" href="{cat_url(c["slug"])}"><span aria-hidden="true">{cat_ico(c, 20)}</span>{esc(c["name"])}</a>'
                                  for c in TOP_CATS if c.get("home_pill", True))
@@ -1090,6 +1088,8 @@ def build_home():
     {pagination(page, total, "/") if page > 1 else ""}
   </section>
 </div>''')
+        if page == 1:
+            parts.append(banner_slider("ads.json", "ad"))  # পাঠকের পছন্দের নিচে, রচনাবলির ওপরে
         if page == 1 and on("category_blocks"):
             cb = sections.get("category_blocks", {})
             blocks = ""
