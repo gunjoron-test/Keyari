@@ -1989,3 +1989,16 @@ body.sx-open { overflow: hidden; }
 .author-hero__social .sbtn { --sb: 40px; }
 @media (max-width: 575.98px) { .footer__social .sbtn { --sb: 40px; } .member__social a.sbtn { --sb: 40px; } }
 @media (max-width: 359.98px) { .footer__social { gap: 6px; } .footer__social .sbtn { --sb: 34px; } }
+
+/* মেগা-মেনু: আরও কমপ্যাক্ট — কলাম লেখার মাপ অনুযায়ী, মাঝের ফাঁক কম, সরু দাগ আগের মতোই */
+.mega { width: max-content; max-width: calc(100vw - 48px); padding: 24px 10px; }
+.mega__cols { grid-template-columns: repeat(3, max-content); justify-content: center; gap: 0; }
+.mega__col { padding: 2px 26px; }
+
+/* ফুটারের আইকন: স্টাইল একই, মাপ আগের মতো ছোট (বোতাম ২৮px, ভেতরের চিহ্ন ছোট); ট্যাপের জায়গা অদৃশ্যভাবে বড় */
+.footer__social { gap: 9px; }
+.footer__social .sbtn { --sb: 28px; position: relative; }
+.footer__social .sbtn::after { content: ""; position: absolute; inset: -6px; }
+.footer__social .sbtn svg { scale: .7; }
+@media (max-width: 575.98px) { .footer__social .sbtn { --sb: 32px; } .footer__social .sbtn svg { scale: .74; } }
+@media (max-width: 359.98px) { .footer__social { gap: 6px; } .footer__social .sbtn { --sb: 28px; } .footer__social .sbtn svg { scale: .7; } }
