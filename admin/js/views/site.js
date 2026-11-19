@@ -615,3 +615,50 @@ export function familyView(view) {
   }
   draw();
 }
+
+
+// ==================================================================== ভিডিও (ইউটিউব)
+export function videosView(view) {
+  const cfg = clone(S.videos && Array.isArray(S.videos.items) ? S.videos : { enabled: true, title: 'ভিডিও', items: [] });
+  const ytId = (u) => { const t = String(u || '').trim(); if (/^[A-Za-z0-9_-]{11}$/.test(t)) return t; const m = t.match(/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/|\/live\/)([A-Za-z0-9_-]{11})/); return m ? m[1] : ''; };
+  const draw = () => {
+    view.innerHTML = `<div class="page-head"><div><h1>ভিডিও</h1><p>মুখপাতার নিচে (ফুটারের ঠিক ওপরে) ইউটিউব ভিডিওর কার্ড — প্রতি লাইনে ৩টি। যত খুশি যোগ করা যায়, ↑↓ দিয়ে আগে-পরে সাজানো যায়</p></div>
+      <div class="btn-row"><button class="btn btn--light" data-add>＋ নতুন ভিডিও</button><button class="btn" data-save>সংরক্ষণ</button></div></div>
+      <div class="card"><div class="grid2"><label class="check"><input type="checkbox" data-en ${cfg.enabled !== false ? 'checked' : ''}> মুখপাতায় ভিডিও সেকশন দেখাবে</label>
+        <div class="field" style="margin:0"><label>সেকশনের শিরোনাম</label><input class="input" data-title value="${esc(cfg.title || '')}" placeholder="ভিডিও"></div></div></div>
+      <div class="card" style="padding:0"><table class="table"><thead><tr><th class="hide-sm"></th><th>শিরোনাম</th><th>অবস্থা</th><th>ক্রম</th><th></th></tr></thead><tbody>
+      ${cfg.items.map((v, i) => { const id = ytId(v.url); return `<tr><td class="hide-sm">${id ? `<img class="thumb" src="https://i.ytimg.com/vi/${id}/mqdefault.jpg" alt="">` : ''}</td><td><b>${esc(v.title || '(শিরোনাম ইউটিউব থেকে আসবে)')}</b><div class="help" style="word-break:break-all">${esc(v.url || '')}${id ? '' : ' — ⚠ লিংক চেনা যায়নি'}</div></td>
+        <td>${v.active === false ? '<span class="badge badge--draft">লুকানো</span>' : '<span class="badge badge--published">দেখাচ্ছে</span>'}</td>
+        <td><button class="btn btn--ghost btn--sm" data-up="${i}" ${i === 0 ? 'disabled' : ''}>↑</button> <button class="btn btn--ghost btn--sm" data-down="${i}" ${i === cfg.items.length - 1 ? 'disabled' : ''}>↓</button></td>
+        <td><button class="btn btn--ghost btn--sm" data-ed="${i}">সম্পাদনা</button> <button class="btn btn--ghost btn--sm" data-del="${i}" style="color:#c0392b">মুছুন</button></td></tr>`; }).join('') || '<tr><td colspan="5" class="empty">এখনো কোনো ভিডিও নেই — "নতুন ভিডিও" চাপুন</td></tr>'}
+      </tbody></table></div>`;
+    $$('img', view).forEach(imgFallback);
+    $('[data-en]', view).onchange = (e) => { cfg.enabled = e.target.checked; };
+    $('[data-title]', view).oninput = (e) => { cfg.title = e.target.value; };
+    $$('[data-ed]', view).forEach((b) => (b.onclick = () => edit(+b.dataset.ed)));
+    $$('[data-del]', view).forEach((b) => (b.onclick = async () => { if (!(await confirmBox('এই ভিডিও সরাবেন?', { danger: true, ok: 'সরান' }))) return; cfg.items.splice(+b.dataset.del, 1); draw(); }));
+    $$('[data-up]', view).forEach((b) => (b.onclick = () => { const i = +b.dataset.up; [cfg.items[i - 1], cfg.items[i]] = [cfg.items[i], cfg.items[i - 1]]; draw(); }));
+    $$('[data-down]', view).forEach((b) => (b.onclick = () => { const i = +b.dataset.down; [cfg.items[i + 1], cfg.items[i]] = [cfg.items[i], cfg.items[i + 1]]; draw(); }));
+    $('[data-add]', view).onclick = () => edit(-1);
+    $('[data-save]', view).onclick = async () => { S.videos = cfg; await saveSingle('videos', 'ভিডিও হালনাগাদ'); };
+  };
+  function edit(idx) {
+    const isNew = idx < 0;
+    const it = isNew ? { id: uid('vd'), url: '', title: '', active: true } : clone(cfg.items[idx]);
+    const m = modal({
+      title: isNew ? 'নতুন ভিডিও' : 'ভিডিও সম্পাদনা',
+      body: `<div class="field"><label>ইউটিউব লিংক</label><input class="input" data-k="url" value="${esc(it.url || '')}" placeholder="https://www.youtube.com/watch?v=…"></div>
+        <div class="field"><label>শিরোনাম (ঐচ্ছিক)</label><input class="input" data-k="title" value="${esc(it.title || '')}" placeholder="ফাঁকা রাখলে ইউটিউবের শিরোনামই আসবে"></div>
+        <label class="check"><input type="checkbox" data-k="active" ${it.active !== false ? 'checked' : ''}> মুখপাতায় দেখাবে</label>`,
+      foot: '<button class="btn btn--light" data-no>বাতিল</button><button class="btn" data-ok>ঠিক আছে</button>',
+    });
+    $$('[data-k]', m.el).forEach((el) => el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => { it[el.dataset.k] = el.type === 'checkbox' ? el.checked : el.value; }));
+    $('[data-no]', m.el).onclick = () => m.close();
+    $('[data-ok]', m.el).onclick = () => {
+      if (!ytId(it.url)) { toast('ইউটিউবের সঠিক লিংক দিন', 'err'); return; }
+      if (isNew) cfg.items.push(it); else cfg.items[idx] = it;
+      m.close(); draw();
+    };
+  }
+  draw();
+}

@@ -17,6 +17,17 @@
       if (top < 0) window.scrollBy({ top: top - 90, behavior: 'smooth' });
     }
   });
+  // ইউটিউব কার্ড: ক্লিক করলে সেখানেই ভিডিও চলে (তার আগে কোনো বাইরের স্ক্রিপ্ট লোড হয় না)
+  doc.addEventListener('click', function (e) {
+    var m = e.target.closest && e.target.closest('.vid__media');
+    if (!m || m.classList.contains('is-playing')) return;
+    var id = m.parentNode.getAttribute('data-vid');
+    var f = doc.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.setAttribute('allowfullscreen', ''); f.title = 'ইউটিউব ভিডিও';
+    m.classList.add('is-playing'); m.appendChild(f);
+  });
   var BASE = (window.KEYARI && window.KEYARI.base) || '';
   var $ = function (s, c) { return (c || doc).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || doc).querySelectorAll(s)); };

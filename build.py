@@ -472,6 +472,61 @@ def card_h(p, eager=False):
 </article>'''
 
 
+def yt_id(url):
+    """ইউটিউব লিংক (watch / youtu.be / shorts / embed) বা সরাসরি ১১ অক্ষরের আইডি থেকে ভিডিও-আইডি"""
+    t = (url or "").strip()
+    if re.fullmatch(r"[A-Za-z0-9_-]{11}", t):
+        return t
+    m = re.search(r"(?:youtu\.be/|[?&]v=|/embed/|/shorts/|/live/)([A-Za-z0-9_-]{11})", t)
+    return m.group(1) if m else ""
+
+
+_YT_TITLES = {}
+
+
+def yt_title(vid):
+    if vid in _YT_TITLES:
+        return _YT_TITLES[vid]
+    t = ""
+    if not os.environ.get("KEYARI_NO_NET"):
+        try:
+            q = urllib.parse.quote("https://www.youtube.com/watch?v=" + vid, safe="")
+            with urllib.request.urlopen(urllib.request.Request("https://www.youtube.com/oembed?format=json&url=" + q, headers={"User-Agent": "keyari-build"}), timeout=8) as r:
+                t = json.loads(r.read().decode("utf-8")).get("title", "")
+        except Exception:  # noqa
+            t = ""
+    _YT_TITLES[vid] = t
+    return t
+
+
+def video_card(v):
+    vid = yt_id(v.get("url") or v.get("id"))
+    if not vid:
+        return ""
+    title = (v.get("title") or "").strip() or yt_title(vid) or "ভিডিও"
+    play = '<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.53.85l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>'
+    return f'''<article class="card-g vid" data-vid="{vid}">
+  <button class="card-g__media vid__media" type="button" aria-label="চালান: {esc(title)}">
+    <img class="card-g__img" src="https://i.ytimg.com/vi/{vid}/hqdefault.jpg" alt="" loading="lazy" decoding="async">
+    <span class="vid__play">{play}</span>
+  </button>
+  <div class="card-g__body"><h3 class="card-g__title vid__title">{esc(title)}</h3></div>
+</article>'''
+
+
+def video_section(tone):
+    cfg = load("videos.json", {}) or {}
+    if cfg.get("enabled", True) is False:
+        return ""
+    cards = [c for c in (video_card(v) for v in cfg.get("items", []) if v.get("active", True) is not False) if c]
+    if not cards:
+        return ""
+    return f'''<section class="cat-block container video-block tone tone-{tone}" aria-label="ভিডিও">
+  {section_head(cfg.get("title") or "ভিডিও")}
+  {more_grid("".join(cards), len(cards), "feed__list more-grid")}
+</section>'''
+
+
 def more_grid(items_html, n, cls="more-grid"):
     """৩ কলামের গ্রিড: কম্পিউটারে প্রথম ৬টি (২ সারি), মোবাইলে প্রথম ৩টি; বাকিগুলো 'আরও দেখুন'-এ একই পাতায় খোলে"""
     btn = ""
@@ -1134,7 +1189,7 @@ def build_home():
     <button class="btn btn--ghost" type="button" data-copy="{esc(S.get("email"))}">{icon("copy", 16)} {esc(S.get("email"))}</button></div>
   </div></section>''')
         if page == 1:
-            parts.append(banner_slider("ayojon_slides.json", "ayojon"))
+            parts.append(video_section((tone + 2) if on("category_blocks") else 3))
         path = "/" if page == 1 else f"/page/{page}/"
         prev_p = None if page == 1 else ("/" if page == 2 else f"/page/{page - 1}/")
         next_p = f"/page/{page + 1}/" if page < total else None

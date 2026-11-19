@@ -1567,3 +1567,17 @@ body.sx-open { overflow: hidden; }
   .sf__editor, .sf__contact { background: none; border: 0; border-radius: 0; padding: 6px 10px; }
   .sf__contact { border-left: 1px solid var(--line); }
 }
+
+/* ---------- ভিডিও সেকশন (ইউটিউব): অন্য কার্ডের মতোই ৩ কলাম ---------- */
+.vid__media { position: relative; width: 100%; padding: 0; border: 0; background: #111; cursor: pointer; aspect-ratio: 16 / 9; }
+.vid__media .card-g__img { height: 100%; display: block; }
+.vid__media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.35)); pointer-events: none; }
+.vid__play { position: absolute; left: 50%; top: 50%; z-index: 1; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 50%; background: rgba(255,255,255,.94); color: var(--accent); display: grid; place-items: center; box-shadow: 0 8px 24px rgba(0,0,0,.28); transition: transform .3s cubic-bezier(.22,.61,.36,1), background .3s, color .3s; }
+.vid__play svg { margin-left: 3px; }
+.vid:hover .vid__play { transform: scale(1.1); background: var(--accent); color: #fff; }
+.vid__media:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.vid__media iframe { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; border: 0; }
+.vid__media.is-playing { cursor: default; }
+.vid__media.is-playing::after, .vid__media.is-playing .vid__play { display: none; }
+.vid__title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 18px; }
+@media (max-width: 575.98px) { .vid__play { width: 52px; height: 52px; margin: -26px 0 0 -26px; } }
