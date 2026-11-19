@@ -336,9 +336,9 @@
   $$('[data-copy]').forEach(function (b) {
     b.addEventListener('click', function () {
       var v = b.getAttribute('data-copy');
-      (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject()).then(function () { toast('কপি হয়েছে ✓'); }, function () {
+      (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject()).then(function () { toast('কপি হয়েছে'); }, function () {
         var ta = doc.createElement('textarea'); ta.value = v; doc.body.appendChild(ta); ta.select();
-        try { doc.execCommand('copy'); toast('কপি হয়েছে ✓'); } catch (e) { toast(v); } ta.remove();
+        try { doc.execCommand('copy'); toast('কপি হয়েছে'); } catch (e) { toast(v); } ta.remove();
       });
     });
   });

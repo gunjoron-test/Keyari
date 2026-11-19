@@ -1962,3 +1962,6 @@ body.sx-open { overflow: hidden; }
   -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
 }
 /* ======================= [পরীক্ষামূলক] শেষ ======================= */
+
+/* বার্তা-বক্স (যেমন "কপি হয়েছে"): ব্র্যান্ড সবুজ #00A664 ব্যাকগ্রাউন্ড, সাদা লেখা */
+.toast { background: #00A664; color: #fff; font-weight: 600; border: 0; box-shadow: 0 10px 28px rgba(0, 166, 100, .32); }
