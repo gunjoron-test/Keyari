@@ -381,7 +381,7 @@
     var asMenu = $('#as-menu'), asPlay = $('[data-as-play]', asBox), asDesk = window.matchMedia('(min-width: 768px)');
     var asMenuSet = function (v) { if (!asMenu) return; asMenu.hidden = !v; asBox.classList.toggle('is-menu', v); asFab.setAttribute('aria-expanded', v ? 'true' : 'false'); };
     asFab.addEventListener('click', function () {
-      if (asDesk.matches && asMenu) asMenuSet(asMenu.hidden);
+      if (asMenu) asMenuSet(asMenu.hidden);
       else if (asRun) asStop(); else asStart();
     });
     if (asPlay) asPlay.addEventListener('click', function () { if (asRun) asStop(); else asStart(); });

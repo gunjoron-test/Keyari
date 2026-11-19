@@ -1725,3 +1725,46 @@ body.sx-open { overflow: hidden; }
 
 /* বিজ্ঞাপন-স্লাইডার: ওপরের ও নিচের রঙিন সেকশন থেকে দৃশ্যমান ফাঁক সমান (রঙিন পটি বাক্সের ৪০px বাইরে যায়, তাই নিচে ৮০px) */
 .ad-slider { margin-top: 80px; margin-bottom: 80px; }
+
+/* ---------- মোবাইল ডক (পিসির মতোই): ডানে আলাদা বই-বোতাম + আলাদা "উপরে যান"; বই চাপলে বাঁয়ে কম্প্যাক্ট পিল ---------- */
+@media (max-width: 767.98px) {
+  .autoscroll { left: auto; right: 16px; top: auto; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); width: auto; height: auto; padding: 0; gap: 8px; flex-direction: column; align-items: flex-end; background: none; border: 0; border-radius: 0; box-shadow: none; transform: translateY(14px); }
+  .autoscroll.is-shown:not(.is-running):not(.is-menu) { transform: translateY(14px); opacity: 0; visibility: hidden; }
+  body.hdr-off .autoscroll, .autoscroll.is-running, .autoscroll.is-menu { transform: none; opacity: 1; visibility: visible; }
+  .autoscroll.is-idle .autoscroll__fab, .autoscroll.is-idle .autoscroll__size { opacity: 1; }
+
+  .autoscroll .autoscroll__fab { display: grid !important; order: 1; width: 48px; min-width: 0; height: 48px; padding: 0; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--text-muted); box-shadow: var(--shadow); gap: 0; }
+  .autoscroll .autoscroll__fab:active { transform: scale(.94); }
+  .autoscroll.is-menu .autoscroll__fab, .autoscroll.is-running .autoscroll__fab { background: var(--surface); color: var(--accent-ink); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); width: 48px; padding: 0; }
+  .autoscroll .autoscroll__label, .autoscroll .autoscroll__tip { display: none !important; }
+  .autoscroll .autoscroll__fab .as-ico--play, .autoscroll .autoscroll__fab .as-ico--pause { display: none !important; }
+  .autoscroll .autoscroll__fab .as-ico--tri { display: block; width: 20px; height: 20px; margin: 0; }
+
+  .autoscroll .autoscroll__top { display: grid; order: 2; margin: 0; width: 48px; height: 48px; border-radius: 50%; background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+  .autoscroll .autoscroll__ring { width: 48px; height: 48px; }
+
+  .autoscroll .autoscroll__size, .autoscroll .autoscroll__size[hidden] { position: absolute; right: 56px; bottom: 60px; height: 40px; padding: 0 5px; gap: 1px; order: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; box-shadow: 0 4px 14px rgba(41, 41, 75, .12); animation: as-in .26s cubic-bezier(.22,.61,.36,1) both; display: flex !important; align-items: center; white-space: nowrap; }
+  .autoscroll .autoscroll__size[hidden] { display: none !important; }
+  .autoscroll .as-m { width: 32px; height: 32px; }
+  .autoscroll .as-m--sm { width: 26px; height: 26px; }
+  .autoscroll .as-fz--s { font-size: 13px; }
+  .autoscroll .as-fz--l { font-size: 19px; }
+  .autoscroll .as-m-sep { height: 16px; margin: 0 4px; }
+  .autoscroll .autoscroll__play, .autoscroll.is-running .autoscroll__play { width: 32px; min-width: 32px; height: 32px; padding: 0; gap: 0; border-radius: 50%; background: transparent; color: var(--text-muted); }
+  .autoscroll .as-plabel, .autoscroll.is-running .as-plabel { display: none; }
+  .autoscroll .autoscroll__play .ap-play { display: block; }
+  .autoscroll .autoscroll__play .ap-pause { display: none; }
+  .autoscroll.is-running .autoscroll__play { color: var(--accent-ink); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .autoscroll.is-running .autoscroll__play .ap-play { display: none; }
+  .autoscroll.is-running .autoscroll__play .ap-pause { display: block; }
+  .autoscroll .as-spd { margin-left: 4px; padding-left: 4px; border-left: 1px solid var(--line); }
+  .autoscroll .as-spd__v { min-width: 30px; font-size: 13px; }
+}
+@media (max-width: 359.98px) {
+  .autoscroll { right: 12px; }
+  .autoscroll .autoscroll__size, .autoscroll .autoscroll__size[hidden] { right: 56px; }
+  .autoscroll .as-m { width: 30px; height: 30px; }
+  .autoscroll .autoscroll__play, .autoscroll.is-running .autoscroll__play { width: 30px; min-width: 30px; height: 30px; }
+  .autoscroll .as-m--sm { width: 24px; height: 24px; }
+  .autoscroll .as-spd__v { min-width: 26px; font-size: 12.5px; }
+}
