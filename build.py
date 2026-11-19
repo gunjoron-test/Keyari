@@ -1404,10 +1404,15 @@ def build_post(p):
   </div>
 <div class="autoscroll" data-autoscroll>
   <div class="autoscroll__size" id="as-menu" role="group" aria-label="পড়ার সুবিধা" hidden>
-    <button class="autoscroll__btn" type="button" data-fz-down aria-label="লেখা ছোট করুন" title="লেখা ছোট করুন"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 18 8.5 6l5 12M5.3 14h6.4"/><path d="M16.5 12h5"/></svg></button>
-    <button class="autoscroll__btn" type="button" data-fz-up aria-label="লেখা বড় করুন" title="লেখা বড় করুন"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19 8.5 5l6 14M4.6 14.5h7.8"/><path d="M17.5 11h5M20 8.5v5"/></svg></button>
-    <span class="autoscroll__sep" aria-hidden="true"></span>
-    <button class="autoscroll__btn autoscroll__play" type="button" data-as-play aria-label="অটো-স্ক্রল চালু করুন" title="অটো-স্ক্রল"><svg class="ap-play" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 5.6v12.8a1 1 0 0 0 1.52.85l10.2-6.4a1 1 0 0 0 0-1.7L9.52 4.75A1 1 0 0 0 8 5.6z"/></svg><svg class="ap-pause" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><rect x="7" y="6" width="3.6" height="12" rx="1.2"/><rect x="13.4" y="6" width="3.6" height="12" rx="1.2"/></svg></button>
+    <button class="as-m" type="button" data-fz-down aria-label="লেখা ছোট করুন" title="লেখা ছোট করুন"><span class="as-fz as-fz--s">অ</span></button>
+    <button class="as-m" type="button" data-fz-up aria-label="লেখা বড় করুন" title="লেখা বড় করুন"><span class="as-fz as-fz--l">অ</span></button>
+    <span class="as-m-sep" aria-hidden="true"></span>
+    <button class="as-m autoscroll__play" type="button" data-as-play aria-label="অটো-স্ক্রল চালু করুন" title="অটো-স্ক্রল"><svg class="ap-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 5.6v12.8a1 1 0 0 0 1.52.85l10.2-6.4a1 1 0 0 0 0-1.7L9.52 4.75A1 1 0 0 0 8 5.6z"/></svg><svg class="ap-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="7" y="6" width="3.6" height="12" rx="1.2"/><rect x="13.4" y="6" width="3.6" height="12" rx="1.2"/></svg></button>
+    <span class="as-spd">
+      <button class="as-m as-m--sm" type="button" data-as-slower aria-label="গতি কমান" title="গতি কমান"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 12h12"/></svg></button>
+      <b class="as-spd__v" data-as-speed>১×</b>
+      <button class="as-m as-m--sm" type="button" data-as-faster aria-label="গতি বাড়ান" title="গতি বাড়ান"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 12h12M12 6v12"/></svg></button>
+    </span>
   </div>
     <div class="autoscroll__panel" id="as-panel" role="group" aria-label="অটো-স্ক্রলের গতি" hidden>
     <button class="autoscroll__btn" type="button" data-as-slower aria-label="গতি কমান" title="গতি কমান"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 12h12"/></svg></button>
@@ -1418,7 +1423,7 @@ def build_post(p):
   </div>
   <button class="autoscroll__fab" type="button" data-as-fab aria-controls="as-panel" aria-pressed="false" aria-label="অটো-স্ক্রল চালু করুন" title="অটো-স্ক্রল — নিজে নিজে পড়ে যান">
     <svg class="as-ico as-ico--play" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6.5l5 5 5-5M7 12.5l5 5 5-5"/></svg>
-    <svg class="as-ico as-ico--tri" viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><text x="1.5" y="18" font-size="17" font-weight="700" font-family="inherit">A</text><text x="13.5" y="18" font-size="12" font-weight="700" font-family="inherit">a</text></svg>
+    <svg class="as-ico as-ico--tri" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.2 5.2 7.6 4.7 4.5 5v12c3.1-.3 5.7.2 7.5 1.5 1.8-1.3 4.4-1.8 7.5-1.5V5c-3.1-.3-5.7.2-7.5 1.5zM12 6.5v12"/></svg>
     <svg class="as-ico as-ico--pause" viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><rect x="7" y="6" width="3.6" height="12" rx="1.2"/><rect x="13.4" y="6" width="3.6" height="12" rx="1.2"/></svg>
     <span class="autoscroll__tip" aria-hidden="true">অটো-স্ক্রল</span>
     <span class="autoscroll__label" data-as-label>অটো-স্ক্রল</span>

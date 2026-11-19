@@ -298,8 +298,8 @@
   // ---------- অটো-স্ক্রল (গতি কম-বেশি করা যায়; চলার সময়ও নিজে স্ক্রল করা যায়) ----------
   var asBox = $('[data-autoscroll]');
   if (asBox) {
-    var asFab = $('[data-as-fab]', asBox), asPanel = $('#as-panel'), asSpeedEl = $('[data-as-speed]', asBox);
-    var asSlow = $('[data-as-slower]', asBox), asFast = $('[data-as-faster]', asBox);
+    var asFab = $('[data-as-fab]', asBox), asPanel = $('#as-panel'), asSpeedEls = $$('[data-as-speed]', asBox);
+    var asSlows = $$('[data-as-slower]', asBox), asFasts = $$('[data-as-faster]', asBox);
     var LEVELS = [0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3], BASE_PX = 36; // ১× = সেকেন্ডে ৩৬ পিক্সেল
     var asIdx = parseInt(store.get('keyari-as-speed'), 10);
     if (!(asIdx >= 0 && asIdx < LEVELS.length)) asIdx = 2;
@@ -307,8 +307,8 @@
     var asBody = $('.entry-content');
     var fmtSpeed = function (v) { return bn(String(v).replace(/^0\./, '০.')) + '×'; };
     var asPaint = function () {
-      asSpeedEl.textContent = fmtSpeed(LEVELS[asIdx]);
-      asSlow.disabled = asIdx === 0; asFast.disabled = asIdx === LEVELS.length - 1;
+      asSpeedEls.forEach(function (el) { el.textContent = fmtSpeed(LEVELS[asIdx]); });
+      asSlows.forEach(function (b) { b.disabled = asIdx === 0; }); asFasts.forEach(function (b) { b.disabled = asIdx === LEVELS.length - 1; });
       asBox.classList.toggle('is-running', asRun);
       asFab.setAttribute('aria-pressed', asRun ? 'true' : 'false');
       asFab.setAttribute('aria-label', asRun ? 'অটো-স্ক্রল থামান' : 'অটো-স্ক্রল চালু করুন');
@@ -358,8 +358,8 @@
     if (asPlay) asPlay.addEventListener('click', function () { if (asRun) asStop(); else asStart(); });
     doc.addEventListener('pointerdown', function (e) { if (asMenu && !asMenu.hidden && !asBox.contains(e.target)) asMenuSet(false); });
     doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && asMenu && !asMenu.hidden && !asRun) asMenuSet(false); });
-    asSlow.addEventListener('click', function () { if (asIdx > 0) { asIdx--; store.set('keyari-as-speed', asIdx); asPaint(); } });
-    asFast.addEventListener('click', function () { if (asIdx < LEVELS.length - 1) { asIdx++; store.set('keyari-as-speed', asIdx); asPaint(); } });
+    asSlows.forEach(function (b) { b.addEventListener('click', function () { if (asIdx > 0) { asIdx--; store.set('keyari-as-speed', asIdx); asPaint(); } }); });
+    asFasts.forEach(function (b) { b.addEventListener('click', function () { if (asIdx < LEVELS.length - 1) { asIdx++; store.set('keyari-as-speed', asIdx); asPaint(); } }); });
     $('[data-as-close]', asBox).addEventListener('click', asClose);
     // পাঠক নিজে স্ক্রল করলে: চাকা/কি-বোর্ডে সঙ্গে সঙ্গে মিশে যায়; আঙুলে টানলে টানার সময়টুকু থেমে থাকে
     window.addEventListener('touchstart', function (e) { if (asRun && !asBox.contains(e.target)) asTouching = true; }, { passive: true });
