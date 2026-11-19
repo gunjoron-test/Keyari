@@ -826,6 +826,72 @@ BRAND = {
 }
 
 
+def _xform(d, sc, tx, ty):
+    """সরল পাথ-রূপান্তর (M L H V h v l Z): স্কেল + সরানো — শুধু এক্স-এর পাথের জন্য"""
+    toks = re.findall(r"[A-Za-z]|-?\d*\.?\d+", d)
+    out, i, cmd = [], 0, None
+    n_args = {"M": 2, "L": 2, "l": 2, "m": 2, "H": 1, "V": 1, "h": 1, "v": 1, "Z": 0, "z": 0}
+    while i < len(toks):
+        if toks[i].isalpha():
+            cmd = toks[i]
+            i += 1
+            out.append(cmd)
+            if cmd in "Zz":
+                continue
+        k = n_args[cmd]
+        vals = [float(x) for x in toks[i:i + k]]
+        i += k
+        if cmd in "ML":
+            vals = [vals[0] * sc + tx, vals[1] * sc + ty]
+        elif cmd == "H":
+            vals = [vals[0] * sc + tx]
+        elif cmd == "V":
+            vals = [vals[0] * sc + ty]
+        else:
+            vals = [v * sc for v in vals]
+        out.append(" ".join(f"{v:.3f}".rstrip("0").rstrip(".") for v in vals))
+        if cmd == "M":
+            cmd = "L"
+    return " ".join(out)
+
+
+def _wa_solid():
+    """হোয়াটসঅ্যাপ: আংটির মতো ফাঁপা নয়, পুরো ভরাট বুদবুদ; ভেতরে ফোনের চিহ্ন কাটা (evenodd)"""
+    p = BRAND["whatsapp"][1]
+    parts = re.split(r"(?=[Mm])", p)
+    parts = [x for x in parts if x.strip()]
+    phone = parts[0]
+    outer = parts[-1]
+    if outer[0] == "m":
+        outer = "M20.463 3.488" + outer[len("m8.413-18.297"):]
+    return phone + outer
+
+
+_X_GLYPH = "M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+_CIRCLE = "M12 .5a11.5 11.5 0 1 0 0 23 11.5 11.5 0 1 0 0-23Z"
+# ভরাট-আইকনের সেট: (পাথ, fill-rule) — পুরো সাইটে একই ছন্দ: ভরাট আকার + ভেতরে কাটা চিহ্ন
+SOLID = {
+    "whatsapp": (_wa_solid(), "evenodd"),
+    "x": (_CIRCLE + _xform(_X_GLYPH, 0.46, 6.48, 6.48), "evenodd"),
+    "mail": ("M6 1.5h12A4.5 4.5 0 0 1 22.5 6v12a4.5 4.5 0 0 1-4.5 4.5H6A4.5 4.5 0 0 1 1.5 18V6A4.5 4.5 0 0 1 6 1.5Z"
+             "M7 7.4h10a1.4 1.4 0 0 1 1.1.55L12 12.1 5.9 7.95A1.4 1.4 0 0 1 7 7.4Z"
+             "M5.5 9.7 12 14.1l6.5-4.4V15a1.6 1.6 0 0 1-1.6 1.6H7.1A1.6 1.6 0 0 1 5.5 15Z", "evenodd"),
+}
+
+
+def glyph(k):
+    if k in SOLID:
+        return SOLID[k]
+    return (BRAND[k][1], "nonzero")
+
+
+def solid_svg(k, size=20, color="currentColor"):
+    path, rule = glyph(k)
+    return ('<svg viewBox="0 0 24 24" width="' + str(size) + '" height="' + str(size) + '" fill="' + color + '" aria-hidden="true">'
+            '<path fill-rule="' + rule + '" clip-rule="' + rule + '" d="' + path + '"/></svg>')
+
+
+
 def social_links():
     """অ্যাডমিন → সেটিংস → সোশ্যাল-এ যে লিংক দেওয়া আছে শুধু সেগুলোর আসল ব্র্যান্ড-আইকন"""
     soc = S.get("social", {}) or {}
@@ -835,7 +901,7 @@ def social_links():
         if not href:
             continue
         out.append('<a class="social-ico social-ico--' + k + '" href="' + esc(href) + '" target="_blank" rel="noopener me" aria-label="' + esc(label) + '" title="' + esc(label) + '">'
-                   '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="' + path + '"/></svg></a>')
+                   + solid_svg(k, 20) + '</a>')
     return ('<div class="footer__social" aria-label="সোশ্যাল মিডিয়া">' + "".join(out) + "</div>") if out else ""
 
 
@@ -852,7 +918,7 @@ def editor_icons():
             out.append('<a class="social-ico" href="' + esc(href) + '" target="_blank" rel="noopener me" aria-label="সম্পাদকের ' + label + '" title="' + label + '">' + brand_svg(k, 15, "currentColor") + "</a>")
     mail = (es.get("email") or S.get("email") or "").strip()
     if mail:
-        out.append('<a class="social-ico" href="mailto:' + esc(mail) + '" aria-label="সম্পাদককে ইমেইল" title="ইমেইল">' + icon("mail", 15) + "</a>")
+        out.append('<a class="social-ico" href="mailto:' + esc(mail) + '" aria-label="সম্পাদককে ইমেইল" title="ইমেইল">' + solid_svg("mail", 15) + "</a>")
     return '<div class="footer__social footer__social--editor">' + "".join(out) + "</div>" if out else ""
 
 
@@ -1255,8 +1321,7 @@ def avatar(a, size=64):
 
 
 def brand_svg(k, size=20, color=None):
-    c, path, _ = BRAND[k]
-    return '<svg viewBox="0 0 24 24" width="' + str(size) + '" height="' + str(size) + '" fill="' + (color or c) + '" aria-hidden="true"><path d="' + path + '"/></svg>'
+    return solid_svg(k, size, color or BRAND[k][0])
 
 
 A_PLUS = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 8 6l5 13M5 14.5h6"/><path d="M18 4v6M15 7h6"/></svg>'
@@ -1565,7 +1630,7 @@ def build_authors():
         for k, ic in [("facebook", "facebook"), ("website", "link"), ("email", "mail")]:
             if a.get(k):
                 href = ("mailto:" + a[k]) if k == "email" else a[k]
-                social += f'<a class="social" href="{esc(href)}" target="_blank" rel="noopener" aria-label="{k}">{icon(ic, 16)}</a>'
+                social += f'<a class="social" href="{esc(href)}" target="_blank" rel="noopener" aria-label="{k}">{solid_svg(ic, 16) if ic in ("facebook", "mail") else icon(ic, 16)}</a>'
         posts = a["_posts"]
         cat_counts = {}
         for p in posts:
@@ -1630,7 +1695,7 @@ def build_pages():
                 if (m.get("website") or "").strip():
                     ico.append('<a href="' + esc(m["website"].strip()) + '" target="_blank" rel="noopener me" aria-label="ওয়েবসাইট" title="ওয়েবসাইট">' + icon("link", 18) + "</a>")
                 if (m.get("email") or "").strip():
-                    ico.append('<a href="mailto:' + esc(m["email"].strip()) + '" aria-label="ইমেইল" title="ইমেইল">' + icon("mail", 18) + "</a>")
+                    ico.append('<a href="mailto:' + esc(m["email"].strip()) + '" aria-label="ইমেইল" title="ইমেইল">' + solid_svg("mail", 18) + "</a>")
                 ph = {"name": m["name"], "slug": m.get("id", m["name"]), "photo": m.get("photo", "")}
                 cards += ('<article class="member">' + avatar(ph, 104)
                           + '<h3 class="member__name">' + esc(m["name"]) + "</h3>"
