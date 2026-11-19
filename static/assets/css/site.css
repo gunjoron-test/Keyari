@@ -1957,9 +1957,7 @@ body.sx-open { overflow: hidden; }
 .wb-7 { --m-ln: var(--ln-7); }
 .tone::after {
   content: ""; position: absolute; z-index: -1; left: 50%; width: 100vw; transform: translateX(-50%);
-  bottom: -56px; height: 32px; background: var(--edge, transparent); pointer-events: none;
-  -webkit-mask-image: var(--m-ln); mask-image: var(--m-ln); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  bottom: -40px; height: 1px; background: var(--edge, transparent); pointer-events: none;
 }
 /* ======================= [পরীক্ষামূলক] শেষ ======================= */
 
@@ -2002,3 +2000,9 @@ body.sx-open { overflow: hidden; }
 .footer__social .sbtn svg { scale: .7; }
 @media (max-width: 575.98px) { .footer__social .sbtn { --sb: 32px; } .footer__social .sbtn svg { scale: .74; } }
 @media (max-width: 359.98px) { .footer__social { gap: 6px; } .footer__social .sbtn { --sb: 28px; } .footer__social .sbtn svg { scale: .7; } }
+
+/* পটির কিনারা আবার সোজা (ঢেউ বাদ); রঙ, পাশাপাশি আলাদা রঙের ক্রম ও নিচের সরু রেখা অপরিবর্তিত */
+.tone::before {
+  top: -40px; bottom: -40px;
+  -webkit-mask-image: none; mask-image: none;
+}
