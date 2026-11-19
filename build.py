@@ -487,6 +487,7 @@ def card_v(p, show_date=True, heading="h3"):
 def card_small(p):
     return f'''<article class="card-s">
   <div class="card-s__body">
+    {('<p class="card-g__cat card-s__cat"><a href="' + cat_url(p["_sub"] or p["_top"]) + '">' + esc(CAT[p["_sub"] or p["_top"]]["name"]) + "</a></p>") if (p["_sub"] or p["_top"]) else ""}
     <a class="card-s__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{aname(p["_author"])}</a>
     <h3 class="card-s__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
     <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>

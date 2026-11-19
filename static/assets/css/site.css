@@ -1394,3 +1394,4 @@ html { overflow-x: clip; }
 @media (max-width: 575.98px) { .card-s__media { flex: none; align-self: stretch; } }
 .card-s__media { flex: 0 0 clamp(150px, 42%, 240px); }
 @media (max-width: 575.98px) { .card-s__media { flex: none; align-self: stretch; } }
+.card-s__cat { margin: 0 0 2px; }
