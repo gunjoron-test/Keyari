@@ -1517,3 +1517,7 @@ body.sx-open { overflow: hidden; }
 /* আমাদের কথা: লেখা ও কেয়ারি পরিবার হেডারের লোগোর সোজা নয়, পাতার মূল অংশের মতো একটু ভেতর থেকে শুরু (লেখার পাতার মতোই) */
 @media (min-width: 992px) { .page--about { padding-left: calc(var(--gutter) + 28px); } }
 @media (min-width: 1201px) { .page--about { padding-left: calc(var(--gutter) + 48px); } }
+/* আমাদের কথা: পুরো অংশ পাতার মাঝখানে, ডান-বাঁয়ে সমান ফাঁক (লেখা বাঁ-সারিবদ্ধ থাকে) */
+.page--about { max-width: 940px; margin-inline: auto; padding-left: var(--gutter) !important; padding-right: var(--gutter); }
+.page--about .entry-content--page { max-width: none; margin-inline: 0; }
+.family__grid { justify-content: start; }
