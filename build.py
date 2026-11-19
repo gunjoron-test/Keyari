@@ -1597,11 +1597,10 @@ def build_pages():
 {family}
 </div>'''
         elif tpl == "guidelines":
-            toc = toc_from(body)
             content = f'''<div class="container page page--guide">{bc_html}
 <header class="page-hero"><h1 class="page-title">{esc(pg["title"])}</h1></header>
 {f'<figure class="page-banner page-banner--small">{img_tag(banner.get("src"), banner.get("alt") or pg["title"], "page-banner__img", 1169, 614, eager=True)}</figure>' if banner.get("src") else ""}
-<div class="guide-layout"><aside class="guide-toc">{toc}</aside>
+<div class="guide-layout">
 <div class="entry-content entry-content--page">{body}
 <div class="mail-cta"><p class="sec-label">লেখা জমা দিন</p><p class="mail-cta__mail">{esc(S.get("email"))}</p>
 <div class="cta__actions"><button class="btn" type="button" data-copy="{esc(S.get("email"))}">{icon("copy", 16)} ইমেইল কপি করুন</button>
