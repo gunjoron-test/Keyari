@@ -1150,7 +1150,7 @@ img.avatar--xs { font-size: inherit; width: 1.5em; height: 1.5em; }
 .nav__item.has-mega > .mega { left: 50%; }
 
 /* ---------- শুধু লেখার (আর্টিকেল) পাতায়: পড়ার লেখা আরেকটু বড় ---------- */
-body.single .entry-content { font-size: 20px; line-height: 1.95; }
+body.single .entry-content { font-size: var(--art-size, 20px); line-height: 1.95; }
 @media (max-width: 767.98px) { body.single .entry-content { font-size: 19px; } }
 
 /* বিভাগের আসল ভেক্টর আইকন — ব্র্যান্ড-সবুজ */
@@ -1598,3 +1598,14 @@ body.sx-open { overflow: hidden; }
 /* নিয়ম-পাতার শিরোনাম: ওপরের ও নিচের দাগের ঠিক মাঝখানে */
 .page--guide .entry-content h2 { margin: 28px 0 28px; padding-top: 28px; }
 .page--guide .entry-content h2 + h2 { margin-top: 0; }
+
+/* ---------- কম্পিউটারে লেখার পাতার ডক: লেখা ছোট/বড় + প্লে/পজ (অটো-স্ক্রল) ---------- */
+.autoscroll__size { display: none; }
+.autoscroll .as-ico--tri { display: none; }
+@media (min-width: 768px) {
+  .autoscroll__size { display: flex; align-items: center; gap: 2px; height: 48px; padding: 0 6px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .autoscroll .as-ico--play { display: none; }
+  .autoscroll .as-ico--tri { display: block; margin-left: 2px; }
+  .autoscroll.is-running .autoscroll__fab .as-ico--tri { display: none; }
+  .autoscroll__tip { content: none; }
+}
