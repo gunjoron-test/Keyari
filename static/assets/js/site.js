@@ -417,13 +417,8 @@
     asFasts.forEach(function (b) { b.addEventListener('click', function () { if (asIdx < LEVELS.length - 1) { asIdx++; store.set('keyari-as-speed', asIdx); asPaint(); } }); });
     $('[data-as-close]', asBox).addEventListener('click', asClose);
     // পাঠক নিজে স্ক্রল করলে: চাকা/কি-বোর্ডে সঙ্গে সঙ্গে মিশে যায়; আঙুলে টানলে টানার সময়টুকু থেমে থাকে
-    var asTY = 0;
-    window.addEventListener('touchstart', function (e) { if (asRun && !asBox.contains(e.target)) { asTouching = true; asTY = e.touches[0].clientY; } }, { passive: true });
-    // আঙুল নিচের দিকে টানলে (লেখা ওপরে ফিরছে = উল্টো দিক) অটো-স্ক্রল থামে; ওপরের দিকে টানলে (সামনে এগোচ্ছে) থামে না, বাড়তি এগিয়ে চলতে থাকে
-    window.addEventListener('touchmove', function (e) {
-      if (asRun && asTouching && e.touches[0].clientY - asTY > 10) asStop();
-    }, { passive: true });
-    // পাতায় ট্যাপ / মাউস-ক্লিক করলে থামে (ডকের নিজের বোতামে নয়)
+    window.addEventListener('touchstart', function (e) { if (asRun && !asBox.contains(e.target)) { asTouching = true; } }, { passive: true });
+    // অটো-স্ক্রল শুধু তখনই থামে যখন পাঠক পাতায় একবার ক্লিক/ট্যাপ করেন (ডকের নিজের বোতামে নয়)। ওপরে-নিচে যেদিকেই টানুন, থামে না — টানা শেষ হলে নতুন জায়গা থেকেই চলতে থাকে
     doc.addEventListener('click', function (e) { if (asRun && !asBox.contains(e.target)) asStop(); });
     window.addEventListener('touchend', function () { if (asTouching) { asTouching = false; asHoldUntil = performance.now() + 700; } }, { passive: true });
     window.addEventListener('wheel', function () { if (asRun) asHoldUntil = performance.now() + 250; }, { passive: true });
