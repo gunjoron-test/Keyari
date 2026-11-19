@@ -1860,3 +1860,51 @@ body.sx-open { overflow: hidden; }
   -webkit-mask-position: 0 0, 0 32px, 0 100%;
   mask-position: 0 0, 0 32px, 0 100%;
 }
+
+/* ---------- মুখপাতার পটি, দ্বিতীয় সংস্করণ: ৮টি স্পষ্ট আলাদা রঙ (হালকা-গাঢ় পর্যায়ক্রমে) ও ৮ রকম ঢেউ (প্রতি কিনারায় আলাদা) ---------- */
+:root {
+  /* হালকা (L) ও একটু গাঢ় (D) পর্যায়ক্রমে; প্রতিটির রঙের ধারা আলাদা */
+  --tc-0: rgba(110, 214, 168, .22);   /* L পুদিনা */
+  --tc-1: rgba(105, 105, 238, .15);   /* D নীলচে-বেগুনি */
+  --tc-2: rgba(250, 218, 120, .32);   /* L মাখন-হলুদ */
+  --tc-3: rgba(25, 160, 178, .17);    /* D টিল */
+  --tc-4: rgba(246, 150, 150, .16);   /* L গোলাপি-প্রবাল */
+  --tc-5: rgba(40, 112, 72, .17);     /* D বনসবুজ */
+  --tc-6: rgba(190, 150, 236, .22);   /* L ল্যাভেন্ডার */
+  --tc-7: rgba(48, 128, 222, .15);    /* D আকাশি-নীল */
+  --sb-0: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M0%2022%20C300%2022%20420%206%20700%2012%20S1000%2026%201200%208%20L1200%2032%20L0%2032%20Z%27/%3E%3C/svg%3E");
+  --sa-0: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2022.6%20C%20300%2022.6%20420%206.6%20700%2012.6%20S%201000%2026.6%201200%208.6%20L1200%200%20L0%200%20Z%27/%3E%3C/svg%3E");
+  --sb-1: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M0%2025%20C300%2025%20400%206%20600%206%20S900%2025%201200%2025%20L1200%2032%20L0%2032%20Z%27/%3E%3C/svg%3E");
+  --sa-1: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2025.6%20C%20300%2025.6%20400%206.6%20600%206.6%20S%20900%2025.6%201200%2025.6%20L1200%200%20L0%200%20Z%27/%3E%3C/svg%3E");
+  --sb-2: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M0%207%20C300%207%20400%2026%20600%2026%20S900%207%201200%207%20L1200%2032%20L0%2032%20Z%27/%3E%3C/svg%3E");
+  --sa-2: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%207.6%20C%20300%207.6%20400%2026.6%20600%2026.6%20S%20900%207.6%201200%207.6%20L1200%200%20L0%200%20Z%27/%3E%3C/svg%3E");
+  --sb-3: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M0%206%20C350%204%20800%2010%201200%2027%20L1200%2032%20L0%2032%20Z%27/%3E%3C/svg%3E");
+  --sa-3: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%206.6%20C%20350%204.6%20800%2010.6%201200%2027.6%20L1200%200%20L0%200%20Z%27/%3E%3C/svg%3E");
+  --sb-4: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M0%2021%20C200%203%20420%203%20620%2018%20S1000%2033%201200%2014%20L1200%2032%20L0%2032%20Z%27/%3E%3C/svg%3E");
+  --sa-4: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2021.6%20C%20200%203.6%20420%203.6%20620%2018.6%20S%201000%2033.6%201200%2014.6%20L1200%200%20L0%200%20Z%27/%3E%3C/svg%3E");
+  --sb-5: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M0%2022%20C500%2022%20800%2022%201000%2018%20S1150%206%201200%203%20L1200%2032%20L0%2032%20Z%27/%3E%3C/svg%3E");
+  --sa-5: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2022.6%20C%20500%2022.6%20800%2022.6%201000%2018.6%20S%201150%206.6%201200%203.6%20L1200%200%20L0%200%20Z%27/%3E%3C/svg%3E");
+  --sb-6: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M0%2029%20C150%2027%20250%2013%20500%2011%20S900%2011%201200%2011%20L1200%2032%20L0%2032%20Z%27/%3E%3C/svg%3E");
+  --sa-6: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2029.6%20C%20150%2027.6%20250%2013.6%20500%2011.6%20S%20900%2011.6%201200%2011.6%20L1200%200%20L0%200%20Z%27/%3E%3C/svg%3E");
+  --sb-7: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M0%2014%20C250%2030%20450%2030%20650%2016%20S1000%202%201200%2014%20L1200%2032%20L0%2032%20Z%27/%3E%3C/svg%3E");
+  --sa-7: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2014.6%20C%20250%2030.6%20450%2030.6%20650%2016.6%20S%201000%202.6%201200%2014.6%20L1200%200%20L0%200%20Z%27/%3E%3C/svg%3E");
+}
+[data-scheme="dark"] {
+  --tc-0: rgba(0, 200, 130, .15);
+  --tc-1: rgba(120, 120, 255, .17);
+  --tc-2: rgba(240, 200, 80, .12);
+  --tc-3: rgba(40, 190, 210, .15);
+  --tc-4: rgba(255, 130, 130, .12);
+  --tc-5: rgba(80, 190, 110, .15);
+  --tc-6: rgba(190, 150, 255, .15);
+  --tc-7: rgba(70, 150, 240, .16);
+}
+.tc-0 { --tone: var(--tc-0); } .tc-1 { --tone: var(--tc-1); } .tc-2 { --tone: var(--tc-2); } .tc-3 { --tone: var(--tc-3); } .tc-4 { --tone: var(--tc-4); } .tc-5 { --tone: var(--tc-5); } .tc-6 { --tone: var(--tc-6); } .tc-7 { --tone: var(--tc-7); }
+.wt-0 { --m-top: var(--sb-0); } .wb-0 { --m-bot: var(--sa-0); }
+.wt-1 { --m-top: var(--sb-1); } .wb-1 { --m-bot: var(--sa-1); }
+.wt-2 { --m-top: var(--sb-2); } .wb-2 { --m-bot: var(--sa-2); }
+.wt-3 { --m-top: var(--sb-3); } .wb-3 { --m-bot: var(--sa-3); }
+.wt-4 { --m-top: var(--sb-4); } .wb-4 { --m-bot: var(--sa-4); }
+.wt-5 { --m-top: var(--sb-5); } .wb-5 { --m-bot: var(--sa-5); }
+.wt-6 { --m-top: var(--sb-6); } .wb-6 { --m-bot: var(--sa-6); }
+.wt-7 { --m-top: var(--sb-7); } .wb-7 { --m-bot: var(--sa-7); }

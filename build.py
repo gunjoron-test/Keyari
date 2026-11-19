@@ -930,7 +930,7 @@ def _tone_classes(html):
     def f(m):
         i = n[0]
         n[0] += 1
-        return 'class="' + m.group(1) + f' tc-{i % 6} wv-{i % 2}"'
+        return 'class="' + m.group(1) + f' tc-{i % 8} wt-{(i - 1) % 8} wb-{i % 8}"'
     return re.sub(r'class="([^"]*\btone\b[^"]*)"', f, html)
 
 
