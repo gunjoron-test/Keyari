@@ -1921,45 +1921,7 @@ body.sx-open { overflow: hidden; }
   --tc-7: #112641;   /* গাঢ় নৌ-নীল */
 }
 
-/* ======================= [পরীক্ষামূলক] পটির নিচের সরু রেখা =======================
-   বাতিল করতে চাইলে এই কমেন্ট থেকে "শেষ" কমেন্ট পর্যন্ত পুরো অংশটা মুছে দিলেই হবে — আর কিছু বদলাতে হবে না। */
-:root {
-  --ed-0: #5cc99a; --ed-1: #8f8ff0; --ed-2: #e3be52; --ed-3: #3fb5c4;
-  --ed-4: #ee9494; --ed-5: #3f9060; --ed-6: #b48fe6; --ed-7: #5b9be8;
-  --ln-0: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2021.1%20C%20300%2021.1%20420%205.1%20700%2011.1%20S%201000%2025.1%201200%207.1%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%271.8%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E");
-  --ln-1: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2024.1%20C%20300%2024.1%20400%205.1%20600%205.1%20S%20900%2024.1%201200%2024.1%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%271.8%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E");
-  --ln-2: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%206.1%20C%20300%206.1%20400%2025.1%20600%2025.1%20S%20900%206.1%201200%206.1%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%271.8%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E");
-  --ln-3: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%205.1%20C%20350%203.1%20800%209.1%201200%2026.1%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%271.8%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E");
-  --ln-4: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2020.1%20C%20200%202.1%20420%202.1%20620%2017.1%20S%201000%2032.1%201200%2013.1%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%271.8%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E");
-  --ln-5: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2021.1%20C%20500%2021.1%20800%2021.1%201000%2017.1%20S%201150%205.1%201200%202.1%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%271.8%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E");
-  --ln-6: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2028.1%20C%20150%2026.1%20250%2012.1%20500%2010.1%20S%20900%2010.1%201200%2010.1%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%271.8%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E");
-  --ln-7: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M%200%2013.1%20C%20250%2029.1%20450%2029.1%20650%2015.1%20S%201000%201.1%201200%2013.1%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%271.8%27%20vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E");
-}
-[data-scheme="dark"] {
-  --ed-0: #1f9470; --ed-1: #5656c0; --ed-2: #a88236; --ed-3: #21949f;
-  --ed-4: #b85c7e; --ed-5: #329452; --ed-6: #805cc0; --ed-7: #3c7ccc;
-}
-.tc-0 { --edge: var(--ed-0); }
-.tc-1 { --edge: var(--ed-1); }
-.tc-2 { --edge: var(--ed-2); }
-.tc-3 { --edge: var(--ed-3); }
-.tc-4 { --edge: var(--ed-4); }
-.tc-5 { --edge: var(--ed-5); }
-.tc-6 { --edge: var(--ed-6); }
-.tc-7 { --edge: var(--ed-7); }
-.wb-0 { --m-ln: var(--ln-0); }
-.wb-1 { --m-ln: var(--ln-1); }
-.wb-2 { --m-ln: var(--ln-2); }
-.wb-3 { --m-ln: var(--ln-3); }
-.wb-4 { --m-ln: var(--ln-4); }
-.wb-5 { --m-ln: var(--ln-5); }
-.wb-6 { --m-ln: var(--ln-6); }
-.wb-7 { --m-ln: var(--ln-7); }
-.tone::after {
-  content: ""; position: absolute; z-index: -1; left: 50%; width: 100vw; transform: translateX(-50%);
-  bottom: -40px; height: 1px; background: var(--edge, transparent); pointer-events: none;
-}
-/* ======================= [পরীক্ষামূলক] শেষ ======================= */
+
 
 /* বার্তা-বক্স (যেমন "কপি হয়েছে"): ব্র্যান্ড সবুজ #00A664 ব্যাকগ্রাউন্ড, সাদা লেখা */
 .toast { background: #00A664; color: #fff; font-weight: 600; border: 0; box-shadow: 0 10px 28px rgba(0, 166, 100, .32); }
