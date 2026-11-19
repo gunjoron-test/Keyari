@@ -1510,3 +1510,7 @@ body.sx-open { overflow: hidden; }
 .member__social a:hover { color: var(--accent-ink); transform: translateY(-2px); }
 .member__social svg { width: 18px; height: 18px; }
 @media (max-width: 575.98px) { .family__grid { grid-template-columns: 1fr; } .member__social a { width: 40px; height: 40px; } }
+/* কেয়ারি পরিবারের কার্ড: সব কিছু বক্সের মাঝখানে */
+.member { align-items: center; text-align: center; }
+.member__bio { text-align: center; }
+.member__social { justify-content: center; }
