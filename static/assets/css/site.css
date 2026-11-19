@@ -2006,3 +2006,15 @@ body.sx-open { overflow: hidden; }
   top: -40px; bottom: -40px;
   -webkit-mask-image: none; mask-image: none;
 }
+
+/* হালকা মোড: পটির রঙ আরেকটু ফিকে (প্রায় ৩০% কম), রঙের ধারা একই */
+:root:not([data-scheme="dark"]) {
+  --tc-0: rgba(110, 214, 168, .15);
+  --tc-1: rgba(105, 105, 238, .105);
+  --tc-2: rgba(250, 218, 120, .22);
+  --tc-3: rgba(25, 160, 178, .12);
+  --tc-4: rgba(246, 150, 150, .11);
+  --tc-5: rgba(40, 112, 72, .12);
+  --tc-6: rgba(190, 150, 236, .15);
+  --tc-7: rgba(48, 128, 222, .105);
+}
