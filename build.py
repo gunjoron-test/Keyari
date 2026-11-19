@@ -726,7 +726,7 @@ def header(active=""):
       <button class="icon-btn" type="button" data-search-open aria-label="অনুসন্ধান" aria-controls="search-pop" aria-expanded="false">{icon("search", 20)}</button>
       <span class="header-tools__sep" aria-hidden="true"></span>
       {toggle}
-      <a class="btn btn--fb" href="{esc(S.get("app_url") or "#")}"{app_attrs()}>বুকশপ</a>
+      <a class="btn btn--fb" href="{esc(S.get("app_url") or "#")}"{app_attrs()}>বুক অ্যাপ</a>
     </div>
     <div class="search-pop" id="search-pop" role="dialog" aria-label="অনুসন্ধান" hidden>
       <button class="icon-btn search-pop__close" type="button" data-search-close aria-label="বন্ধ করুন">{icon("close", 18)}</button>
@@ -747,7 +747,7 @@ def header(active=""):
     <label class="sr-only" for="ms">খুঁজুন</label><input id="ms" type="search" name="s" placeholder="খুঁজুন…" required><button class="btn" type="submit">খুঁজুন</button>
   </form>
   <ul class="m-nav">{"".join(m_items)}</ul>
-  <a class="btn btn--block" href="{esc(S.get("app_url") or "#")}"{app_attrs()}>বুকশপ</a>
+  <a class="btn btn--block" href="{esc(S.get("app_url") or "#")}"{app_attrs()}>বুক অ্যাপ</a>
   <div class="offcanvas__foot">{toggle}</div>
 </div>
 <div class="offcanvas-backdrop" data-offcanvas-close hidden></div>'''
@@ -1225,9 +1225,7 @@ def comments_html(p):
       <button class="btn cm__send" type="submit">মন্তব্য পাঠান</button>
     </div>
     <input class="cm__hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <p class="cm__hint">সম্পাদক অনুমোদন দিলে তবেই আপনার মন্তব্য সবার কাছে দেখা যাবে।</p>
     <p class="cm__msg" role="status" aria-live="polite" data-cm-msg></p>
-    {'<p class="cm__demo">পরীক্ষামূলক অবস্থা: মন্তব্য-সার্ভার এখনো যুক্ত হয়নি, তাই এখন পাঠালে মন্তব্য কেবল আপনার ব্রাউজারে থাকবে।</p>' if not endpoint else ""}
   </form>
   <div class="cm__list" data-cm-list></div>
   <noscript><p class="cm__hint">মন্তব্য করতে জাভাস্ক্রিপ্ট চালু থাকতে হবে।</p></noscript>
@@ -1440,7 +1438,7 @@ def build_categories():
     bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("বিষয়সূচি", "/বিষয়সূচি/")])
     write("/বিষয়সূচি/", layout(title="বিষয়সূচি", description=f"{SITE}-এর সব বিভাগ ও উপ-বিভাগ: " + ", ".join(c["name"] for c in TOP_CATS),
                                path="/বিষয়সূচি/", active="বিষয়সূচি", ld=[bc_ld],
-                               body=f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">বিষয়সূচি</h1><p class="archive-desc">কেয়ারির নয়টি বিভাগ ও তাদের উপ-বিভাগ।</p></header><div class="grid grid--3">{cards}</div></div>'))
+                               body=f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">বিষয়সূচি</h1></header><div class="grid grid--3">{cards}</div></div>'))
 
 
 def build_authors():
@@ -1490,7 +1488,7 @@ def build_authors():
     bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("লেখক তালিকা", "/লেখক-তালিকা/")])
     body = f'''<div class="container archive">{bc_html}
 <header class="archive-header"><p class="sec-label">বাতায়ন</p><h1 class="archive-title">লেখক তালিকা</h1>
-<p class="archive-desc">কেয়ারিতে লিখেছেন {bn(len(with_posts))} জন লেখক।</p>
+
 <label class="sr-only" for="af">লেখক খুঁজুন</label><input class="filter-input" id="af" type="search" placeholder="লেখকের নাম লিখুন…" data-filter=".author-card"></header>
 <div class="author-grid">{cards}</div></div>'''
     write("/লেখক-তালিকা/", layout(title="লেখক তালিকা", description=f"{SITE}-এর সব লেখকের তালিকা, পরিচিতি ও লেখা।",
@@ -1599,7 +1597,7 @@ def build_issues():
     cards = "".join(issue_card(x) for x in ISSUES)
     bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("সংখ্যাগুচ্ছ", "/সংখ্যাগুচ্ছ/")])
     body = (f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">সংখ্যাগুচ্ছ</h1>'
-            f'<p class="archive-desc">কেয়ারির সব সংখ্যা এক জায়গায়, ক্রমানুসারে।</p></header>'
+            f'</header>'
             f'{more_grid(cards, len(ISSUES), "feed__list more-grid") if cards else EMPTY_SOON}</div>')
     write("/সংখ্যাগুচ্ছ/", layout(title="সংখ্যাগুচ্ছ", description=f"{SITE}-এর সব সংখ্যা এক জায়গায়।",
                                   path="/সংখ্যাগুচ্ছ/", body=body, active="সংখ্যাগুচ্ছ", ld=[bc_ld],
@@ -1620,7 +1618,7 @@ def build_series():
     cards = "".join(series_card(x) for x in items)
     bc_html, bc_ld = breadcrumb([("মুখপাতা", "/"), ("ধারাবাহিক", "/ধারাবাহিক/")])
     write("/ধারাবাহিক/", layout(title="ধারাবাহিক", description="কেয়ারির ধারাবাহিক উপন্যাস, জীবনী ও রচনা — পর্ব অনুযায়ী।", path="/ধারাবাহিক/",
-                                body=f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">ধারাবাহিক</h1><p class="archive-desc">পর্বে পর্বে প্রকাশিত লেখাগুলো একসাথে।</p></header><div class="feed__list">{cards}</div></div>', ld=[bc_ld]))
+                                body=f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">ধারাবাহিক</h1></header><div class="feed__list">{cards}</div></div>', ld=[bc_ld]))
     for s in items:
         path = f"/ধারাবাহিক/{s['slug']}/"
         header_html = f'<p class="sec-label">ধারাবাহিক · {bn(len(s["posts"]))}টি পর্ব</p><h1 class="archive-title">{esc(s["name"])}</h1><p class="archive-desc">{esc(s["posts"][0]["_author"]["name"])}</p>'

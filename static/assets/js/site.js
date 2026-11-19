@@ -355,7 +355,7 @@
       var head = el('div', 'cm__meta');
       head.appendChild(el('strong', 'cm__who' + (nm ? '' : ' is-anon'), nm || ANON));
       head.appendChild(el('time', 'cm__time', fmt(c.ts)));
-      if (pending) head.appendChild(el('span', 'cm__badge', 'অনুমোদনের অপেক্ষায় · শুধু আপনি দেখছেন'));
+      if (pending) head.appendChild(el('span', 'cm__badge', 'অনুমোদনের অপেক্ষায়'));
       body.appendChild(head);
       body.appendChild(el('p', 'cm__text', c.text));
       if (c.reply) {
@@ -376,7 +376,7 @@
       still.slice().reverse().forEach(function (c) { cmList.appendChild(card(c, true)); });
       approved.slice().reverse().forEach(function (c) { cmList.appendChild(card(c, false)); });
       cmCount.textContent = approved.length ? '(' + toBn(approved.length) + ')' : '';
-      if (!approved.length && !still.length) cmList.appendChild(el('p', 'cm__empty', 'এখনো কোনো মন্তব্য নেই — প্রথম মন্তব্যটি আপনিই করুন।'));
+      if (!approved.length && !still.length) cmList.appendChild(el('p', 'cm__empty', 'এখনো কোনো মন্তব্য নেই।'));
     };
     var fetchList = function () {
       if (cmDemo) { render([]); return; }
@@ -398,7 +398,7 @@
       if (cmDemo) {
         var pd = readP(); (pd[cmPost] = pd[cmPost] || []).push({ id: 'demo' + Date.now(), name: name, text: text, ts: Date.now() }); writeP(pd);
         f.text.value = '';
-        cmMsg.textContent = 'পরীক্ষামূলক: মন্তব্যটি শুধু আপনার ব্রাউজারে দেখানো হচ্ছে — সার্ভার যুক্ত হলে এটি সম্পাদকের কাছে যাবে।';
+        cmMsg.textContent = 'ধন্যবাদ, আপনার মন্তব্য জমা হয়েছে।';
         cmMsg.className = 'cm__msg is-ok'; btn.disabled = false; btn.textContent = 'মন্তব্য পাঠান'; fetchList(); return;
       }
       fetch(cmEnd + '/comments', {
@@ -408,7 +408,7 @@
         if (!x.ok) throw new Error(x.d.error || 'পাঠানো যায়নি');
         var p = readP(); (p[cmPost] = p[cmPost] || []).push({ id: x.d.id, name: name, text: text, ts: Date.now() }); writeP(p);
         f.text.value = '';
-        cmMsg.textContent = 'ধন্যবাদ! আপনার মন্তব্য জমা হয়েছে। সম্পাদক অনুমোদন দিলে সবার কাছে দেখা যাবে — ততক্ষণ শুধু আপনি নিচে দেখতে পাবেন।';
+        cmMsg.textContent = 'ধন্যবাদ, আপনার মন্তব্য জমা হয়েছে।';
         cmMsg.className = 'cm__msg is-ok';
         fetchList();
       }).catch(function (err) {
