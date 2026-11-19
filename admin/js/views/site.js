@@ -170,11 +170,18 @@ export function homeView(view) {
         <div class="field" style="margin-top:10px"><label>প্রতিটিতে লেখা</label><input class="input" type="number" min="2" max="8" data-cbn value="${esc((h.sections.find((s) => s.type === 'category_blocks') || {}).count || 4)}" style="max-width:100px"></div>
         <div class="field"><label>"লেখা পাঠান" অংশের বার্তা</label><textarea class="textarea" data-cta>${esc((h.sections.find((s) => s.type === 'cta') || {}).text || '')}</textarea></div></div>
     </div><div>
-      <div class="card"><h2 class="card__title" style="margin-bottom:12px">হিরো</h2>
-        <div class="field"><label>পদ্ধতি</label><select class="select" data-hm><option value="auto" ${h.hero.mode !== 'manual' ? 'selected' : ''}>স্বয়ংক্রিয়</option><option value="manual" ${h.hero.mode === 'manual' ? 'selected' : ''}>নিজে বাছাই</option></select></div>
-        <div data-auto ${h.hero.mode === 'manual' ? 'hidden' : ''}><div class="field"><label>বড় লেখা আসবে এই বিভাগের সর্বশেষ লেখা থেকে</label><select class="select" data-hc>${topCats().map((c) => `<option value="${c.slug}" ${h.hero.main_category === c.slug ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></div><p class="help">পাশের ৩টি = সর্বশেষ ৩টি লেখা।</p></div>
-        <div data-manual ${h.hero.mode === 'manual' ? '' : 'hidden'}><div class="field"><label>বড় লেখা</label><select class="select" data-main>${opt(h.hero.main)}</select></div>
-        ${[0, 1, 2].map((i) => `<div class="field"><label>পাশের লেখা ${bn(i + 1)}</label><select class="select" data-side="${i}">${opt((h.hero.side || [])[i])}</select></div>`).join('')}</div></div>
+      <div class="card"><h2 class="card__title" style="margin-bottom:4px">মুখপাতার হিরো — কোন লেখা কোথায়</h2>
+        <p class="help" style="margin-bottom:14px">ওপরের বড় অংশে একটি <b>বড় লেখা</b> আর তার ডানে তিনটি <b>সাইড লেখা</b> দেখায়। ফাঁকা রাখলে সাইট নিজে সর্বশেষ লেখা বসায়।</p>
+        <div style="padding:14px;border:1.5px solid var(--accent);border-radius:12px;margin-bottom:14px;background:color-mix(in srgb,var(--accent) 6%,transparent)">
+          <div class="btn-row" style="margin-bottom:8px"><span class="badge badge--published">বড় লেখা</span><span class="help">বাঁয়ের বড় ছবিসহ কার্ড</span></div>
+          <div class="field"><select class="select" data-main>${opt(h.hero.main)}</select></div>
+          <div class="field" style="margin-bottom:0"><label>বড় লেখা না বাছলে আসবে এই বিভাগের সর্বশেষ লেখা</label><select class="select" data-hc>${topCats().map((c) => `<option value="${c.slug}" ${h.hero.main_category === c.slug ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></div>
+        </div>
+        <div style="padding:14px;border:1.5px solid var(--line-2);border-radius:12px">
+          <div class="btn-row" style="margin-bottom:8px"><span class="badge badge--draft">সাইড লেখা</span><span class="help">ডানের তিনটি ছোট কার্ড (ওপর থেকে নিচে)</span></div>
+          ${[0, 1, 2].map((i) => `<div class="field"><label>সাইড লেখা ${bn(i + 1)}</label><select class="select" data-side="${i}">${opt((h.hero.side || [])[i])}</select></div>`).join('')}
+        </div>
+      </div>
       <div class="card"><h2 class="card__title" style="margin-bottom:12px">স্লাইডার (সাইডবার)</h2>
         <div class="field"><label>শিরোনাম</label><input class="input" data-st value="${esc(h.slider.title || 'পাঠকের পছন্দ')}"></div>
         <div class="field"><label>উৎস</label><select class="select" data-sm><option value="picks" ${h.slider.mode !== 'latest' ? 'selected' : ''}>★ পাঠকের পছন্দ চিহ্নিত লেখা (না থাকলে সর্বশেষ)</option><option value="latest" ${h.slider.mode === 'latest' ? 'selected' : ''}>সর্বশেষ লেখা</option></select></div>
@@ -187,10 +194,9 @@ export function homeView(view) {
     $$('[data-cb]', view).forEach((el) => (el.onchange = () => { const s = cbSec(); s.categories = $$('[data-cb]', view).filter((x) => x.checked).map((x) => x.dataset.cb); }));
     $('[data-cbn]', view).oninput = (e) => { cbSec().count = +e.target.value || 4; };
     $('[data-cta]', view).oninput = (e) => { const s = h.sections.find((x) => x.type === 'cta'); if (s) s.text = e.target.value; };
-    $('[data-hm]', view).onchange = (e) => { h.hero.mode = e.target.value; $('[data-auto]', view).hidden = h.hero.mode === 'manual'; $('[data-manual]', view).hidden = h.hero.mode !== 'manual'; };
     $('[data-hc]', view).onchange = (e) => { h.hero.main_category = e.target.value; };
-    $('[data-main]', view).onchange = (e) => { h.hero.main = e.target.value; };
-    $$('[data-side]', view).forEach((el) => (el.onchange = () => { h.hero.side = $$('[data-side]', view).map((x) => x.value).filter(Boolean); }));
+    $('[data-main]', view).onchange = (e) => { h.hero.main = e.target.value; h.hero.mode = 'manual'; };
+    $$('[data-side]', view).forEach((el) => (el.onchange = () => { h.hero.side = $$('[data-side]', view).map((x) => x.value).filter(Boolean); h.hero.mode = 'manual'; }));
     $('[data-st]', view).oninput = (e) => { h.slider.title = e.target.value; };
     $('[data-sm]', view).onchange = (e) => { h.slider.mode = e.target.value; };
     $('[data-sc]', view).oninput = (e) => { h.slider.count = +e.target.value || 5; };

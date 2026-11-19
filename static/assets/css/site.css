@@ -1405,3 +1405,21 @@ html { overflow-x: clip; }
 .card-s__media { flex: 0 0 clamp(170px, 50%, 270px); }
 .card-s__img, .card-s .ph { width: 100%; height: auto; aspect-ratio: 16 / 9; }
 @media (max-width: 575.98px) { .card-s__media { flex: none; align-self: stretch; } }
+
+/* ---------- হিরোর ডানের কার্ড: তিনটা একই মাপ; ছবি লেখার উচ্চতা বরাবর (দুই পাশ সামান্য কেটে বড়); শিরোনাম সবসময় এক লাইনে ---------- */
+.hero__side .card-s { display: flex; align-items: stretch; gap: 22px; height: 176px; padding: 0 0 24px; margin-bottom: 24px; }
+.hero__side .card-s:last-child { padding-bottom: 0; margin-bottom: 0; height: 152px; }
+.card-s__media { flex: 0 0 clamp(180px, 50%, 300px); align-self: stretch; display: block; }
+.card-s__img, .card-s .ph { width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; border-radius: var(--radius-md); }
+.card-s__body { justify-content: flex-start; overflow: hidden; }
+.card-s__title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 19px; }
+.card-s__title a { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 575.98px) {
+  .hero__side .card-s, .hero__side .card-s:last-child { flex-direction: column-reverse; height: auto; gap: 14px; padding-bottom: 24px; }
+  .card-s__media { flex: none; align-self: stretch; }
+  .card-s__img, .card-s .ph { height: auto; aspect-ratio: 16 / 9; }
+}
+.hero__side .card-s { height: 196px; }
+.hero__side .card-s:last-child { height: 172px; }
+.card-s__media { flex: 0 0 clamp(190px, 54%, 320px); }
+@media (max-width: 575.98px) { .hero__side .card-s, .hero__side .card-s:last-child { height: auto; } .card-s__media { flex: none; } }

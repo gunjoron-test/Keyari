@@ -979,12 +979,15 @@ def build_home():
     per = max(3, round(per / 3) * 3)  # ৩ কলামের গ্রিডে পুরো সারি ভরতে ৩-এর গুণিতক
     hero_cfg = HOME.get("hero", {})
     main = None
-    if hero_cfg.get("mode") == "manual" and hero_cfg.get("main") in POST_BY_ID:
+    if hero_cfg.get("main") in POST_BY_ID:
         main = POST_BY_ID[hero_cfg["main"]]
     if not main:
         mc = hero_cfg.get("main_category")
         main = next((p for p in POSTS if mc and mc in p["_cats"]), None) or (POSTS[0] if POSTS else None)
-    side = [POST_BY_ID[i] for i in hero_cfg.get("side", []) if i in POST_BY_ID] if hero_cfg.get("mode") == "manual" else []
+    side = []
+    for i in hero_cfg.get("side", []):
+        if i in POST_BY_ID and POST_BY_ID[i] is not main and POST_BY_ID[i] not in side:
+            side.append(POST_BY_ID[i])
     for p in POSTS:
         if len(side) >= 3:
             break
