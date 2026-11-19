@@ -1722,3 +1722,6 @@ body.sx-open { overflow: hidden; }
   .autoscroll .autoscroll__play { width: auto; min-width: 34px; display: inline-flex; }
   .autoscroll.is-running .autoscroll__play { width: 34px; padding: 0; }
 }
+
+/* বিজ্ঞাপন-স্লাইডার: ওপরের ও নিচের রঙিন সেকশন থেকে দৃশ্যমান ফাঁক সমান (রঙিন পটি বাক্সের ৪০px বাইরে যায়, তাই নিচে ৮০px) */
+.ad-slider { margin-top: 80px; margin-bottom: 80px; }
