@@ -916,7 +916,7 @@ def jsonld(obj):
 
 
 def org_ld():
-    logo = "/assets/img/icon-512.png"
+    logo = "/assets/img/favicon.svg"
     return {"@type": "Organization", "@id": SITE_URL + "/#org", "name": SITE, "alternateName": S.get("site_name_en"),
             "url": SITE_URL + u("/"), "logo": {"@type": "ImageObject", "url": absu(logo)},
             "email": S.get("email"), "sameAs": [x for x in [S.get("facebook")] + list(S.get("social", {}).values()) if x]}
@@ -973,9 +973,7 @@ def layout(*, title, description, path, body, active="", og_image="", og_type="w
 <meta name="theme-color" content="#FDFDFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1C1C1C" media="(prefers-color-scheme: dark)">
 {verify}
-<link rel="icon" href="{asset(S.get("favicon") or "/assets/img/favicon.svg")}">
-<link rel="icon" type="image/png" sizes="192x192" href="{u("/assets/img/icon-192.png")}">
-<link rel="apple-touch-icon" href="{u("/assets/img/icon-180.png")}">
+<link rel="icon" type="image/svg+xml" sizes="any" href="{asset(S.get("favicon") or "/assets/img/favicon.svg")}">
 <link rel="manifest" href="{u("/manifest.webmanifest")}">
 <link rel="alternate" type="application/rss+xml" title="{esc(SITE)} — ফিড" href="{u("/feed.xml")}">
 <link rel="preload" href="{u("/assets/fonts/NotoSerifByGunjoron-Regular.woff")}?v={FONT_V}" as="font" type="font/woff" crossorigin>
@@ -1872,9 +1870,7 @@ def build_static():
     (DIST / "manifest.webmanifest").write_text(json.dumps({
         "name": SITE, "short_name": SITE, "lang": "bn", "start_url": u("/"), "display": "standalone",
         "background_color": "#FDFDFF", "theme_color": "#00A664",
-        "icons": [{"src": u("/assets/img/favicon.svg"), "sizes": "any", "type": "image/svg+xml"},
-                  {"src": u("/assets/img/icon-192.png"), "sizes": "192x192", "type": "image/png", "purpose": "any"},
-                  {"src": u("/assets/img/icon-512.png"), "sizes": "512x512", "type": "image/png", "purpose": "any"}]},
+        "icons": [{"src": u("/assets/img/favicon.svg"), "sizes": "any", "type": "image/svg+xml", "purpose": "any"}]},
         ensure_ascii=False), "utf-8")
 
 
