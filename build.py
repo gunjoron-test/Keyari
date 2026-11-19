@@ -480,13 +480,8 @@ def card_g(p):
 
 
 def card_v(p, show_date=True, heading="h3"):
-    return f'''<article class="card-v">
-  <div class="card-v__media"><a href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["cover"].get("alt") or p["title"], "card-v__img", sizes="(max-width: 767px) 100vw, 400px")}</a>
-</div>
-  {('<p class="card__meta"><a class="card__author" href="' + u("/author/" + p["_author"]["slug"] + "/") + '">' + aname(p["_author"]) + '</a> · ' + bn_date(p["_date"]) + '</p>') if show_date else ''}
-  <{heading} class="card-v__title"><a href="{p["_url"]}">{esc(p["title"])}</a></{heading}>
-  <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
-</article>'''
+    """পুরোনো নাম; সব জায়গায় এখন একই লেখার-কার্ড (card_g)"""
+    return card_g(p)
 
 
 def card_small(p):
@@ -1317,7 +1312,7 @@ def build_post(p):
 </div>
   <section class="read-next container" aria-labelledby="rn-h">
     <h2 class="read-next__title" id="rn-h">আরও পড়ুন</h2>
-    <div class="grid grid--3">{"".join(card_v(x) for x in related)}</div>
+    <div class="feed__list">{"".join(card_g(x) for x in related)}</div>
   </section>
 </article>'''
     seo = p.get("seo") or {}
@@ -1361,7 +1356,7 @@ def archive_page(*, path, title, items, crumbs, header_html, description, active
   {bc_html}
   <header class="{header_cls}">{header_html}</header>
   {before_grid}
-  <div class="grid grid--3" data-grid>{grid}</div>
+  <div class="feed__list" data-grid>{grid}</div>
   {pagination(page, total, path)}
 </div>'''
         prev_p = None if page == 1 else (path if page == 2 else f"{path}page/{page - 1}/")
@@ -1440,7 +1435,7 @@ def build_authors():
         before = f'<div class="author-works">{section_head("লেখাসমূহ", h="h2")}{chips}</div>'
         archive_page(path=path, title=a["name"], items=posts, header_html=header_html, active="বাতায়ন", per=per_page,
                      header_cls="author-hero", before_grid=before,
-                     card_fn=lambda p: card_v(p).replace('<article class="card-v">', f'<article class="card-v" data-cat="{p["_top"] or ""}">', 1),
+                     card_fn=lambda p: card_g(p).replace('<article class="card-g">', f'<article class="card-g" data-cat="{p["_top"] or ""}">', 1),
                      crumbs=[("মুখপাতা", "/"), ("লেখক তালিকা", "/লেখক-তালিকা/"), (a["name"], path)],
                      description=a.get("bio") or f'{a["name"]}-এর লেখা — {SITE}', ld_type="ProfilePage")
     # লেখক তালিকা
@@ -1525,7 +1520,7 @@ def build_ayojon():
 <div class="entry-content entry-content--page ay-editorial"><p class="sec-label">সম্পাদকীয়</p>{process_body(a.get("editorial", ""))}</div>
 </div>
 <section class="container ay-posts" aria-label="{esc(a.get("section_title", "লেখাসমূহ"))}">{section_head(a.get("section_title", "লেখাসমূহ"), center=True)}
-<div class="grid grid--3">{"".join(card_v(p) for p in aps)}</div></section>{other_html}'''
+<div class="feed__list">{"".join(card_g(p) for p in aps)}</div></section>{other_html}'''
         write(path, layout(title=a.get("seo", {}).get("title") or (a["title"] + " — আয়োজন"),
                            description=a.get("seo", {}).get("description") or strip_tags(a.get("editorial", ""))[:160],
                            path=path, body=body, active="আয়োজন", og_image=a.get("banner", {}).get("src", ""),
@@ -1603,7 +1598,7 @@ def build_tags():
 
 
 def build_search():
-    idx = [{"t": p["title"], "a": p["_author"]["name"], "ap": asset(p["_author"].get("photo", "")) if p["_author"].get("photo") else "", "as": p["_author"].get("slug", ""), "c": " ".join(CAT[c]["name"] for c in p["_cats"]),
+    idx = [{"t": p["title"], "a": p["_author"]["name"], "ap": asset(p["_author"].get("photo", "")) if p["_author"].get("photo") else "", "as": p["_author"].get("slug", ""), "cl": (CAT[p["_sub"] or p["_top"]]["name"] if (p["_sub"] or p["_top"]) else ""), "cu": (cat_url(p["_sub"] or p["_top"]) if (p["_sub"] or p["_top"]) else ""), "c": " ".join(CAT[c]["name"] for c in p["_cats"]),
             "e": p["excerpt"][:200], "u": p["_url"], "i": asset(p["cover"].get("src", "")), "d": bn_date(p["_date"]),
             "g": " ".join(p.get("tags", []))} for p in POSTS]
     (DIST / "search-index.json").write_text(json.dumps(idx, ensure_ascii=False, separators=(",", ":")), "utf-8")
@@ -1612,7 +1607,7 @@ def build_search():
 <form class="search-form search-form--page" action="{u("/search/")}" method="get" role="search">
 <label class="sr-only" for="ps">খুঁজুন</label><input id="ps" type="search" name="s" placeholder="লেখা, লেখক বা বিষয়…" required><button class="btn" type="submit">খুঁজুন</button></form>
 <p class="archive-desc" data-search-count aria-live="polite"></p></header>
-<div class="grid grid--3" data-search-results></div>
+<div class="feed__list" data-search-results></div>
 <nav class="pagination" data-search-pages aria-label="পাতা নম্বর"></nav>
 </div>'''
     write("/search/", layout(title="অনুসন্ধান", description=f"{SITE}-এ লেখা, লেখক ও বিষয় খুঁজুন।", path="/search/", body=body, noindex=True, body_class="search-page"))
@@ -1625,7 +1620,7 @@ def build_404():
 <p class="nf__text">দুঃখিত, আপনি যে পাতাটি খুঁজছেন তা এখানে নেই। হয়তো ঠিকানাটি বদলেছে বা মুছে ফেলা হয়েছে।</p>
 <form class="search-form search-form--page" action="{u("/search/")}" method="get" role="search"><label class="sr-only" for="nfs">খুঁজুন</label><input id="nfs" type="search" name="s" placeholder="খুঁজে দেখুন…" required><button class="btn" type="submit">খুঁজুন</button></form>
 <p><a class="btn" href="{u("/")}">মুখপাতায় ফিরুন</a></p>
-<div class="grid grid--3 nf__latest">{"".join(card_v(p) for p in POSTS[:3])}</div>
+<div class="feed__list nf__latest">{"".join(card_g(p) for p in POSTS[:3])}</div>
 </div>'''
     (DIST / "404.html").write_text(layout(title="পাতাটি খুঁজে পাওয়া যায়নি", description="", path="/404.html", body=body, noindex=True), "utf-8")
 

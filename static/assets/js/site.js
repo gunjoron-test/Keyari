@@ -446,7 +446,7 @@
 
   // ---------- লেখক পাতার বিভাগ-ছাঁকনি ----------
   $$('.chips').forEach(function (box) {
-    var cards = $$('[data-grid] .card-v');
+    var cards = $$('[data-grid] .card-g');
     $$('.chip-btn', box).forEach(function (b) {
       b.addEventListener('click', function () {
         var k = b.getAttribute('data-chip');
@@ -486,10 +486,15 @@
         countEl.textContent = scored.length ? bn(scored.length) + 'টি লেখা পাওয়া গেছে' : 'দুঃখিত, কিছু পাওয়া যায়নি। অন্য শব্দে খুঁজে দেখুন।';
         results.innerHTML = scored.slice((page - 1) * per, page * per).map(function (x) {
           var it = x.it;
-          return '<article class="card-v"><div class="card-v__media"><a href="' + it.u + '" tabindex="-1">' +
-            (it.i ? '<img class="card-v__img" data-lz src="' + esc(it.i) + '" alt="' + esc(it.t) + '" loading="lazy" width="1169" height="658">' : '<div class="ph"><span>কেয়ারি</span></div>') +
-            '</a></div><p class="card__meta"><span class="card__author"><span class="aname">' + (it.ap ? '<img class="avatar avatar--xs" src="' + esc(it.ap) + '" alt="" width="22" height="22" loading="lazy">' : '<span class="avatar avatar--xs avatar--ph" style="--h:' + (function (sl) { var h = 0; for (var q = 0; q < sl.length; q++) h += sl.charCodeAt(q); return h % 360; })(it.as || 'x') + '" aria-hidden="true">' + esc((it.a || '?').charAt(0)) + '</span>') + '<span class="aname__t">' + esc(it.a) + '</span></span></span> · ' + esc(it.d) + ' · ' + esc(it.c) + '</p>' +
-            '<h2 class="card-v__title"><a href="' + it.u + '">' + esc(it.t) + '</a></h2><p class="card__excerpt clamp-3">' + esc(it.e) + '</p></article>';
+          var h = 0, sl = it.as || 'x'; for (var q = 0; q < sl.length; q++) h += sl.charCodeAt(q); h = h % 360;
+          var av = it.ap ? '<img class="avatar avatar--xs" src="' + esc(it.ap) + '" alt="" width="26" height="26" loading="lazy">' : '<span class="avatar avatar--xs avatar--ph" style="--h:' + h + '" aria-hidden="true">' + esc((it.a || '?').charAt(0)) + '</span>';
+          return '<article class="card-g"><a class="card-g__media" href="' + it.u + '" tabindex="-1" aria-hidden="true">' +
+            (it.i ? '<img class="card-g__img" data-lz src="' + esc(it.i) + '" alt="' + esc(it.t) + '" loading="lazy" width="1169" height="658">' : '<div class="ph card-g__img" role="img"><span class="sr-only">কেয়ারি</span></div>') +
+            '</a><div class="card-g__body">' +
+            (it.cl ? '<p class="card-g__cat"><a href="' + (it.cu || '#') + '">' + esc(it.cl) + '</a></p>' : '') +
+            '<h3 class="card-g__title"><a href="' + it.u + '">' + esc(it.t) + '</a></h3>' +
+            '<p class="card__excerpt clamp-3">' + esc(it.e) + '</p>' +
+            '<p class="card-g__by"><span class="card__author"><span class="aname">' + av + '<span class="aname__t">' + esc(it.a) + '</span></span></span><span aria-hidden="true"> · </span><time>' + esc(it.d) + '</time></p></div></article>';
         }).join('');
         if (total > 1 && pagesEl) {
           var h = '';
