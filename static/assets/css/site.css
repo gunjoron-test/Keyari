@@ -1827,3 +1827,36 @@ body.sx-open { overflow: hidden; }
 /* হিরো সেকশনেও অন্য সেকশনের মতো হালকা রঙিন পটি (পুরো প্রস্থ); পরের সেকশনের পটির সঙ্গে সরাসরি লাগানো */
 .home .hero.tone { padding-bottom: 0; margin-top: 64px; margin-bottom: 80px; }
 @media (max-width: 640px) { .home .hero.tone { margin-top: 56px; margin-bottom: 80px; } }
+
+/* ---------- মুখপাতার রঙিন পটি: সোজা কিনারার বদলে হালকা ঢেউ; পাশাপাশি পটির রং আলাদা ---------- */
+:root {
+  --tc-0: rgba(0, 166, 100, .075);     /* পুদিনা-সবুজ */
+  --tc-1: rgba(114, 114, 255, .075);   /* হালকা নীলচে-বেগুনি */
+  --tc-2: rgba(202, 226, 122, .26);    /* লাইম */
+  --tc-3: rgba(235, 178, 72, .12);     /* বালি-সোনালি */
+  --tc-4: rgba(42, 165, 190, .085);    /* আকাশি-নীলাভ */
+  --tc-5: rgba(47, 107, 56, .085);     /* গাঢ় সবুজাভ */
+}
+[data-scheme="dark"] {
+  --tc-0: rgba(0, 200, 120, .10);
+  --tc-1: rgba(130, 130, 255, .11);
+  --tc-2: rgba(202, 226, 122, .07);
+  --tc-3: rgba(235, 178, 72, .09);
+  --tc-4: rgba(60, 190, 215, .09);
+  --tc-5: rgba(120, 200, 120, .09);
+}
+.tc-0 { --tone: var(--tc-0); } .tc-1 { --tone: var(--tc-1); } .tc-2 { --tone: var(--tc-2); }
+.tc-3 { --tone: var(--tc-3); } .tc-4 { --tone: var(--tc-4); } .tc-5 { --tone: var(--tc-5); }
+/* জোড-সংখ্যার পটি: ওপরে আয়না-ঢেউ, নিচে সরল-ঢেউ; বিজোড়ে উল্টো — তাই জোড়া লাগা কিনারা ঠিক মেলে */
+.wv-0 { --m-top: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M1200%2020%20C940%2020%20840%208%20600%2014%20S260%2026%200%2010%20L0%2032%20L1200%2032%20Z%27/%3E%3C/svg%3E"); --m-bot: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M0%2020.6%20C260%2020.6%20360%208.6%20600%2014.6%20S940%2026.6%201200%2010.6%20L1200%200%20L0%200%20Z%27/%3E%3C/svg%3E"); }
+.wv-1 { --m-top: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M0%2020%20C260%2020%20360%208%20600%2014%20S940%2026%201200%2010%20L1200%2032%20L0%2032%20Z%27/%3E%3C/svg%3E"); --m-bot: url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%201200%2032%27%20preserveAspectRatio=%27none%27%3E%3Cpath%20d=%27M1200%2020.6%20C940%2020.6%20840%208.6%20600%2014.6%20S260%2026.6%200%2010.6%20L0%200%20L1200%200%20Z%27/%3E%3C/svg%3E"); }
+.tone::before {
+  top: -56px; bottom: -56px;
+  -webkit-mask-image: var(--m-top), linear-gradient(#000, #000), var(--m-bot);
+  mask-image: var(--m-top), linear-gradient(#000, #000), var(--m-bot);
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 32px, 100% calc(100% - 64px), 100% 32px;
+  mask-size: 100% 32px, 100% calc(100% - 64px), 100% 32px;
+  -webkit-mask-position: 0 0, 0 32px, 0 100%;
+  mask-position: 0 0, 0 32px, 0 100%;
+}

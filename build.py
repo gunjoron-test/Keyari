@@ -922,8 +922,21 @@ def org_ld():
             "email": S.get("email"), "sameAs": [x for x in [S.get("facebook")] + list(S.get("social", {}).values()) if x]}
 
 
+def _tone_classes(html):
+    """মুখপাতার রঙিন পটিগুলোকে ক্রমানুসারে আলাদা রং (tc-0…5) ও ঢেউয়ের দিক (wv-0/1) দেওয়া হয় — পাশাপাশি দুটো কখনো এক রঙের হয় না,
+    আর এক পটির নিচের ঢেউ ঠিক পরের পটির ওপরের ঢেউয়ের সঙ্গে মেলে"""
+    n = [0]
+
+    def f(m):
+        i = n[0]
+        n[0] += 1
+        return 'class="' + m.group(1) + f' tc-{i % 6} wv-{i % 2}"'
+    return re.sub(r'class="([^"]*\btone\b[^"]*)"', f, html)
+
+
 def layout(*, title, description, path, body, active="", og_image="", og_type="website", ld=None,
            extra_head="", noindex=False, body_class="", fonts=None, prev_next=None):
+    body = _tone_classes(body)
     canonical = absu(path)
     full_title = title if title == SITE else f"{title} {SEP} {SITE}"
     desc = truncate(strip_tags(description or S.get("description", "")), 158)
