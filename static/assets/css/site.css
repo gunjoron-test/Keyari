@@ -1793,3 +1793,9 @@ body.sx-open { overflow: hidden; }
   .autoscroll .as-spd .as-spd__v { order: 2; }
   .autoscroll .as-spd [data-as-slower] { order: 3; }
 }
+
+/* থিম-টগল: সাদা গোল শেপ ঠিক আইকনের মাঝখানে (সূর্য/চাঁদ ৩২px ঘরের কেন্দ্রে ২৮px বৃত্ত) */
+.scheme-toggle::after { left: 6px; }
+[data-scheme="dark"] .scheme-toggle::after { transform: translateX(32px); }
+.site-header.is-compact .scheme-toggle::after { left: 6px; }
+[data-scheme="dark"] .site-header.is-compact .scheme-toggle::after { transform: translateX(28px); }
