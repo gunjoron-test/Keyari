@@ -358,7 +358,7 @@
       if (asLast) {
         var dt = Math.min(100, t - asLast) / 1000;
         if (asTouching || t <= asHoldUntil || Math.abs(cur - asSet) > 2.5) {
-          asPos = cur; // পাঠক নিজে স্ক্রল করেছেন — তাঁর অবস্থান থেকেই আবার শুরু
+          asPos = cur; asSet = cur; // পাঠক নিজে স্ক্রল করেছেন — তাঁর অবস্থান থেকেই আবার শুরু
         } else {
           asPos += BASE_PX * LEVELS[asIdx] * dt;
           asSet = asPos;
@@ -384,12 +384,20 @@
     function asStop() { asRun = false; asPaint(); asWake(); }
     var asClose = function () { asStop(); asPanel.hidden = true; asBox.classList.remove('has-panel'); };
     var asMenu = $('#as-menu'), asPlay = $('[data-as-play]', asBox), asDesk = window.matchMedia('(min-width: 768px)');
-    var asMenuSet = function (v) { if (!asMenu) return; asMenu.hidden = !v; asBox.classList.toggle('is-menu', v); asFab.setAttribute('aria-expanded', v ? 'true' : 'false'); };
+    var asMenuT;
+    var asMenuSet = function (v) {
+      if (!asMenu) return;
+      asMenu.hidden = !v; asBox.classList.toggle('is-menu', v); asFab.setAttribute('aria-expanded', v ? 'true' : 'false');
+      clearTimeout(asMenuT);
+      if (v) asMenuT = setTimeout(function () { asMenuSet(false); }, 5000);
+    };
+    // মেনুর ভেতরে/বইয়ে যেকোনো ক্লিক ৫ সেকেন্ডের গণনা আবার শুরু করে
+    asBox.addEventListener('pointerdown', function () { if (asMenu && !asMenu.hidden) { clearTimeout(asMenuT); asMenuT = setTimeout(function () { asMenuSet(false); }, 5000); } });
     asFab.addEventListener('click', function () {
       if (asMenu) asMenuSet(asMenu.hidden);
       else if (asRun) asStop(); else asStart();
     });
-    if (asPlay) asPlay.addEventListener('click', function () { if (asRun) asStop(); else { asStart(); if (asRun) asMenuSet(false); } });
+    if (asPlay) asPlay.addEventListener('click', function () { if (asRun) asStop(); else asStart(); });
     doc.addEventListener('pointerdown', function (e) { if (asMenu && !asMenu.hidden && !asBox.contains(e.target)) asMenuSet(false); });
     doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && asMenu && !asMenu.hidden && !asRun) asMenuSet(false); });
     asSlows.forEach(function (b) { b.addEventListener('click', function () { if (asIdx > 0) { asIdx--; store.set('keyari-as-speed', asIdx); asPaint(); } }); });
