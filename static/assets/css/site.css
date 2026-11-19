@@ -1514,3 +1514,6 @@ body.sx-open { overflow: hidden; }
 .member { align-items: center; text-align: center; }
 .member__bio { text-align: center; }
 .member__social { justify-content: center; }
+/* আমাদের কথা: লেখা ও কেয়ারি পরিবার হেডারের লোগোর সোজা নয়, পাতার মূল অংশের মতো একটু ভেতর থেকে শুরু (লেখার পাতার মতোই) */
+@media (min-width: 992px) { .page--about { padding-left: calc(var(--gutter) + 28px); } }
+@media (min-width: 1201px) { .page--about { padding-left: calc(var(--gutter) + 48px); } }
