@@ -54,6 +54,35 @@
     clearTimeout(toastT); toastT = setTimeout(function () { toastEl.hidden = true; }, ms || 2400);
   }
 
+  // ---------- টীকা: গোল সবুজ নম্বরে চাপলে ছোট পপআপ (পেছনটা ঝাপসা; বন্ধ করলে ঠিক যেখানে ছিলেন সেখানেই) ----------
+  var fnPop = null, fnLast = null;
+  function fnClose() {
+    if (!fnPop || fnPop.hidden) return;
+    fnPop.hidden = true; doc.body.classList.remove('fnp-open');
+    if (fnLast) { try { fnLast.focus({ preventScroll: true }); } catch (e) { fnLast.focus(); } }
+  }
+  function fnOpen(btn) {
+    if (!fnPop) {
+      fnPop = doc.createElement('div'); fnPop.className = 'fnp'; fnPop.hidden = true;
+      fnPop.innerHTML = '<div class="fnp__backdrop" data-fnp-close></div><div class="fnp__panel" role="dialog" aria-modal="true" aria-label="টীকা">' +
+        '<button class="fnp__x" type="button" data-fnp-close aria-label="বন্ধ করুন"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>' +
+        '<span class="fnp__num"></span><div class="fnp__text"></div></div>';
+      doc.body.appendChild(fnPop);
+      fnPop.addEventListener('click', function (e) { if (e.target.closest('[data-fnp-close]')) fnClose(); });
+      doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') fnClose(); });
+    }
+    fnLast = btn;
+    $('.fnp__num', fnPop).textContent = btn.textContent;
+    var tx = $('.fnp__text', fnPop); tx.textContent = '';
+    String(btn.getAttribute('data-fn-note') || '').split(/\n/).forEach(function (line, i) { if (i) tx.appendChild(doc.createElement('br')); tx.appendChild(doc.createTextNode(line)); });
+    fnPop.hidden = false; doc.body.classList.add('fnp-open');
+    var x = $('.fnp__x', fnPop); x && x.focus({ preventScroll: true });
+  }
+  doc.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.fn-dot');
+    if (b) { e.preventDefault(); fnOpen(b); }
+  });
+
   // ---------- ডার্ক মোড ----------
   $$('[data-scheme-toggle]').forEach(function (b) {
     b.addEventListener('click', function () {

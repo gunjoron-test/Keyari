@@ -340,14 +340,21 @@ def process_body(body, with_footnotes=True):
     notes = []
     if with_footnotes:
         def fn(m):
-            notes.append(html.unescape(m.group(1)))
-            n = len(notes)
-            return f'<sup class="fn-ref" id="fnref-{n}"><a href="#fn-{n}" aria-label="টীকা {bn(n)}">{bn(n)}</a></sup>'
-        b = re.sub(r'<sup class="fn-ref" data-note="([^"]*)"[^>]*>.*?</sup>', fn, b, flags=re.S)
+            tag = m.group(0)
+            nm = re.search(r'data-note="([^"]*)"', tag)
+            if not nm:
+                return tag
+            note = html.unescape(nm.group(1))
+            nn = re.search(r'data-fn="(\d+)"', tag)
+            idx = len(notes) + 1
+            n = int(nn.group(1)) if nn else idx
+            notes.append((n, note))
+            return (f'<sup class="fn-ref" id="fnref-{idx}"><button type="button" class="fn-dot" data-fn-note="{esc(note)}" '
+                    f'aria-haspopup="dialog" aria-label="টীকা {bn(n)}">{bn(n)}</button></sup>')
+        b = re.sub(r'<sup\b[^>]*\bclass="[^"]*\bfn-ref\b[^"]*"[^>]*>.*?</sup>', fn, b, flags=re.S)
         if notes:
-            items = "".join(f'<li id="fn-{i}">{esc(t)} <a href="#fnref-{i}" class="fn-back" aria-label="ফিরে যান">↩</a></li>'
-                            for i, t in enumerate(notes, 1))
-            b += f'<section class="footnotes" aria-label="টীকা"><h2 class="footnotes__title">টীকা ও তথ্যসূত্র</h2><ol>{items}</ol></section>'
+            items = "".join(f'<li value="{n}" id="fn-{i}">{esc(t)}</li>' for i, (n, t) in enumerate(notes, 1))
+            b += f'<section class="footnotes" aria-label="টীকা"><h2 class="footnotes__title">টীকা</h2><ol>{items}</ol></section>'
     return b
 
 
@@ -1061,7 +1068,7 @@ def layout(*, title, description, path, body, active="", og_image="", og_type="w
 <link rel="stylesheet" href="{u("/assets/css/fonts.css")}?v={BUILD_ID}">
 <link rel="stylesheet" href="{u("/assets/css/site.css")}?v={BUILD_ID}">
 <link rel="stylesheet" href="{u("/assets/css/styles.css")}?v={BUILD_ID}">
-<script>(function(){{try{{var s=localStorage.getItem('keyari-scheme');if(!s)s=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-scheme',s);localStorage.removeItem('keyari-fs')}}catch(e){{}}}})();window.KEYARI={{base:"{BASE}"}};</script>
+<script>(function(){{try{{var s=localStorage.getItem('keyari-scheme');if(!s)s=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-scheme',s);document.documentElement.classList.add('js');localStorage.removeItem('keyari-fs')}}catch(e){{}}}})();window.KEYARI={{base:"{BASE}"}};</script>
 <meta name="build" content="{BUILD_ID}">
 <script>(function(){{try{{var m=document.querySelector('meta[name=build]');if(!m||!window.fetch)return;var b=m.getAttribute('content');fetch("{u("/version.json")}?t="+Date.now(),{{cache:'no-store'}}).then(function(r){{return r.json()}}).then(function(j){{if(!j||!j.v||j.v===b)return;var k='keyari-rl';if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v);location.reload()}}).catch(function(){{}})}}catch(e){{}}}})();</script>
 {extra_head}

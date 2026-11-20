@@ -1,5 +1,5 @@
 // কেয়ারি রিচ-টেক্সট এডিটর — TinyMCE 6 (MIT) + InDesign/Word ধাঁচের টাইপোগ্রাফি টুল
-import { esc, toBnDigits, fixPunctuation, smartQuotes, promptBox } from './util.js';
+import { esc, toBnDigits, fixPunctuation, smartQuotes, promptBox, modal } from './util.js';
 
 const TINY = 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3';
 const LANG = 'https://cdn.jsdelivr.net/npm/tinymce-i18n@25.1.27/langs6/bn_BD.js';
@@ -123,7 +123,7 @@ const TIPS = {
   link: 'লিংক — নির্বাচিত লেখাকে ওয়েব-ঠিকানার সাথে যুক্ত করে (Ctrl+K)',
   image: 'ছবি — লেখার ভেতরে ছবি বসায়, ক্যাপশনসহ',
   table: 'টেবিল — ছক বসায়; পরে সারি, কলাম ও স্টাইল বদলানো যায়',
-  kfootnote: 'টীকা / ফুটনোট — লেখার শেষে ক্রমিক নম্বরসহ তথ্যসূত্র হয়ে যায় (Ctrl+Shift+F)',
+  kfootnote: 'টীকা — চাপলে পপআপে টীকা লিখুন; নম্বর নিজে বসে (Ctrl+Shift+F)',
   kmore: 'আরও টুল — অক্ষর, অনুচ্ছেদ, বিশেষ ব্লক ও বাংলা টুলের সারিগুলো দেখান বা লুকান',
   kcharstyle: 'অক্ষর স্টাইল — নির্বাচিত শব্দে সবুজ জোর, হাইলাইট, ঢেউ-দাগ ইত্যাদি বসায়',
   fontsize: 'লেখার আকার — নির্বাচিত অংশের অক্ষর ছোট বা বড় করে',
@@ -217,8 +217,8 @@ export async function createEditor(target, ctx) {
       *:focus,*:focus-visible,body.entry-content:focus{outline:none!important;box-shadow:none!important}
       body.entry-content{max-width:760px;margin:28px auto 80px;padding:0 28px;background:#fff;color:#29294B;font-family:'Noto Serif by Gunjoron',serif}
       body.entry-content p{margin:0 0 1.6em}
-      .fn-ref{color:#00A664;font-weight:700;cursor:help;border-bottom:1px dotted #00A664}
-      .fn-ref::after{content:" ✱";font-size:.7em}
+      sup.fn-ref{display:inline-grid;place-items:center;min-width:1.55em;height:1.55em;padding:0 .3em;box-sizing:border-box;border-radius:50%;background:#00A664;color:#fff;font-size:.62em;font-weight:700;line-height:1;vertical-align:.7em;cursor:pointer;margin:0 .12em;user-select:none}
+      sup.fn-ref:hover{background:#00955A}
       .k-box,.k-cols-2,.k-cols-3{outline:1px dashed #CCEDE0;outline-offset:4px}
       img[data-mce-selected]{outline:3px solid #00A664}
       .mce-content-body [data-mce-selected="inline-boundary"]{background:#CCEDE0}
@@ -723,17 +723,40 @@ function setupKeyari(ed, ctx, paraStyles, charStyles) {
     ]),
   });
 
-  // ---------- টীকা / ফুটনোট ----------
-  const kfoot = async () => {
-    const cur = ed.dom.getParent(ed.selection.getNode(), 'sup.fn-ref');
-    const v = await promptBox(cur ? 'টীকা সম্পাদনা' : 'টীকা / ফুটনোট যোগ', 'টীকার লেখা (প্রকাশের সময় লেখার শেষে ক্রমিক নম্বরসহ তালিকা হবে)', cur ? cur.getAttribute('data-note') : '', { multiline: true });
-    if (v === null) return;
-    if (cur) { if (v.trim()) cur.setAttribute('data-note', v.trim()); else ed.dom.remove(cur); }
-    else if (v.trim()) { ed.selection.collapse(false); ed.insertContent(`<sup class="fn-ref" data-note="${esc(v.trim())}" title="${esc(v.trim())}">*</sup>&nbsp;`); }
-    ed.focus();
+  // ---------- টীকা / ফুটনোট (পপআপে লেখা; নম্বর নিজে বসে, চাইলে বদলানো যায়) ----------
+  const fnNums = () => [...ed.getBody().querySelectorAll('sup.fn-ref')].map((s) => parseInt(s.getAttribute('data-fn'), 10)).filter((n) => !isNaN(n));
+  const fnNext = () => { const all = fnNums(); const cnt = ed.getBody().querySelectorAll('sup.fn-ref').length; return Math.max(all.length ? Math.max(...all) : 0, cnt) + 1; };
+  const fnHtml = (n, note) => `<sup class="fn-ref" data-note="${esc(note)}" data-fn="${n}" contenteditable="false">${toBnDigits(String(n))}</sup>`;
+  const kfoot = (target) => {
+    const cur = target && target.nodeType === 1 ? target : ed.dom.getParent(ed.selection.getNode(), 'sup.fn-ref');
+    const curNote = cur ? (cur.getAttribute('data-note') || '') : '';
+    const curNum = cur ? (parseInt(cur.getAttribute('data-fn'), 10) || fnNext()) : fnNext();
+    const m = modal({
+      title: cur ? 'টীকা সম্পাদনা' : 'টীকা যোগ করুন',
+      body: `<div class="field" style="max-width:180px"><label>টীকা নম্বর</label><input class="input" type="number" min="1" data-n value="${curNum}"><p class="help">নম্বর নিজে থেকে ক্রমানুসারে বসে; চাইলে বদলান।</p></div>
+        <div class="field" style="margin-bottom:0"><label>টীকার লেখা</label><textarea class="textarea" rows="5" data-t placeholder="পাঠক নম্বরে চাপ দিলে এই লেখাটি পপআপে দেখবেন">${esc(curNote)}</textarea></div>`,
+      foot: `${cur ? '<button class="btn btn--ghost" data-del style="margin-right:auto;color:#c0392b">মুছুন</button>' : ''}<button class="btn btn--light" data-no>বাতিল</button><button class="btn" data-ok>${cur ? 'হালনাগাদ' : 'যোগ করুন'}</button>`,
+    });
+    const ta = m.el.querySelector('[data-t]'), nn = m.el.querySelector('[data-n]');
+    setTimeout(() => ta.focus(), 40);
+    m.el.querySelector('[data-no]').onclick = () => { m.close(); ed.focus(); };
+    const del = m.el.querySelector('[data-del]');
+    if (del) del.onclick = () => { ed.undoManager.transact(() => ed.dom.remove(cur)); m.close(); ed.focus(); };
+    m.el.querySelector('[data-ok]').onclick = () => {
+      const note = ta.value.trim();
+      const n = Math.max(1, parseInt(nn.value, 10) || curNum);
+      if (!note) { ta.focus(); return; }
+      m.close();
+      ed.undoManager.transact(() => {
+        if (cur) { cur.setAttribute('data-note', note); cur.setAttribute('data-fn', String(n)); cur.textContent = toBnDigits(String(n)); }
+        else { ed.selection.collapse(false); ed.insertContent(fnHtml(n, note) + '&nbsp;'); }
+      });
+      ed.focus();
+    };
   };
-  ed.ui.registry.addButton('kfootnote', { icon: 'kfoot', tooltip: 'টীকা / ফুটনোট', onAction: kfoot });
-  ed.ui.registry.addMenuItem('kfootnote', { icon: 'kfoot', text: 'টীকা / ফুটনোট…', onAction: kfoot });
+  ed.on('click', (ev) => { const s = ev.target && ev.target.closest && ev.target.closest('sup.fn-ref'); if (s) { ev.preventDefault(); kfoot(s); } });
+  ed.ui.registry.addButton('kfootnote', { icon: 'kfoot', tooltip: 'টীকা / ফুটনোট', onAction: () => kfoot() });
+  ed.ui.registry.addMenuItem('kfootnote', { icon: 'kfoot', text: 'টীকা / ফুটনোট…', onAction: () => kfoot() });
 
   // ---------- বাংলা টুল ----------
   const report = (n, what) => ed.notificationManager.open({ text: n ? `${n}টি জায়গায় ${what}` : 'বদলানোর মতো কিছু পাওয়া যায়নি', type: n ? 'success' : 'info', timeout: 2200 });
@@ -756,6 +779,6 @@ function setupKeyari(ed, ctx, paraStyles, charStyles) {
   // কি-বোর্ড শর্টকাট
   ed.addShortcut('meta+shift+p', 'অনুচ্ছেদ বিন্যাস', openPara);
   ed.addShortcut('meta+shift+c', 'অক্ষর বিন্যাস', openChar);
-  ed.addShortcut('meta+shift+f', 'টীকা', kfoot);
+  ed.addShortcut('meta+shift+f', 'টীকা', () => kfoot());
   ed.addShortcut('meta+shift+8', 'দৃশ্য-বিরতি', kscene);
 }

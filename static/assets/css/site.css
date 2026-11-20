@@ -2031,3 +2031,19 @@ body.sx-open { overflow: hidden; }
 
 /* বার্তা-পপআপ: লোগো ছাড়া, শুধু ব্র্যান্ড সবুজ বক্স ও লেখা */
 .toast { padding: 12px 22px; text-align: center; justify-content: center; }
+
+/* ---------- টীকা: লেখার ভেতরে গোল ব্র্যান্ড-সবুজ নম্বর + মিনিমাল পপআপ ---------- */
+.fn-ref { line-height: 0; }
+.fn-dot { display: inline-grid; place-items: center; min-width: 1.55em; height: 1.55em; padding: 0 .3em; margin: 0 .12em; box-sizing: border-box; border: 0; border-radius: 50%; background: var(--accent); color: #fff; font: inherit; font-size: .62em; font-weight: 700; line-height: 1; vertical-align: .75em; cursor: pointer; transition: background .2s, transform .15s, box-shadow .2s; }
+.fn-dot:hover, .fn-dot:focus-visible { background: var(--accent-hover, #00955A); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 166, 100, .35); }
+.js .footnotes { display: none; }
+.fnp { position: fixed; inset: 0; z-index: 620; display: grid; place-items: center; padding: 20px; }
+.fnp[hidden] { display: none; }
+.fnp__backdrop { position: absolute; inset: 0; background: rgba(24, 24, 40, .38); -webkit-backdrop-filter: blur(10px) saturate(120%); backdrop-filter: blur(10px) saturate(120%); animation: sx-fade .25s ease both; }
+.fnp__panel { position: relative; width: min(440px, 100%); max-height: min(78vh, 560px); overflow-y: auto; padding: 22px 24px 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 30px 80px rgba(24, 24, 40, .3); animation: sx-in .28s cubic-bezier(.22, .61, .36, 1) both; }
+.fnp__num { display: inline-grid; place-items: center; min-width: 28px; height: 28px; padding: 0 8px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+.fnp__text { font-size: 17px; line-height: 1.85; color: var(--text); overflow-wrap: anywhere; padding-right: 8px; }
+.fnp__x { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--text); display: grid; place-items: center; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.fnp__x:hover, .fnp__x:focus-visible { background: var(--accent); border-color: var(--accent); color: #fff; }
+body.fnp-open { overflow: hidden; }
+@media (max-width: 575.98px) { .fnp { padding: 16px; } .fnp__panel { padding: 20px 20px 22px; } .fnp__text { font-size: 16.5px; } }
