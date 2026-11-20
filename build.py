@@ -1228,9 +1228,13 @@ def build_home():
             side.append(POST_BY_ID[i])
     side = side[:3]
     hero_ids = ({id(main)} if main else set()) | {id(p) for p in side}
-    # পাঠকের পছন্দ: কেবল পাঠকের পড়া লেখা, বেশি পড়া আগে (সমান হলে নতুন আগে)। নতুন লেখা পড়া না হওয়া পর্যন্ত এখানে আসে না
-    feed = [p for p in POSTS if id(p) not in hero_ids and view_count(p) > 0]
-    feed.sort(key=lambda p: -view_count(p))
+    # পাঠকের পছন্দ: পড়ার সংখ্যা এলে কেবল পাঠকের পড়া লেখা, বেশি পড়া আগে। সংখ্যা না থাকা পর্যন্ত (সাময়িক) পুরোনো লেখা আগে, নতুন পরে
+    feed = [p for p in POSTS if id(p) not in hero_ids]
+    if any(view_count(p) for p in feed):
+        feed = [p for p in feed if view_count(p) > 0]
+        feed.sort(key=lambda p: -view_count(p))
+    else:
+        feed.sort(key=post_sort_key)
     total = max(1, math.ceil(len(feed) / per))
     sections = {s["type"]: s for s in HOME.get("sections", [])}
 
@@ -1667,7 +1671,10 @@ def build_all_posts():
     sections = {x["type"]: x for x in HOME.get("sections", [])}
     title = sections.get("feed", {}).get("title", "পাঠকের পছন্দ")
     items = list(POSTS)
-    items.sort(key=lambda p: -view_count(p))  # বেশি পড়া আগে; পড়া-না-হওয়া লেখা সবার শেষে (নতুন আগে)
+    if any(view_count(p) for p in items):
+        items.sort(key=lambda p: -view_count(p))  # বেশি পড়া আগে; পড়া-না-হওয়া লেখা সবার শেষে (নতুন আগে)
+    else:
+        items.sort(key=post_sort_key)  # সংখ্যা না থাকা পর্যন্ত (সাময়িক): পুরোনো আগে, নতুন পরে
     header_html = f'<h1 class="archive-title">{esc(title)}</h1>'
     archive_page(path="/সব-লেখা/", title=title, items=items, crumbs=[("মুখপাতা", "/"), (title, "/সব-লেখা/")], header_html=header_html,
                  description=f"{SITE}-এর সব লেখা — {title} ক্রমে।", active="মুখপাতা")
