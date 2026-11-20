@@ -2061,3 +2061,7 @@ body.fnp-open { overflow: hidden; }
 .fn-ref { font-size: inherit; vertical-align: baseline; line-height: 0; }
 .fn-dot { font-size: .56em; vertical-align: .32em; }
 .fn-dot--paren, .fn-dot--square { font-size: .72em; vertical-align: .3em; }
+
+/* টীকার সার্কেল: আইকন-বোতামের মতো — সাধারণ অবস্থায় শুধু সবুজ সার্কেল-রেখা (ভেতর ফাঁকা), মাউস নিলে পুরো সার্কেল সবুজ */
+.fn-dot:not(.fn-dot--paren):not(.fn-dot--square) { background: var(--surface); color: var(--accent); border: 1px solid var(--accent); }
+.fn-dot:not(.fn-dot--paren):not(.fn-dot--square):hover, .fn-dot:not(.fn-dot--paren):not(.fn-dot--square):focus-visible { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 5px 14px rgba(0, 166, 100, .32); }
