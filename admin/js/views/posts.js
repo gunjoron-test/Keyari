@@ -32,7 +32,7 @@ export function postsView(view, params) {
       <select class="select" data-month><option value="">সব মাস</option>${months.map((m) => `<option value="${m}">${bnDate(m + '-01').replace(/^\S+\s/, '')}</option>`).join('')}</select>
     </div>
     <div class="toolbar" data-bulk hidden><b data-bn></b>
-      <select class="select" data-bulk-act><option value="">বাছাই করা লেখায়…</option>${can('publish') ? '<option value="published">প্রকাশ করুন</option>' : ''}<option value="draft">খসড়া করুন</option><option value="review">পর্যালোচনায় পাঠান</option>${can('others') ? '<option value="pick">পাঠকের পছন্দে যোগ/বাদ</option><option value="featured">সম্পাদকের বাছাই যোগ/বাদ</option>' : ''}<option value="trash">ট্র্যাশে সরান</option><option value="delete">স্থায়ীভাবে মুছুন</option></select>
+      <select class="select" data-bulk-act><option value="">বাছাই করা লেখায়…</option>${can('publish') ? '<option value="published">প্রকাশ করুন</option>' : ''}<option value="draft">খসড়া করুন</option><option value="review">পর্যালোচনায় পাঠান</option><option value="trash">ট্র্যাশে সরান</option><option value="delete">স্থায়ীভাবে মুছুন</option></select>
       <button class="btn btn--sm" data-bulk-go>প্রয়োগ</button></div>
     <div class="card" style="padding:0"><div class="table-wrap"><table class="table"><thead><tr>
       <th style="width:36px"><input type="checkbox" data-all aria-label="সব বাছাই"></th><th class="hide-sm"></th><th>শিরোনাম</th><th class="hide-sm">লেখক</th><th class="hide-sm">বিভাগ</th><th>তারিখ</th><th>অবস্থা</th></tr></thead><tbody data-body></tbody></table></div></div>
@@ -60,7 +60,7 @@ export function postsView(view, params) {
     $('[data-body]', view).innerHTML = rows.map((p) => `<tr>
       <td><input type="checkbox" data-sel="${esc(p.id)}" ${selected.has(p.id) ? 'checked' : ''} aria-label="বাছাই"></td>
       <td class="hide-sm">${p.cover?.src ? `<img class="thumb" src="${esc(imgUrl(p.cover.src))}" alt="" loading="lazy">` : '<span class="thumb"></span>'}</td>
-      <td><a class="t-title" href="#/post/${encodeURIComponent(p.id)}">${esc(p.title || '(শিরোনামহীন)')}</a>${p.pick ? ' <span class="badge" title="পাঠকের পছন্দ">★</span>' : ''}${p.featured ? ' <span class="badge" title="সম্পাদকের বাছাই">◆</span>' : ''}${p.series ? ` <span class="badge">${esc(p.series.name)} · ${bn(p.series.part || '')}</span>` : ''}
+      <td><a class="t-title" href="#/post/${encodeURIComponent(p.id)}">${esc(p.title || '(শিরোনামহীন)')}</a>${p.series ? ` <span class="badge">${esc(p.series.name)} · ${bn(p.series.part || '')}</span>` : ''}
         <div class="t-actions"><a href="#/post/${encodeURIComponent(p.id)}">সম্পাদনা</a>${p.status === 'published' ? `<a href="${esc(siteUrl(postPath(p)))}" target="_blank" rel="noopener">দেখুন ↗</a>` : ''}<a href="#" data-dup="${esc(p.id)}">অনুলিপি</a><span class="help">${bn(wordCount(p.body))} শব্দ</span></div></td>
       <td class="hide-sm">${esc(authorName(p.author))}</td>
       <td class="hide-sm">${(p.categories || []).map((c) => esc(catName(c))).join(', ')}</td>
@@ -477,8 +477,6 @@ function sidePanels(kind, d) {
   const seriesNames = [...new Set(S.posts.filter((p) => p.series?.name).map((p) => p.series.name))];
   return `<details class="panel" open><summary>প্রকাশ</summary><div class="panel__body">${statusSel}${dateInput}
       <label class="check"><input type="checkbox" data-s="comments" ${d.comments !== false ? 'checked' : ''}> মন্তব্য চালু</label>
-      ${can('others') ? `<label class="check"><input type="checkbox" data-s="pick" ${d.pick ? 'checked' : ''}> ★ পাঠকের পছন্দ (স্লাইডারে)</label>
-      <label class="check"><input type="checkbox" data-s="featured" ${d.featured ? 'checked' : ''}> ◆ সম্পাদকের বাছাই</label>` : ''}
       <div style="margin-top:10px">${danger}</div></div></details>
     ${can('others') ? heroPanel(d) : ''}
     <details class="panel" open><summary>বিভাগ</summary><div class="panel__body"><div class="cat-tree">${catTree}</div><p class="help">উপ-বিভাগ বাছলে মূল বিভাগও নিজে থেকে বাছাই হবে।</p></div></details>
