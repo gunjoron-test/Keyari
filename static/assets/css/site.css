@@ -2028,3 +2028,6 @@ body.sx-open { overflow: hidden; }
 /* মন্তব্যের নিচের বার্তা: ব্র্যান্ড-রঙের নরম বক্স */
 .cm__msg.is-ok { background: color-mix(in srgb, var(--accent) 10%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); border-radius: 12px; padding: 10px 14px; }
 .cm__msg.is-err { background: rgba(192, 57, 43, .08); border: 1px solid rgba(192, 57, 43, .3); border-radius: 12px; padding: 10px 14px; }
+
+/* বার্তা-পপআপ: লোগো ছাড়া, শুধু ব্র্যান্ড সবুজ বক্স ও লেখা */
+.toast { padding: 12px 22px; text-align: center; justify-content: center; }

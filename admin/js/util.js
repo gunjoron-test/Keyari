@@ -53,12 +53,10 @@ export const clone = (o) => JSON.parse(JSON.stringify(o));
 export const jsonText = (o) => JSON.stringify(o, null, 2) + '\n';
 
 // ---------- টোস্ট ----------
-export const BRAND_MARK = '<svg viewBox="106.35 424.15 330 330" aria-hidden="true"><path d="M168.38,742.58v-309a228.72,228.72,0,0,0,0,309Z"/><path d="M308.48,435.94l-.41-.33L204,627.29l120.3,117.4V472.29L389.08,529a34.37,34.37,0,0,0-20.38,60.56l-.22.23c.88.6,1.78,1.15,2.68,1.67a34.24,34.24,0,0,0,19.76,6.25,34.65,34.65,0,0,0,7.94-.93c27.95-4.76,49.69-39.92,24.28-93.94C393.81,440.46,313.87,436.16,308.48,435.94Z"/></svg>';
 export function toast(msg, type = '') {
   const el = document.createElement('div');
   el.className = 'toast' + (type ? ' toast--' + type : '');
-  el.innerHTML = '<span class="toast__ico">' + BRAND_MARK + '</span><span class="toast__txt"></span>';
-  el.querySelector('.toast__txt').textContent = msg;
+  el.textContent = msg;
   $('#toasts').appendChild(el);
   setTimeout(() => el.remove(), type === 'err' ? 6000 : 3200);
 }
@@ -68,7 +66,7 @@ export function modal({ title, body, foot, wide = false, onClose }) {
   const back = document.createElement('div');
   back.className = 'modal-back';
   back.innerHTML = `<div class="modal${wide ? ' modal--wide' : ''}" role="dialog" aria-modal="true" aria-label="${esc(title)}">
-    <div class="modal__head"><span class="modal__brand">${BRAND_MARK}</span><h2>${esc(title)}</h2><button class="btn btn--ghost btn--icon" data-x aria-label="বন্ধ করুন">✕</button></div>
+    <div class="modal__head"><h2>${esc(title)}</h2><button class="btn btn--ghost btn--icon" data-x aria-label="বন্ধ করুন">✕</button></div>
     <div class="modal__body"></div>${foot !== false ? '<div class="modal__foot"></div>' : ''}</div>`;
   const bodyEl = $('.modal__body', back);
   if (typeof body === 'string') bodyEl.innerHTML = body; else if (body) bodyEl.appendChild(body);

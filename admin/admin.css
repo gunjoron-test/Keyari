@@ -420,3 +420,7 @@ body.ed-fullscreen { overflow: hidden; }
 .tox .tox-button--secondary { border-radius: var(--r-md) !important; }
 .tox .tox-notification, .tox .tox-snackbar { border-radius: 14px !important; }
 .tox .tox-snackbar { background: linear-gradient(180deg, #1bb97a, #00A664 58%, #008c55) !important; color: #fff !important; border: 0 !important; }
+
+/* অ্যাডমিনের বার্তা ও মোডাল: লোগো ছাড়া */
+.toast { padding: 11px 20px; }
+.modal__head { padding-left: 22px; }

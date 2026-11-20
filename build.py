@@ -975,7 +975,7 @@ def footer():
 </footer>
 <button class="to-top" type="button" data-to-top aria-label="উপরে যান">
   <svg class="to-top__ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22"/></svg>{icon("up", 20)}</button>
-<div class="toast" role="status" aria-live="polite" hidden><span class="toast__ico"><svg viewBox="106.35 424.15 330 330" aria-hidden="true"><path d="M168.38,742.58v-309a228.72,228.72,0,0,0,0,309Z"/><path d="M308.48,435.94l-.41-.33L204,627.29l120.3,117.4V472.29L389.08,529a34.37,34.37,0,0,0-20.38,60.56l-.22.23c.88.6,1.78,1.15,2.68,1.67a34.24,34.24,0,0,0,19.76,6.25,34.65,34.65,0,0,0,7.94-.93c27.95-4.76,49.69-39.92,24.28-93.94C393.81,440.46,313.87,436.16,308.48,435.94Z"/></svg></span><span class="toast__txt"></span></div>'''
+<div class="toast" role="status" aria-live="polite" hidden><span class="toast__txt"></span></div>'''
 
 
 def jsonld(obj):
@@ -1985,6 +1985,17 @@ def build_static():
     (DIST / "assets" / "css" / "styles.css").write_text(style_css(), "utf-8")
     if ADMIN.exists():
         shutil.copytree(ADMIN, DIST / "admin", dirs_exist_ok=True)
+        # অ্যাডমিনের সব মডিউল/স্টাইলে বিল্ড-সংস্করণ বসানো — গিটহাব পেজেস-এর ১০ মিনিটের ক্যাশে পুরোনো কোড আটকে থাকবে না
+        _ad = DIST / "admin"
+        for _f in _ad.rglob("*.js"):
+            _t = _f.read_text(encoding="utf-8")
+            _t = re.sub(r"""((?:from\s+|import\()\s*['"])(\.{1,2}/[^'"?]+\.js)(['"])""", lambda m: m.group(1) + m.group(2) + "?v=" + BUILD_ID + m.group(3), _t)
+            _f.write_text(_t, encoding="utf-8")
+        _ix = _ad / "index.html"
+        if _ix.exists():
+            _h = _ix.read_text(encoding="utf-8")
+            _h = _h.replace('src="js/app.js"', 'src="js/app.js?v=' + BUILD_ID + '"').replace('admin.css"', 'admin.css?v=' + BUILD_ID + '"')
+            _ix.write_text(_h, encoding="utf-8")
     repo = os.environ.get("GITHUB_REPOSITORY", "")
     owner, _, name = repo.partition("/")
     cfg = {"owner": owner, "repo": name, "branch": os.environ.get("GITHUB_REF_NAME", "main"),
