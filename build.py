@@ -1198,7 +1198,7 @@ def build_home():
     def on(t):
         return sections.get(t, {}).get("enabled", True)
 
-    for page in range(1, total + 1):
+    for page in (1,):  # হোম শুধু একটি পাতা; বাকি সব লেখা /সব-লেখা/ আর্কাইভে (পাতা ১, ২, ৩…)
         chunk = feed[(page - 1) * per: page * per]
         parts = []
         if page == 1:
@@ -1243,7 +1243,7 @@ def build_home():
         feed_title = sections.get("feed", {}).get("title", "পাঠকের পছন্দ")
         parts.append(f'''<div class="container feed-wrap{" feed-wrap--top" if page > 1 else " tone tone-1"}">
   <section class="feed" aria-labelledby="feed-h">
-    {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), u("/page/2/") if (page == 1 and total > 1) else None, "সব লেখা", h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
+    {section_head(feed_title if page == 1 else feed_title + " — পাতা " + bn(page), u("/সব-লেখা/") if feed else None, "সব লেখা", h="h2").replace('class="sec-head__title"', 'class="sec-head__title" id="feed-h"')}
     {more_grid("".join(card_g(p) for p in chunk), len(chunk), "feed__list more-grid")}
     {pagination(page, total, "/") if page > 1 else ""}
   </section>
@@ -1286,6 +1286,11 @@ def build_home():
         path = "/" if page == 1 else f"/page/{page}/"
         prev_p = None if page == 1 else ("/" if page == 2 else f"/page/{page - 1}/")
         next_p = f"/page/{page + 1}/" if page < total else None
+        for n_old in range(2, total + 1):
+            tgt = absu("/সব-লেখা/")
+            write(f"/page/{n_old}/", '<!doctype html><html lang="bn"><meta charset="utf-8"><title>পাঠকের পছন্দ</title>'
+                  f'<link rel="canonical" href="{tgt}"><meta name="robots" content="noindex">'
+                  f'<meta http-equiv="refresh" content="0;url={u("/সব-লেখা/")}"><p><a href="{u("/সব-লেখা/")}">সব লেখা</a></p></html>')
         write(path, layout(
             title=SITE if page == 1 else f"সর্বশেষ লেখা — পাতা {bn(page)}",
             description=S.get("description"), path=path, body="\n".join(parts), active="মুখপাতা",
@@ -1616,6 +1621,20 @@ def archive_page(*, path, title, items, crumbs, header_html, description, active
         write(ppath, layout(title=title if page == 1 else f"{title} — পাতা {bn(page)}", description=description,
                             path=ppath, body=body, active=active, ld=[{"@type": ld_type, "url": absu(ppath), "name": title, "inLanguage": "bn"}, bc_ld],
                             og_image=(chunk[0]["cover"].get("src") if chunk else ""), prev_next=(prev_p, next_p)))
+
+
+def build_all_posts():
+    """/সব-লেখা/ — সব লেখা পাঠকের পছন্দের ক্রমে (বেশি পড়া আগে; না থাকলে পছন্দ-চিহ্নিত, তারপর নতুন); পাতা ১, ২, ৩… অন্য আর্কাইভের মতোই"""
+    sections = {x["type"]: x for x in HOME.get("sections", [])}
+    title = sections.get("feed", {}).get("title", "পাঠকের পছন্দ")
+    items = list(POSTS)
+    if any(view_count(p) for p in items):
+        items.sort(key=lambda p: -view_count(p))
+    else:
+        items.sort(key=lambda p: 0 if p.get("pick") else 1)
+    header_html = f'<p class="sec-label">সব লেখা · {bn(len(items))}টি</p><h1 class="archive-title">{esc(title)}</h1>'
+    archive_page(path="/সব-লেখা/", title=title, items=items, crumbs=[("মুখপাতা", "/"), (title, "/সব-লেখা/")], header_html=header_html,
+                 description=f"{SITE}-এর সব লেখা — {title} ক্রমে।", active="মুখপাতা")
 
 
 def build_categories():
@@ -1990,6 +2009,7 @@ def main():
     DIST.mkdir()
     build_static()
     build_home()
+    build_all_posts()
     for p in POSTS:
         build_post(p)
     build_categories()
@@ -2003,7 +2023,7 @@ def main():
     build_search()
     build_404()
     build_feeds()
-    extra = ["/বিষয়সূচি/", "/লেখক-তালিকা/", "/আয়োজন/", "/সংখ্যাগুচ্ছ/", "/ধারাবাহিক/"] + [f"/{p['slug']}/" for p in PAGES] + \
+    extra = ["/বিষয়সূচি/", "/লেখক-তালিকা/", "/আয়োজন/", "/সংখ্যাগুচ্ছ/", "/ধারাবাহিক/", "/সব-লেখা/"] + [f"/{p['slug']}/" for p in PAGES] + \
             [ayojon_path(a) for a in AYOJON] + [issue_path(x) for x in ISSUES] + [f"/ধারাবাহিক/{s}/" for s in SERIES] + (["/ভিডিও/"] if (DIST / "ভিডিও" / "index.html").exists() else [])
     build_sitemaps(extra)
     (DIST / "version.json").write_text(json.dumps({"v": BUILD_ID}), encoding="utf-8")
