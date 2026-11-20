@@ -1632,7 +1632,7 @@ def build_all_posts():
         items.sort(key=lambda p: -view_count(p))
     else:
         items.sort(key=lambda p: 0 if p.get("pick") else 1)
-    header_html = f'<p class="sec-label">সব লেখা · {bn(len(items))}টি</p><h1 class="archive-title">{esc(title)}</h1>'
+    header_html = f'<h1 class="archive-title">{esc(title)}</h1>'
     archive_page(path="/সব-লেখা/", title=title, items=items, crumbs=[("মুখপাতা", "/"), (title, "/সব-লেখা/")], header_html=header_html,
                  description=f"{SITE}-এর সব লেখা — {title} ক্রমে।", active="মুখপাতা")
 
@@ -1649,8 +1649,7 @@ def build_categories():
         if c.get("parent") and c["parent"] in CAT:
             sib = CAT[c["parent"]]["children"]
             siblings = "".join(f'<a class="pill-lg pill-lg--sm{" is-active" if k["slug"] == c["slug"] else ""}" href="{cat_url(k["slug"])}">{esc(k["name"])}</a>' for k in sib)
-        header_html = f'''<p class="sec-label">{"উপ-বিভাগ" if c.get("parent") else "বিভাগ"} · {bn(len(items))}টি লেখা</p>
-<h1 class="archive-title">{esc(c["name"])}</h1>
+        header_html = f'''<h1 class="archive-title">{esc(c["name"])}</h1>
 {f'<p class="archive-desc">{esc(c["description"])}</p>' if c.get("description") else ""}
 {f'<div class="archive-kids">{kids or siblings}</div>' if (kids or siblings) else ""}'''
         archive_page(path=cat_path(c["slug"]), title=c.get("seo_title") or c["name"], items=items, crumbs=crumbs, header_html=header_html,
@@ -1796,7 +1795,7 @@ def build_ayojon():
                 f'<a class="series-card" href="{u(ayojon_path(x))}">{img_tag(x.get("banner", {}).get("src"), x["title"], "series-card__img")}<span class="series-card__body"><span class="series-card__name">{esc(x["title"])}</span><span class="series-card__count">{bn(len(x.get("posts", [])))}টি লেখা</span></span></a>'
                 for x in others) + "</div></section>"
         body = f'''<div class="container page page--ayojon">{bc_html}
-<header class="page-hero"><p class="sec-label">আয়োজন{(" · সংখ্যা " + bn(a["number"])) if a.get("number") else ""}</p>
+<header class="page-hero">
 <h1 class="page-title">{esc(a["title"])}</h1>{f'<p class="page-lead">{esc(a["subtitle"])}</p>' if a.get("subtitle") else ""}</header>
 <figure class="page-banner">{img_tag(a.get("banner", {}).get("src"), a.get("banner", {}).get("alt") or a["title"], "page-banner__img", eager=True)}</figure>
 <div class="entry-content entry-content--page ay-editorial"><p class="sec-label">সম্পাদকীয়</p>{process_body(a.get("editorial", ""))}</div>
@@ -1846,7 +1845,7 @@ def build_issues():
     for x in ISSUES:
         ps = [POST_BY_ID[i] for i in x.get("posts", []) if i in POST_BY_ID]
         num = ("সংখ্যা " + bn(x["number"])) if x.get("number") else "বিশেষ সংখ্যা"
-        header_html = (f'<p class="sec-label">{num}</p><h1 class="archive-title">{esc(x["title"])}</h1>'
+        header_html = (f'<h1 class="archive-title">{esc(x["title"])}</h1>'
                        + (f'<p class="archive-desc">{esc(x["summary"])}</p>' if x.get("summary") else ""))
         archive_page(path=issue_path(x), title=x["title"] + " — সংখ্যাগুচ্ছ", items=ps, header_html=header_html, card_fn=card_g,
                      crumbs=[("মুখপাতা", "/"), ("সংখ্যাগুচ্ছ", "/সংখ্যাগুচ্ছ/"), (x["title"], issue_path(x))],
@@ -1862,7 +1861,7 @@ def build_series():
                                 body=f'<div class="container archive">{bc_html}<header class="archive-header"><h1 class="archive-title">ধারাবাহিক</h1></header><div class="feed__list">{cards}</div></div>', ld=[bc_ld]))
     for s in items:
         path = f"/ধারাবাহিক/{s['slug']}/"
-        header_html = f'<p class="sec-label">ধারাবাহিক · {bn(len(s["posts"]))}টি পর্ব</p><h1 class="archive-title">{esc(s["name"])}</h1><p class="archive-desc">{esc(s["posts"][0]["_author"]["name"])}</p>'
+        header_html = f'<h1 class="archive-title">{esc(s["name"])}</h1><p class="archive-desc">{esc(s["posts"][0]["_author"]["name"])}</p>'
         archive_page(path=path, title=s["name"] + " — ধারাবাহিক", items=s["posts"], header_html=header_html,
                      crumbs=[("মুখপাতা", "/"), ("ধারাবাহিক", "/ধারাবাহিক/"), (s["name"], path)],
                      description=f'{s["name"]} — সব পর্ব একসাথে। {SITE}')
@@ -1889,7 +1888,7 @@ def build_tags():
             tags.setdefault(t, []).append(p)
     for t, items in tags.items():
         path = f"/tag/{slugify(t)}/"
-        archive_page(path=path, title=f"#{t}", items=items, header_html=f'<p class="sec-label">ট্যাগ</p><h1 class="archive-title">#{esc(t)}</h1>',
+        archive_page(path=path, title=f"#{t}", items=items, header_html=f'<h1 class="archive-title">#{esc(t)}</h1>',
                      crumbs=[("মুখপাতা", "/"), (f"#{t}", path)], description=f"‘{t}’ বিষয়ক লেখা — {SITE}")
 
 

@@ -2006,3 +2006,15 @@ body.sx-open { overflow: hidden; }
 /* অনুসন্ধান-বক্সে "Esc"-এর জায়গায় সবুজ "খুঁজুন" বোতাম (পিসি ও মোবাইল দুই জায়গায়) */
 .sx__go { flex: none; height: 40px; min-height: 0; padding: 0 20px; font-size: 15px; border-radius: 10px; }
 @media (max-width: 575.98px) { .sx__go { height: 38px; padding: 0 16px; font-size: 14.5px; } }
+
+/* বক্স/পিল (বিষয়ের উপ-বিভাগ, লেখকের বিভাগ-ছাঁকনি, বিষয়-তালিকা): ছায়া ছাড়া, সরু বর্ডার; মাউস নিলে পুরো বক্স ব্র্যান্ড সবুজ — আইকন-বোতামের মতোই */
+.pill-lg, .chip-btn {
+  background: var(--surface); border: 1px solid var(--line); box-shadow: none; color: var(--text);
+  transition: transform .15s, box-shadow .2s, border-color .2s, background .2s, color .2s;
+}
+.pill-lg:hover, .pill-lg:focus-visible, .chip-btn:hover, .chip-btn:focus-visible {
+  transform: translateY(-2px); background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 8px 20px rgba(0, 166, 100, .28);
+}
+.pill-lg:hover .count, .pill-lg:focus-visible .count, .chip-btn:hover .count, .chip-btn:focus-visible .count { color: #e6fff4; }
+.pill-lg.is-active, .chip-btn.is-active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: none; }
+.pill-lg.is-active:hover, .chip-btn.is-active:hover { box-shadow: 0 8px 20px rgba(0, 166, 100, .28); }
