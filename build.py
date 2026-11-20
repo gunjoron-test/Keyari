@@ -803,9 +803,6 @@ def header(active=""):
     <a href="{u("/")}" class="site-logo">{logo_img()}</a>
     <button class="icon-btn" type="button" data-offcanvas-close aria-label="মেনু বন্ধ করুন">{icon("close", 22)}</button>
   </div>
-  <form class="search-form search-form--m" action="{u("/search/")}" method="get" role="search">
-    <label class="sr-only" for="ms">খুঁজুন</label><input id="ms" type="search" name="s" placeholder="খুঁজুন…" required><button class="btn" type="submit">খুঁজুন</button>
-  </form>
   <ul class="m-nav">{"".join(m_items)}</ul>
   <a class="btn btn--block" href="{esc(S.get("app_url") or "#")}"{app_attrs()}>বুক অ্যাপ</a>
   <div class="offcanvas__foot">{toggle}</div>
