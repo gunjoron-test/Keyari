@@ -304,6 +304,34 @@ for a in AUTHORS:
 # ------------------------------------------------------------------ HTML processing
 
 
+FN_DIG = {
+    "১": (8, 8.6, -1), "২": (8, -1.8, 5.5), "৩": (0, 3, 0), "৪": (4, 8.2, -1.5), "৫": (3, -2.4, -0.5),
+    "৬": (3, 3.8, -0.5), "৭": (4, 3.4, 0.5), "৮": (-1, 3.4, -1), "৯": (2, 4.2, -2), "০": (2, 6.8, 1),
+}
+FN_BR = {"paren": (9, 12, -2, "(", ")"), "square": (7, 11, -2, "[", "]")}
+
+
+def fn_inner(n_bn, st="circle"):
+    """টীকার নম্বর সার্কেল/বন্ধনীর ঠিক মাঝখানে বসানোর জন্য অক্ষরের মাপ ধরে সূক্ষ্ম সরণ (em-এর শতাংশে)"""
+    ds = [FN_DIG[c] for c in n_bn if c in FN_DIG]
+    if not ds:
+        return n_bn
+    lb, rb = ds[0][0], ds[-1][1]
+    cy = sum(d[2] for d in ds) / len(ds)
+    if st in FN_BR:
+        rbo, lbc, bcy, o, c = FN_BR[st]
+        dx = ((rb + lbc) - (rbo + lb)) / 2
+        dy = bcy - cy
+        pre, post = o, c
+    else:
+        dx = -(lb - rb) / 2
+        dy = -cy
+        pre = post = ""
+    span = f'<span class="fn-n" style="--dx:{dx / 100:.3f}em;--dy:{dy / 100:.3f}em">{n_bn}</span>'
+    return pre + span + post
+
+
+
 def process_body(body, with_footnotes=True):
     b = body or ""
     # Word/Elementor-এর আবর্জনা বাদ
@@ -351,7 +379,7 @@ def process_body(body, with_footnotes=True):
             n = int(nn.group(1)) if nn else idx
             notes.append((n, note))
             st = sm.group(1) if sm else "circle"
-            lab = f"({bn(n)})" if st == "paren" else (f"[{bn(n)}]" if st == "square" else bn(n))
+            lab = fn_inner(bn(n), st)
             return (f'<sup class="fn-ref" id="fnref-{idx}"><button type="button" class="fn-dot{" fn-dot--" + st if st != "circle" else ""}" data-fn-note="{esc(note)}" '
                     f'data-fn-n="{bn(n)}" aria-haspopup="dialog" aria-label="টীকা {bn(n)}">{lab}</button></sup>')
         b = re.sub(r'<sup\b[^>]*\bclass="[^"]*\bfn-ref\b[^"]*"[^>]*>.*?</sup>', fn, b, flags=re.S)

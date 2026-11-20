@@ -2065,3 +2065,7 @@ body.fnp-open { overflow: hidden; }
 /* টীকার সার্কেল: আইকন-বোতামের মতো — সাধারণ অবস্থায় শুধু সবুজ সার্কেল-রেখা (ভেতর ফাঁকা), মাউস নিলে পুরো সার্কেল সবুজ */
 .fn-dot:not(.fn-dot--paren):not(.fn-dot--square) { background: var(--surface); color: var(--accent); border: 1px solid var(--accent); }
 .fn-dot:not(.fn-dot--paren):not(.fn-dot--square):hover, .fn-dot:not(.fn-dot--paren):not(.fn-dot--square):focus-visible { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 5px 14px rgba(0, 166, 100, .32); }
+
+/* টীকার নম্বর: সার্কেল/বন্ধনীর ঠিক মাঝখানে (অক্ষরের আসল মাপ ধরে সূক্ষ্ম সরণ) */
+.fn-n { display: inline-block; line-height: 1; transform: translate(var(--dx, 0), var(--dy, 0)); }
+.fn-dot--paren, .fn-dot--square { display: inline-flex; align-items: center; white-space: nowrap; }

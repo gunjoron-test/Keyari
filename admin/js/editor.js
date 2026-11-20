@@ -1,6 +1,19 @@
 // কেয়ারি রিচ-টেক্সট এডিটর — TinyMCE 6 (MIT) + InDesign/Word ধাঁচের টাইপোগ্রাফি টুল
 import { esc, toBnDigits, fixPunctuation, smartQuotes, promptBox, modal } from './util.js';
 
+const FN_DIG = { '১': [8, 8.6, -1], '২': [8, -1.8, 5.5], '৩': [0, 3, 0], '৪': [4, 8.2, -1.5], '৫': [3, -2.4, -0.5], '৬': [3, 3.8, -0.5], '৭': [4, 3.4, 0.5], '৮': [-1, 3.4, -1], '৯': [2, 4.2, -2], '০': [2, 6.8, 1] };
+const FN_BR = { paren: [9, 12, -2, '(', ')'], square: [7, 11, -2, '[', ']'] };
+/** টীকার নম্বর সার্কেল/বন্ধনীর ঠিক মাঝখানে বসাতে সূক্ষ্ম সরণ (build.py-র fn_inner-এর হুবহু অনুরূপ) */
+export function fnInner(nBn, st = 'circle') {
+  const ds = [...nBn].filter((c) => FN_DIG[c]).map((c) => FN_DIG[c]);
+  if (!ds.length) return nBn;
+  const lb = ds[0][0], rb = ds[ds.length - 1][1], cy = ds.reduce((s, d) => s + d[2], 0) / ds.length;
+  let dx, dy, pre = '', post = '';
+  if (FN_BR[st]) { const [rbo, lbc, bcy, o, c] = FN_BR[st]; dx = ((rb + lbc) - (rbo + lb)) / 2; dy = bcy - cy; pre = o; post = c; }
+  else { dx = -(lb - rb) / 2; dy = -cy; }
+  return `${pre}<span class="fn-n" style="--dx:${(dx / 100).toFixed(3)}em;--dy:${(dy / 100).toFixed(3)}em">${nBn}</span>${post}`;
+}
+
 const TINY = 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3';
 const LANG = 'https://cdn.jsdelivr.net/npm/tinymce-i18n@25.1.27/langs6/bn_BD.js';
 
@@ -217,6 +230,7 @@ export async function createEditor(target, ctx) {
       *:focus,*:focus-visible,body.entry-content:focus{outline:none!important;box-shadow:none!important}
       body.entry-content{max-width:760px;margin:28px auto 80px;padding:0 28px;background:#fff;color:#29294B;font-family:'Noto Serif by Gunjoron',serif}
       body.entry-content p{margin:0 0 1.6em}
+      .fn-n{display:inline-block;line-height:1;transform:translate(var(--dx,0),var(--dy,0))}
       sup.fn-ref{display:inline-grid;place-items:center;min-width:1.4em;height:1.4em;padding:0 .18em;box-sizing:border-box;border-radius:50%;background:#fff;color:#00A664;border:1px solid #00A664;font-size:.56em;font-weight:700;line-height:1;vertical-align:.14em;cursor:pointer;margin:0 .1em 0 .12em;user-select:none}
       sup.fn-ref:hover{background:#00A664;color:#fff}
       sup.fn-ref[data-style=paren],sup.fn-ref[data-style=square]{background:none;color:#00A664;min-width:0;height:auto;padding:0 .06em;border-radius:0;font-size:.7em;vertical-align:.3em;display:inline}
@@ -728,7 +742,7 @@ function setupKeyari(ed, ctx, paraStyles, charStyles) {
   // ---------- টীকা / ফুটনোট (পপআপে লেখা; নম্বর নিজে বসে, চাইলে বদলানো যায়) ----------
   const fnNums = () => [...ed.getBody().querySelectorAll('sup.fn-ref')].map((s) => parseInt(s.getAttribute('data-fn'), 10)).filter((n) => !isNaN(n));
   const fnNext = () => { const all = fnNums(); const cnt = ed.getBody().querySelectorAll('sup.fn-ref').length; return Math.max(all.length ? Math.max(...all) : 0, cnt) + 1; };
-  const fnLabel = (n, st) => { const d = toBnDigits(String(n)); return st === 'paren' ? `(${d})` : st === 'square' ? `[${d}]` : d; };
+  const fnLabel = (n, st) => fnInner(toBnDigits(String(n)), st);
   const fnHtml = (n, note, st) => `<sup class="fn-ref" data-note="${esc(note)}" data-fn="${n}"${st && st !== 'circle' ? ` data-style="${st}"` : ''} contenteditable="false">${fnLabel(n, st)}</sup>`;
   const kfoot = (target) => {
     const cur = target && target.nodeType === 1 ? target : ed.dom.getParent(ed.selection.getNode(), 'sup.fn-ref');
@@ -758,7 +772,7 @@ function setupKeyari(ed, ctx, paraStyles, charStyles) {
       m.close();
       ed.undoManager.transact(() => {
         if (cur) {
-          cur.setAttribute('data-note', note); cur.setAttribute('data-fn', String(n)); cur.textContent = fnLabel(n, st);
+          cur.setAttribute('data-note', note); cur.setAttribute('data-fn', String(n)); cur.innerHTML = fnLabel(n, st);
           if (st === 'circle') cur.removeAttribute('data-style'); else cur.setAttribute('data-style', st);
         } else { ed.selection.collapse(false); ed.insertContent(fnHtml(n, note, st) + '&nbsp;'); }
       });
