@@ -2077,3 +2077,7 @@ body.fnp-open { overflow: hidden; }
 .tone::before { top: 0; bottom: 0; }
 .home :not(.tone) + .tone { margin-top: 48px; }
 .home .tone:has(+ :not(.tone)) { margin-bottom: 56px; }
+
+/* কার্ডের সারাংশ: লেখার লাইন যেমন, কার্ডেও তেমন — প্রতিটি লাইন/অনুচ্ছেদ নতুন লাইনে (কবিতা ও গল্প দুটোতেই) */
+.card__excerpt .ln { display: block; text-align: left; }
+.card__excerpt .ln:only-child { text-align: justify; }

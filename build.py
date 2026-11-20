@@ -229,6 +229,10 @@ for p in POSTS:
         p["excerpt"] = truncate(text, 220)
     # কার্ডে ৩ লাইন ভরার মতো লম্বা সারাংশ (CSS তৃতীয় লাইনে "…" বসায়)
     p["_long"] = p["excerpt"] if len(p["excerpt"]) >= 240 else truncate(text, 320)
+    # কার্ডের সারাংশ লাইন-বাই-লাইন: লেখার ভেতরে যেখানে লাইন/অনুচ্ছেদ ভাঙে, কার্ডেও সেখানেই ভাঙে (কবিতা/গল্প দুটোতেই)
+    _raw = re.sub(r"(?i)<br\s*/?>|</(?:p|div|h[1-6]|li|blockquote|tr)>", "\n", p.get("body", ""))
+    _raw = html.unescape(re.sub(r"<[^>]+>", "", _raw)).replace("\xa0", " ")
+    p["_lines"] = [re.sub(r"\s+", " ", x).strip() for x in _raw.split("\n") if x.strip()][:8]
     cats = [c for c in p.get("categories", []) if c in CAT]
     # প্রধান বিভাগ (টপ-লেভেল) ও উপ-বিভাগ
     top = next((c for c in cats if not CAT[c].get("parent")), None)
@@ -501,7 +505,7 @@ def card_h(p, eager=False):
   <div class="card-h__body">
     <a class="card__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{esc(p["_author"]["name"])}</a>
     <h3 class="card-h__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
-    <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
+    <p class="card__excerpt clamp-3">{ex_lines(p)}</p>
     <div class="card__foot">
       <a class="btn" href="{p["_url"]}">পুরোটা পড়ুন<span class="sr-only">: {esc(p["title"])}</span></a>
       <span class="card__meta">{bn_date(p["_date"])}</span>
@@ -583,10 +587,18 @@ def series_card(s):
   <div class="card-g__body">
     <p class="card-g__cat">ধারাবাহিক · {bn(len(s["posts"]))}টি পর্ব</p>
     <h3 class="card-g__title"><a href="{url}">{esc(s["name"])}</a></h3>
-    <p class="card__excerpt clamp-3">{esc(first["_long"])}</p>
+    <p class="card__excerpt clamp-3">{ex_lines(first)}</p>
     <p class="card-g__by"><a class="card__author" href="{u("/author/" + first["_author"]["slug"] + "/")}">{aname(first["_author"])}</a><span aria-hidden="true"> · </span><time datetime="{last["_date"].isoformat()}">{bn_date(last["_date"])}</time></p>
   </div>
 </article>'''
+
+
+def ex_lines(p):
+    """কার্ডের সারাংশ: প্রতিটি লাইন আলাদা ব্লকে (CSS-এ ৩ লাইনে কাটা)"""
+    ls = p.get("_lines") or []
+    if not ls:
+        return esc(p["_long"])
+    return "".join(f'<span class="ln">{esc(x)}</span>' for x in ls)
 
 
 def card_g(p):
@@ -598,7 +610,7 @@ def card_g(p):
   <div class="card-g__body">
     {cat_html}
     <h3 class="card-g__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
-    <p class="card__excerpt clamp-3">{esc(p["_long"])}</p>
+    <p class="card__excerpt clamp-3">{ex_lines(p)}</p>
     <p class="card-g__by"><a class="card__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{aname(p["_author"])}</a><span aria-hidden="true"> · </span><time datetime="{p["_date"].isoformat()}">{bn_date(p["_date"])}</time></p>
   </div>
 </article>'''
@@ -615,7 +627,7 @@ def card_small(p):
     {('<p class="card-g__cat card-s__cat"><a href="' + cat_url(p["_sub"] or p["_top"]) + '">' + esc(CAT[p["_sub"] or p["_top"]]["name"]) + "</a></p>") if (p["_sub"] or p["_top"]) else ""}
     <a class="card-s__author" href="{u("/author/" + p["_author"]["slug"] + "/")}">{aname(p["_author"])}</a>
     <h3 class="card-s__title"><a href="{p["_url"]}">{esc(p["title"])}</a></h3>
-    <p class="card__excerpt card-s__excerpt">{esc(p["_long"])}</p>
+    <p class="card__excerpt card-s__excerpt">{ex_lines(p)}</p>
   </div>
   <a class="card-s__media" href="{p["_url"]}" tabindex="-1" aria-hidden="true">{img_tag(p["cover"].get("src"), p["title"], "card-s__img", 1169, 658, sizes="(max-width: 575px) 100vw, 220px")}</a>
 </article>'''
@@ -1239,7 +1251,7 @@ def build_home():
       {('<p class="card-g__cat hero__cat"><a href="' + cat_url(main["_sub"] or main["_top"]) + '">' + esc(CAT[main["_sub"] or main["_top"]]["name"]) + "</a></p>") if (main["_sub"] or main["_top"]) else ""}
       <p class="hero__by"><a class="card__author" href="{u("/author/" + main["_author"]["slug"] + "/")}">{aname(main["_author"])}</a><span aria-hidden="true"> · </span><time datetime="{main["_date"].isoformat()}">{bn_date(main["_date"])}</time></p>
       <h2 class="hero__title"><a href="{main["_url"]}">{esc(main["title"])}</a></h2>
-      <p class="hero__excerpt clamp-3">{esc(main.get("subtitle") or main["_long"])}</p>
+      <p class="hero__excerpt clamp-3">{esc(main["subtitle"]) if main.get("subtitle") else ex_lines(main)}</p>
     </div>
   </article>
   <div class="hero__side">{"".join(card_small(p) for p in side)}</div>
