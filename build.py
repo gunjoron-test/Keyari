@@ -793,7 +793,7 @@ def header(active=""):
       <label class="sr-only" for="hs">লেখা, লেখক, বিষয়</label>
       <input id="hs" type="search" name="s" placeholder="লেখা, লেখক, বিষয়…" autocomplete="off" autocapitalize="off" spellcheck="false">
       <button class="sx__clear" type="button" data-sx-clear hidden aria-label="মুছুন">{icon("close", 16)}</button>
-      <button class="sx__esc" type="button" data-search-close aria-label="বন্ধ করুন">Esc</button>
+      <button class="btn sx__go" type="submit">খুঁজুন</button>
     </form>
     <div class="sx__results" data-sx-results role="listbox" hidden></div>
   </div>

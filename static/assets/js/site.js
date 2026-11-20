@@ -267,7 +267,10 @@
         e.preventDefault(); location.href = items[sxActive].getAttribute('href');
       }
     });
-    $('form', pop).addEventListener('submit', function (e) { if (sxMode === 'authors' || !sxInput.value.trim()) e.preventDefault(); });
+    $('form', pop).addEventListener('submit', function (e) {
+      if (sxMode === 'authors') { e.preventDefault(); var f = $('.sx__item', sxRes); if (f) location.href = f.getAttribute('href'); return; }
+      if (!sxInput.value.trim()) e.preventDefault();
+    });
   }
 
   // ---------- অফ-ক্যানভাস মেনু ----------

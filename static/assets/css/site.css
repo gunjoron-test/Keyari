@@ -2002,3 +2002,7 @@ body.sx-open { overflow: hidden; }
 .nav__item.has-mega { position: relative; }
 .nav__item.has-mega > .mega, .site-header.is-compact .nav__item.has-mega > .mega { top: calc(100% + 10px); left: 50%; transform: translate(calc(-50% + var(--mx, 0px)), 6px); }
 .nav__item.has-mega:hover > .mega, .nav__item.has-mega.is-open > .mega { transform: translate(calc(-50% + var(--mx, 0px)), 0); }
+
+/* অনুসন্ধান-বক্সে "Esc"-এর জায়গায় সবুজ "খুঁজুন" বোতাম (পিসি ও মোবাইল দুই জায়গায়) */
+.sx__go { flex: none; height: 40px; min-height: 0; padding: 0 20px; font-size: 15px; border-radius: 10px; }
+@media (max-width: 575.98px) { .sx__go { height: 38px; padding: 0 16px; font-size: 14.5px; } }
