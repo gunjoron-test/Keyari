@@ -249,6 +249,15 @@
   }
   if (openBtn && pop) {
     openBtn.addEventListener('click', function (e) { e.stopPropagation(); if (pop.hidden) openSearch(); else closeSearch(); });
+    // অনুসন্ধান-ফলাফল পাতা ও ৪০৪ পাতার বক্সও একই ঝাপসা মাঝখানের বক্সে খোলে (রিয়েল-টাইম ফলাফলসহ)
+    $$('[data-sx-trigger]').forEach(function (inp) {
+      var go = function () {
+        var v = inp.value;
+        inp.blur(); openSearch('posts');
+        if (v) { sxInput.value = v; sxLoad(sxRender); }
+      };
+      inp.addEventListener('focus', go); inp.addEventListener('click', go);
+    });
     $$('[data-author-search]').forEach(function (inp) {
       var go = function () { inp.blur(); openSearch('authors'); };
       inp.addEventListener('focus', go); inp.addEventListener('click', go);

@@ -1900,7 +1900,7 @@ def build_search():
     body = f'''<div class="container archive">
 <header class="archive-header"><h1 class="archive-title" data-search-title>অনুসন্ধান</h1>
 <form class="search-form search-form--page" action="{u("/search/")}" method="get" role="search">
-<label class="sr-only" for="ps">খুঁজুন</label><input id="ps" type="search" name="s" placeholder="লেখা, লেখক বা বিষয়…" required><button class="btn" type="submit">খুঁজুন</button></form>
+<label class="sr-only" for="ps">খুঁজুন</label><input id="ps" type="search" name="s" placeholder="লেখা, লেখক বা বিষয়…" required data-sx-trigger autocomplete="off"><button class="btn" type="submit">খুঁজুন</button></form>
 <p class="archive-desc" data-search-count aria-live="polite"></p></header>
 <div class="feed__list" data-search-results></div>
 <nav class="pagination" data-search-pages aria-label="পাতা নম্বর"></nav>
@@ -1913,7 +1913,7 @@ def build_404():
 <div class="nf__icon">{icon("file-x", 56)}</div>
 <h1 class="nf__title">পাতাটি খুঁজে পাওয়া যায়নি</h1>
 <p class="nf__text">দুঃখিত, আপনি যে পাতাটি খুঁজছেন তা এখানে নেই। হয়তো ঠিকানাটি বদলেছে বা মুছে ফেলা হয়েছে।</p>
-<form class="search-form search-form--page" action="{u("/search/")}" method="get" role="search"><label class="sr-only" for="nfs">খুঁজুন</label><input id="nfs" type="search" name="s" placeholder="খুঁজে দেখুন…" required><button class="btn" type="submit">খুঁজুন</button></form>
+<form class="search-form search-form--page" action="{u("/search/")}" method="get" role="search"><label class="sr-only" for="nfs">খুঁজুন</label><input id="nfs" type="search" name="s" placeholder="খুঁজে দেখুন…" required data-sx-trigger autocomplete="off"><button class="btn" type="submit">খুঁজুন</button></form>
 <p><a class="btn" href="{u("/")}">মুখপাতায় ফিরুন</a></p>
 <div class="feed__list nf__latest">{"".join(card_g(p) for p in POSTS[:3])}</div>
 </div>'''
