@@ -2069,3 +2069,11 @@ body.fnp-open { overflow: hidden; }
 /* টীকার নম্বর: সার্কেল/বন্ধনীর ঠিক মাঝখানে (অক্ষরের আসল মাপ ধরে সূক্ষ্ম সরণ) */
 .fn-n { display: inline-block; line-height: 1; transform: translate(var(--dx, 0), var(--dy, 0)); }
 .fn-dot--paren, .fn-dot--square { display: inline-flex; align-items: center; white-space: nowrap; }
+
+/* ---------- মুখপাতার রঙিন পটি: নিজের ভেতরেই সম্পূর্ণ (কিছু মুছলে/সরালে অন্যটির ওপর উঠবে না) ----------
+   আগে পটি নিজের বাইরে ৪০px বেরিয়ে প্রতিবেশীর ওপর উঠত; এখন পটি ঠিক নিজের বক্সের মাপেই, ফাঁকা জায়গা পটির ভেতরের প্যাডিং।
+   পাশাপাশি দুই পটি কোনো ফাঁক/ওভারল্যাপ ছাড়া জোড়া লাগে; পটির সামনে-পেছনে পটি-ছাড়া কিছু থাকলে আলাদা ফাঁক থাকে। */
+.tone, .home .hero.tone, .feed-wrap.tone { margin-top: 0; margin-bottom: 0; padding-top: 40px; padding-bottom: 40px; }
+.tone::before { top: 0; bottom: 0; }
+.home :not(.tone) + .tone { margin-top: 48px; }
+.home .tone:has(+ :not(.tone)) { margin-bottom: 56px; }
