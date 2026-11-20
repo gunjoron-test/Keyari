@@ -6,7 +6,9 @@
  */
 declare(strict_types=1);
 mb_internal_encoding('UTF-8');
-$cfg = require __DIR__ . '/config.php';
+// কনফিগ (পাসওয়ার্ডসহ) সম্ভব হলে ওয়েব-ফোল্ডারের বাইরে (হোম ডিরেক্টরিতে keyari-config.php) রাখা হয়; না থাকলে এই ফোল্ডারের config.php
+$cfgFile = is_file(dirname(__DIR__) . '/keyari-config.php') ? dirname(__DIR__) . '/keyari-config.php' : __DIR__ . '/config.php';
+$cfg = require $cfgFile;
 
 const MAX_TEXT = 2000;
 const MAX_NAME = 60;

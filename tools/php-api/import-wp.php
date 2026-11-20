@@ -11,7 +11,9 @@
 declare(strict_types=1);
 header('Content-Type: text/plain; charset=utf-8');
 mb_internal_encoding('UTF-8');
-$cfg = require __DIR__ . '/config.php';
+// কনফিগ (পাসওয়ার্ডসহ) সম্ভব হলে ওয়েব-ফোল্ডারের বাইরে (হোম ডিরেক্টরিতে keyari-config.php) রাখা হয়; না থাকলে এই ফোল্ডারের config.php
+$cfgFile = is_file(dirname(__DIR__) . '/keyari-config.php') ? dirname(__DIR__) . '/keyari-config.php' : __DIR__ . '/config.php';
+$cfg = require $cfgFile;
 if (!isset($_GET['key']) || !hash_equals((string)($cfg['import_key'] ?? ''), (string)$_GET['key']) || ($cfg['import_key'] ?? '') === '') { http_response_code(403); exit("অনুমতি নেই\n"); }
 $go = isset($_GET['go']);
 $px = preg_replace('/[^A-Za-z0-9_]/', '', (string)($cfg['wp_prefix'] ?? 'wp_'));

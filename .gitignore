@@ -6,3 +6,9 @@ __pycache__/
 *.exe
 .DS_Store
 Thumbs.db
+
+# গোপন পাসওয়ার্ড — কখনো গিটহাবে যাবে না
+tools/php-api/config.php
+keyari-config.php
+*.sql
+*.sql.gz
