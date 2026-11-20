@@ -253,7 +253,7 @@ def safe_id(pid):
 
 
 def load_views():
-    """মন্তব্য-সার্ভার (Worker) থেকে লেখাভিত্তিক পড়ার সংখ্যা; সংযোগ না থাকলে ফাঁকা (তখন পছন্দ-চিহ্নিত, তারপর সর্বশেষ লেখা)"""
+    """মন্তব্য-সার্ভার (Worker) থেকে লেখাভিত্তিক পড়ার সংখ্যা; সংযোগ না থাকলে ফাঁকা (তখন মুখপাতার পাঠকের পছন্দ অংশ দেখায় না)"""
     ep = views_endpoint()
     if not ep or os.environ.get("KEYARI_NO_NET"):
         return {}
@@ -1216,12 +1216,9 @@ def build_home():
             side.append(POST_BY_ID[i])
     side = side[:3]
     hero_ids = ({id(main)} if main else set()) | {id(p) for p in side}
-    feed = [p for p in POSTS if id(p) not in hero_ids]
-    # পাঠকের পছন্দ: বেশি পড়া লেখা আগে; সমান হলে নতুন আগে। পড়ার সংখ্যা না থাকলে পছন্দ-চিহ্নিত লেখা আগে, তারপর সর্বশেষ
-    if any(view_count(p) for p in feed):
-        feed.sort(key=lambda p: -view_count(p))
-    else:
-        feed.sort(key=lambda p: 0 if p.get("pick") else 1)
+    # পাঠকের পছন্দ: কেবল পাঠকের পড়া লেখা, বেশি পড়া আগে (সমান হলে নতুন আগে)। নতুন লেখা পড়া না হওয়া পর্যন্ত এখানে আসে না
+    feed = [p for p in POSTS if id(p) not in hero_ids and view_count(p) > 0]
+    feed.sort(key=lambda p: -view_count(p))
     total = max(1, math.ceil(len(feed) / per))
     sections = {s["type"]: s for s in HOME.get("sections", [])}
 
@@ -1277,7 +1274,7 @@ def build_home():
     {more_grid("".join(card_g(p) for p in chunk), len(chunk), "feed__list more-grid")}
     {pagination(page, total, "/") if page > 1 else ""}
   </section>
-</div>''')
+</div>''''' if chunk else "")
         if page == 1:
             parts.append(banner_slider("ads.json", "ad"))  # পাঠকের পছন্দের নিচে, রচনাবলির ওপরে
         if page == 1 and on("category_blocks"):
@@ -1658,10 +1655,7 @@ def build_all_posts():
     sections = {x["type"]: x for x in HOME.get("sections", [])}
     title = sections.get("feed", {}).get("title", "পাঠকের পছন্দ")
     items = list(POSTS)
-    if any(view_count(p) for p in items):
-        items.sort(key=lambda p: -view_count(p))
-    else:
-        items.sort(key=lambda p: 0 if p.get("pick") else 1)
+    items.sort(key=lambda p: -view_count(p))  # বেশি পড়া আগে; পড়া-না-হওয়া লেখা সবার শেষে (নতুন আগে)
     header_html = f'<h1 class="archive-title">{esc(title)}</h1>'
     archive_page(path="/সব-লেখা/", title=title, items=items, crumbs=[("মুখপাতা", "/"), (title, "/সব-লেখা/")], header_html=header_html,
                  description=f"{SITE}-এর সব লেখা — {title} ক্রমে।", active="মুখপাতা")
