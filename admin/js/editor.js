@@ -217,9 +217,9 @@ export async function createEditor(target, ctx) {
       *:focus,*:focus-visible,body.entry-content:focus{outline:none!important;box-shadow:none!important}
       body.entry-content{max-width:760px;margin:28px auto 80px;padding:0 28px;background:#fff;color:#29294B;font-family:'Noto Serif by Gunjoron',serif}
       body.entry-content p{margin:0 0 1.6em}
-      sup.fn-ref{display:inline-grid;place-items:center;min-width:1.55em;height:1.55em;padding:0 .3em;box-sizing:border-box;border-radius:50%;background:#00A664;color:#fff;font-size:.62em;font-weight:700;line-height:1;vertical-align:.58em;cursor:pointer;margin:0 .12em;user-select:none}
+      sup.fn-ref{display:inline-grid;place-items:center;min-width:1.4em;height:1.4em;padding:0 .18em;box-sizing:border-box;border-radius:50%;background:#00A664;color:#fff;font-size:.56em;font-weight:700;line-height:1;vertical-align:.14em;cursor:pointer;margin:0 .1em 0 .12em;user-select:none}
       sup.fn-ref:hover{background:#00955A}
-      sup.fn-ref[data-style=paren],sup.fn-ref[data-style=square]{background:none;color:#00A664;min-width:0;height:auto;padding:0;border-radius:0;font-size:.8em;vertical-align:.48em;display:inline}
+      sup.fn-ref[data-style=paren],sup.fn-ref[data-style=square]{background:none;color:#00A664;min-width:0;height:auto;padding:0 .06em;border-radius:0;font-size:.7em;vertical-align:.3em;display:inline}
       sup.fn-ref[data-style=paren]:hover,sup.fn-ref[data-style=square]:hover{background:none;color:#00955A;text-decoration:underline}
       .k-box,.k-cols-2,.k-cols-3{outline:1px dashed #CCEDE0;outline-offset:4px}
       img[data-mce-selected]{outline:3px solid #00A664}

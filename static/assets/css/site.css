@@ -2052,3 +2052,12 @@ body.fnp-open { overflow: hidden; }
 .fn-dot { vertical-align: .58em; }
 .fn-dot--paren, .fn-dot--square { min-width: 0; height: auto; padding: 0 .1em; margin: 0 .08em; border-radius: 0; background: none; color: var(--accent); font-size: .8em; vertical-align: .48em; }
 .fn-dot--paren:hover, .fn-dot--paren:focus-visible, .fn-dot--square:hover, .fn-dot--square:focus-visible { background: none; color: var(--accent-hover, #00955A); box-shadow: none; transform: none; text-decoration: underline; text-underline-offset: 3px; }
+
+/* টীকার নম্বর: ছোট, লাইনের একেবারে হালকা ওপরে (বেসলাইনের ঠিক ওপরে) */
+.fn-dot { font-size: .52em; min-width: 1.4em; height: 1.4em; padding: 0 .18em; margin: 0 .1em 0 .12em; vertical-align: 0; }
+.fn-dot--paren, .fn-dot--square { font-size: .64em; min-width: 0; height: auto; padding: 0 .06em; margin: 0 .06em; vertical-align: .28em; }
+.fn-dot { font-size: .56em; min-width: 1.4em; height: 1.4em; vertical-align: .14em; }
+.fn-dot--paren, .fn-dot--square { font-size: .7em; vertical-align: .3em; }
+.fn-ref { font-size: inherit; vertical-align: baseline; line-height: 0; }
+.fn-dot { font-size: .56em; vertical-align: .32em; }
+.fn-dot--paren, .fn-dot--square { font-size: .72em; vertical-align: .3em; }
