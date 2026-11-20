@@ -1,0 +1,14 @@
+# সব অনুরোধ index.php-তে যায়; Authorization হেডার যেন হারিয়ে না যায়
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteCond %{REQUEST_URI} !import-wp\.php$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
+
+# গোপন কনফিগ ফাইল ব্রাউজারে খোলা যাবে না
+<Files "config.php">
+  Require all denied
+</Files>
+<Files "config.sample.php">
+  Require all denied
+</Files>
