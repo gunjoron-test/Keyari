@@ -217,8 +217,10 @@ export async function createEditor(target, ctx) {
       *:focus,*:focus-visible,body.entry-content:focus{outline:none!important;box-shadow:none!important}
       body.entry-content{max-width:760px;margin:28px auto 80px;padding:0 28px;background:#fff;color:#29294B;font-family:'Noto Serif by Gunjoron',serif}
       body.entry-content p{margin:0 0 1.6em}
-      sup.fn-ref{display:inline-grid;place-items:center;min-width:1.55em;height:1.55em;padding:0 .3em;box-sizing:border-box;border-radius:50%;background:#00A664;color:#fff;font-size:.62em;font-weight:700;line-height:1;vertical-align:.7em;cursor:pointer;margin:0 .12em;user-select:none}
+      sup.fn-ref{display:inline-grid;place-items:center;min-width:1.55em;height:1.55em;padding:0 .3em;box-sizing:border-box;border-radius:50%;background:#00A664;color:#fff;font-size:.62em;font-weight:700;line-height:1;vertical-align:.58em;cursor:pointer;margin:0 .12em;user-select:none}
       sup.fn-ref:hover{background:#00955A}
+      sup.fn-ref[data-style=paren],sup.fn-ref[data-style=square]{background:none;color:#00A664;min-width:0;height:auto;padding:0;border-radius:0;font-size:.8em;vertical-align:.48em;display:inline}
+      sup.fn-ref[data-style=paren]:hover,sup.fn-ref[data-style=square]:hover{background:none;color:#00955A;text-decoration:underline}
       .k-box,.k-cols-2,.k-cols-3{outline:1px dashed #CCEDE0;outline-offset:4px}
       img[data-mce-selected]{outline:3px solid #00A664}
       .mce-content-body [data-mce-selected="inline-boundary"]{background:#CCEDE0}
@@ -726,14 +728,20 @@ function setupKeyari(ed, ctx, paraStyles, charStyles) {
   // ---------- টীকা / ফুটনোট (পপআপে লেখা; নম্বর নিজে বসে, চাইলে বদলানো যায়) ----------
   const fnNums = () => [...ed.getBody().querySelectorAll('sup.fn-ref')].map((s) => parseInt(s.getAttribute('data-fn'), 10)).filter((n) => !isNaN(n));
   const fnNext = () => { const all = fnNums(); const cnt = ed.getBody().querySelectorAll('sup.fn-ref').length; return Math.max(all.length ? Math.max(...all) : 0, cnt) + 1; };
-  const fnHtml = (n, note) => `<sup class="fn-ref" data-note="${esc(note)}" data-fn="${n}" contenteditable="false">${toBnDigits(String(n))}</sup>`;
+  const fnLabel = (n, st) => { const d = toBnDigits(String(n)); return st === 'paren' ? `(${d})` : st === 'square' ? `[${d}]` : d; };
+  const fnHtml = (n, note, st) => `<sup class="fn-ref" data-note="${esc(note)}" data-fn="${n}"${st && st !== 'circle' ? ` data-style="${st}"` : ''} contenteditable="false">${fnLabel(n, st)}</sup>`;
   const kfoot = (target) => {
     const cur = target && target.nodeType === 1 ? target : ed.dom.getParent(ed.selection.getNode(), 'sup.fn-ref');
     const curNote = cur ? (cur.getAttribute('data-note') || '') : '';
     const curNum = cur ? (parseInt(cur.getAttribute('data-fn'), 10) || fnNext()) : fnNext();
+    const curStyle = cur ? (cur.getAttribute('data-style') || 'circle') : 'circle';
     const m = modal({
       title: cur ? 'টীকা সম্পাদনা' : 'টীকা যোগ করুন',
       body: `<div class="field" style="max-width:180px"><label>টীকা নম্বর</label><input class="input" type="number" min="1" data-n value="${curNum}"><p class="help">নম্বর নিজে থেকে ক্রমানুসারে বসে; চাইলে বদলান।</p></div>
+        <div class="field"><label>লেখায় কেমন দেখাবে</label><div class="btn-row" data-st style="gap:14px;flex-wrap:wrap">
+          <label class="check"><input type="radio" name="fnst" value="circle" ${curStyle === 'circle' ? 'checked' : ''}> সবুজ সার্কেলে নম্বর</label>
+          <label class="check"><input type="radio" name="fnst" value="paren" ${curStyle === 'paren' ? 'checked' : ''}> (১) বন্ধনীতে</label>
+          <label class="check"><input type="radio" name="fnst" value="square" ${curStyle === 'square' ? 'checked' : ''}> [১] বন্ধনীতে</label></div></div>
         <div class="field" style="margin-bottom:0"><label>টীকার লেখা</label><textarea class="textarea" rows="5" data-t placeholder="পাঠক নম্বরে চাপ দিলে এই লেখাটি পপআপে দেখবেন">${esc(curNote)}</textarea></div>`,
       foot: `${cur ? '<button class="btn btn--ghost" data-del style="margin-right:auto;color:#c0392b">মুছুন</button>' : ''}<button class="btn btn--light" data-no>বাতিল</button><button class="btn" data-ok>${cur ? 'হালনাগাদ' : 'যোগ করুন'}</button>`,
     });
@@ -745,11 +753,14 @@ function setupKeyari(ed, ctx, paraStyles, charStyles) {
     m.el.querySelector('[data-ok]').onclick = () => {
       const note = ta.value.trim();
       const n = Math.max(1, parseInt(nn.value, 10) || curNum);
+      const stEl = m.el.querySelector('input[name="fnst"]:checked'); const st = stEl ? stEl.value : 'circle';
       if (!note) { ta.focus(); return; }
       m.close();
       ed.undoManager.transact(() => {
-        if (cur) { cur.setAttribute('data-note', note); cur.setAttribute('data-fn', String(n)); cur.textContent = toBnDigits(String(n)); }
-        else { ed.selection.collapse(false); ed.insertContent(fnHtml(n, note) + '&nbsp;'); }
+        if (cur) {
+          cur.setAttribute('data-note', note); cur.setAttribute('data-fn', String(n)); cur.textContent = fnLabel(n, st);
+          if (st === 'circle') cur.removeAttribute('data-style'); else cur.setAttribute('data-style', st);
+        } else { ed.selection.collapse(false); ed.insertContent(fnHtml(n, note, st) + '&nbsp;'); }
       });
       ed.focus();
     };

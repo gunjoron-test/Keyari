@@ -72,7 +72,7 @@
       doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') fnClose(); });
     }
     fnLast = btn;
-    $('.fnp__num', fnPop).textContent = btn.textContent;
+    $('.fnp__num', fnPop).textContent = btn.getAttribute('data-fn-n') || btn.textContent;
     var tx = $('.fnp__text', fnPop); tx.textContent = '';
     String(btn.getAttribute('data-fn-note') || '').split(/\n/).forEach(function (line, i) { if (i) tx.appendChild(doc.createElement('br')); tx.appendChild(doc.createTextNode(line)); });
     fnPop.hidden = false; doc.body.classList.add('fnp-open');

@@ -2047,3 +2047,8 @@ body.sx-open { overflow: hidden; }
 .fnp__x:hover, .fnp__x:focus-visible { background: var(--accent); border-color: var(--accent); color: #fff; }
 body.fnp-open { overflow: hidden; }
 @media (max-width: 575.98px) { .fnp { padding: 16px; } .fnp__panel { padding: 20px 20px 22px; } .fnp__text { font-size: 16.5px; } }
+
+/* টীকার নম্বর: লাইনের সামান্য ওপরে (বইয়ের মতো); বন্ধনী-ধরন ব্র্যান্ড সবুজ লেখা */
+.fn-dot { vertical-align: .58em; }
+.fn-dot--paren, .fn-dot--square { min-width: 0; height: auto; padding: 0 .1em; margin: 0 .08em; border-radius: 0; background: none; color: var(--accent); font-size: .8em; vertical-align: .48em; }
+.fn-dot--paren:hover, .fn-dot--paren:focus-visible, .fn-dot--square:hover, .fn-dot--square:focus-visible { background: none; color: var(--accent-hover, #00955A); box-shadow: none; transform: none; text-decoration: underline; text-underline-offset: 3px; }

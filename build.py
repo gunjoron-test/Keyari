@@ -346,11 +346,14 @@ def process_body(body, with_footnotes=True):
                 return tag
             note = html.unescape(nm.group(1))
             nn = re.search(r'data-fn="(\d+)"', tag)
+            sm = re.search(r'data-style="(paren|square)"', tag)
             idx = len(notes) + 1
             n = int(nn.group(1)) if nn else idx
             notes.append((n, note))
-            return (f'<sup class="fn-ref" id="fnref-{idx}"><button type="button" class="fn-dot" data-fn-note="{esc(note)}" '
-                    f'aria-haspopup="dialog" aria-label="টীকা {bn(n)}">{bn(n)}</button></sup>')
+            st = sm.group(1) if sm else "circle"
+            lab = f"({bn(n)})" if st == "paren" else (f"[{bn(n)}]" if st == "square" else bn(n))
+            return (f'<sup class="fn-ref" id="fnref-{idx}"><button type="button" class="fn-dot{" fn-dot--" + st if st != "circle" else ""}" data-fn-note="{esc(note)}" '
+                    f'data-fn-n="{bn(n)}" aria-haspopup="dialog" aria-label="টীকা {bn(n)}">{lab}</button></sup>')
         b = re.sub(r'<sup\b[^>]*\bclass="[^"]*\bfn-ref\b[^"]*"[^>]*>.*?</sup>', fn, b, flags=re.S)
         if notes:
             items = "".join(f'<li value="{n}" id="fn-{i}">{esc(t)}</li>' for i, (n, t) in enumerate(notes, 1))
