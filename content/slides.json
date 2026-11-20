@@ -1,7 +1,7 @@
 {
   "enabled": true,
   "autoplay": true,
-  "interval": 6,
+  "interval": 3,
   "items": [
     {
       "id": "s-welcome",
