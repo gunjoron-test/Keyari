@@ -1,5 +1,5 @@
 // লেখা, পাতা ও আয়োজন — তালিকা ও সম্পাদক
-import { S, can, commit, cleanDoc, catName, catBySlug, topCats, childCats, authorName, authorBySlug, siteUrl, statusBadge, statusLabel, imgUrl, imgFallback, resolveImage } from '../state.js';
+import { S, PATHS, can, commit, cleanDoc, catName, catBySlug, topCats, childCats, authorName, authorBySlug, siteUrl, statusBadge, statusLabel, imgUrl, imgFallback, resolveImage } from '../state.js';
 import { $, $$, esc, bn, bnDate, toast, modal, confirmBox, slugify, uid, nowIso, toLocalInput, fromLocalInput, postPath, wordCount, stripTags, jsonText, debounce, clone, blobToBase64, processImage, asciiSlug } from '../util.js';
 import { createEditor, stylesToCss } from '../editor.js';
 import { pickMedia } from './media.js';
@@ -396,10 +396,17 @@ export async function editorView(view, kind, id) {
       S.ayojon.filter((a) => a.id !== out.id && a.active).forEach((a) => { a.active = false; changes.push({ path: a._path || `content/ayojon/${a.id}.json`, text: jsonText(cleanDoc(a)) }); });
     }
     changes.push({ path, text: jsonText(cleanDoc(out)) });
+    let newHome = null;
+    const heroSel = kind === 'post' ? $('[data-hero]', view) : null;
+    if (heroSel && heroSel.value !== heroSlotOf(out.id)) {
+      newHome = heroApply(out.id, heroSel.value);
+      changes.push({ path: PATHS.home, text: jsonText(newHome) });
+    }
     const btns = $$('.top .btn'); btns.forEach((b) => (b.disabled = true));
     try {
       const verb = status === 'published' ? (new Date(out.date) > new Date() ? 'নির্ধারিত' : 'প্রকাশ') : status === 'review' ? 'পর্যালোচনা' : 'খসড়া';
       await commit(`${LABEL[kind]} ${verb}: ${out.title}`, changes);
+      if (newHome) S.home = newHome;
       Object.assign(d, out);
       if (srcs.length && ed) ed.setContent(html);
       const idx = coll.findIndex((x) => x.id === out.id);
@@ -473,6 +480,7 @@ function sidePanels(kind, d) {
       ${can('others') ? `<label class="check"><input type="checkbox" data-s="pick" ${d.pick ? 'checked' : ''}> ★ পাঠকের পছন্দ (স্লাইডারে)</label>
       <label class="check"><input type="checkbox" data-s="featured" ${d.featured ? 'checked' : ''}> ◆ সম্পাদকের বাছাই</label>` : ''}
       <div style="margin-top:10px">${danger}</div></div></details>
+    ${can('others') ? heroPanel(d) : ''}
     <details class="panel" open><summary>বিভাগ</summary><div class="panel__body"><div class="cat-tree">${catTree}</div><p class="help">উপ-বিভাগ বাছলে মূল বিভাগও নিজে থেকে বাছাই হবে।</p></div></details>
     <details class="panel" open><summary>লেখক</summary><div class="panel__body">
       <div class="field"><select class="select" data-s="author" ${!can('others') && myAuthor() ? 'disabled' : ''}><option value="">— লেখক বাছুন —</option>${authorsOpts}</select>
@@ -515,7 +523,46 @@ function seoPanel(d, isPost) {
   </div></details>`;
 }
 
+const HERO_SLOTS = [['', 'না — মুখপাতার হিরোতে দেখাবে না'], ['main', 'বড় লেখা (বাঁয়ের বড় কার্ড)'], ['s0', 'সাইড লেখা ১ (ডানের ওপরেরটি)'], ['s1', 'সাইড লেখা ২ (ডানের মাঝেরটি)'], ['s2', 'সাইড লেখা ৩ (ডানের নিচেরটি)']];
+export function heroSlotOf(id) {
+  const h = (S.home && S.home.hero) || {};
+  if (h.main === id) return 'main';
+  const i = (h.side || []).indexOf(id);
+  return i > -1 && i < 3 ? 's' + i : '';
+}
+/** home.hero-তে লেখাটিকে নির্দিষ্ট জায়গায় বসায় (আগের দখলদার সরে যায়); বদল হলে নতুন home ফেরত দেয় */
+function heroApply(id, slot) {
+  const home = clone(S.home || {}); const h = (home.hero = home.hero || {});
+  const side = [0, 1, 2].map((i) => (h.side || [])[i] || '');
+  if (h.main === id) h.main = '';
+  side.forEach((x, i) => { if (x === id) side[i] = ''; });
+  if (slot === 'main') h.main = id; else if (slot) side[+slot[1]] = id;
+  h.side = side; h.mode = 'manual';
+  return home;
+}
+const heroTitle = (id) => { const p = S.posts.find((x) => x.id === id); return p ? p.title : ''; };
+function heroPanel(d) {
+  const cur = heroSlotOf(d.id);
+  const h = (S.home && S.home.hero) || {};
+  const occ = (slot) => (slot === 'main' ? h.main : (h.side || [])[+slot[1]]);
+  return `<details class="panel" open><summary>মুখপাতার হিরো</summary><div class="panel__body">
+      <p class="help" style="margin:0 0 8px">মুখপাতার ওপরের অংশে শুধু আপনার বেছে দেওয়া লেখাই আসে; নিজে থেকে কিছু বসে না।</p>
+      <div class="field" style="margin-bottom:6px"><select class="select" data-hero>${HERO_SLOTS.map(([v, l]) => `<option value="${v}" ${v === cur ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <p class="help" data-hero-note style="margin:0"></p>
+      <input type="hidden" data-hero-init value="${cur}"></div></details>`;
+}
+function heroNote(side, d) {
+  const sel = $('[data-hero]', side); const note = $('[data-hero-note]', side);
+  if (!sel || !note) return;
+  const h = (S.home && S.home.hero) || {};
+  const slot = sel.value;
+  const occ = slot === 'main' ? h.main : slot ? (h.side || [])[+slot[1]] : '';
+  note.textContent = slot && occ && occ !== d.id ? `এখন এই জায়গায় আছে: "${heroTitle(occ)}" — সংরক্ষণ করলে সেটি সরে এই লেখা আসবে।` : slot ? 'সংরক্ষণ করলে এই লেখা ওই জায়গায় দেখাবে (লেখাটি প্রকাশিত থাকতে হবে)।' : '';
+}
+
 function bindSide(kind, d, side, markDirty, refreshSeo) {
+  const hs = $('[data-hero]', side);
+  if (hs) { hs.addEventListener('change', () => { heroNote(side, d); markDirty(); }); heroNote(side, d); }
   // সাধারণ ফিল্ড
   $$('[data-s]', side).forEach((el) => el.addEventListener(el.type === 'checkbox' ? 'change' : 'input', () => {
     const k = el.dataset.s;

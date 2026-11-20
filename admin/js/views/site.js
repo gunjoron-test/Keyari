@@ -156,8 +156,8 @@ export function menuView(view) {
 const SECTION_NAMES = { hero: 'হিরো (বড় লেখা + পাশে ৩টি)', category_pills: 'বিষয়-পিল', ayojon: 'চলমান আয়োজন ব্যানার', feed: 'সর্বশেষ লেখা + সাইডবার', category_blocks: 'বিভাগভিত্তিক ব্লক', series: 'ধারাবাহিক', authors: 'লেখক পরিচিতি', cta: '"লেখা পাঠান" আহ্বান' };
 export function homeView(view) {
   const h = clone(S.home); h.hero = h.hero || {}; h.slider = h.slider || {}; h.sections = h.sections || [];
-  const published = S.posts.filter((p) => p.status === 'published');
-  const opt = (sel) => `<option value="">— স্বয়ংক্রিয় —</option>` + published.slice(0, 200).map((p) => `<option value="${esc(p.id)}" ${sel === p.id ? 'selected' : ''}>${esc(p.title)}</option>`).join('');
+  const published = S.posts.filter((p) => p.status === 'published').sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  const opt = (sel) => `<option value="">— ফাঁকা (কিছু দেখাবে না) —</option>` + published.slice(0, 200).map((p) => `<option value="${esc(p.id)}" ${sel === p.id ? 'selected' : ''}>${esc(p.title)}</option>`).join('');
   const draw = () => {
     view.innerHTML = `<div class="page-head"><div><h1>মুখপাতার বিন্যাস</h1><p>কোন অংশ কোথায়, কোন লেখা হিরোতে — সব এখান থেকে</p></div><div class="btn-row"><a class="btn btn--light" target="_blank" href="${esc(siteUrl('/'))}">মুখপাতা দেখুন ↗</a><button class="btn" data-save>সংরক্ষণ</button></div></div>
     <div class="dash"><div>
@@ -171,11 +171,10 @@ export function homeView(view) {
         <div class="field"><label>"লেখা পাঠান" অংশের বার্তা</label><textarea class="textarea" data-cta>${esc((h.sections.find((s) => s.type === 'cta') || {}).text || '')}</textarea></div></div>
     </div><div>
       <div class="card"><h2 class="card__title" style="margin-bottom:4px">মুখপাতার হিরো — কোন লেখা কোথায়</h2>
-        <p class="help" style="margin-bottom:14px">ওপরের বড় অংশে একটি <b>বড় লেখা</b> আর তার ডানে তিনটি <b>সাইড লেখা</b> দেখায়। ফাঁকা রাখলে সাইট নিজে সর্বশেষ লেখা বসায়।</p>
+        <p class="help" style="margin-bottom:14px">ওপরের বড় অংশে একটি <b>বড় লেখা</b> আর তার ডানে তিনটি <b>সাইড লেখা</b> দেখায়। এখানে শুধু আপনার বাছা লেখাই আসবে — ফাঁকা রাখলে সেই জায়গা ফাঁকাই থাকবে, সাইট নিজে কিছু বসাবে না। (বড় লেখা না বাছলে পুরো হিরো অংশ দেখাবে না।)</p>
         <div style="padding:14px;border:1.5px solid var(--accent);border-radius:12px;margin-bottom:14px;background:color-mix(in srgb,var(--accent) 6%,transparent)">
           <div class="btn-row" style="margin-bottom:8px"><span class="badge badge--published">বড় লেখা</span><span class="help">বাঁয়ের বড় ছবিসহ কার্ড</span></div>
           <div class="field"><select class="select" data-main>${opt(h.hero.main)}</select></div>
-          <div class="field" style="margin-bottom:0"><label>বড় লেখা না বাছলে আসবে এই বিভাগের সর্বশেষ লেখা</label><select class="select" data-hc>${topCats().map((c) => `<option value="${c.slug}" ${h.hero.main_category === c.slug ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></div>
         </div>
         <div style="padding:14px;border:1.5px solid var(--line-2);border-radius:12px">
           <div class="btn-row" style="margin-bottom:8px"><span class="badge badge--draft">সাইড লেখা</span><span class="help">ডানের তিনটি ছোট কার্ড (ওপর থেকে নিচে)</span></div>
@@ -194,7 +193,6 @@ export function homeView(view) {
     $$('[data-cb]', view).forEach((el) => (el.onchange = () => { const s = cbSec(); s.categories = $$('[data-cb]', view).filter((x) => x.checked).map((x) => x.dataset.cb); }));
     $('[data-cbn]', view).oninput = (e) => { cbSec().count = +e.target.value || 4; };
     $('[data-cta]', view).oninput = (e) => { const s = h.sections.find((x) => x.type === 'cta'); if (s) s.text = e.target.value; };
-    $('[data-hc]', view).onchange = (e) => { h.hero.main_category = e.target.value; };
     $('[data-main]', view).onchange = (e) => { h.hero.main = e.target.value; h.hero.mode = 'manual'; };
     $$('[data-side]', view).forEach((el) => (el.onchange = () => { h.hero.side = $$('[data-side]', view).map((x) => x.value).filter(Boolean); h.hero.mode = 'manual'; }));
     $('[data-st]', view).oninput = (e) => { h.slider.title = e.target.value; };

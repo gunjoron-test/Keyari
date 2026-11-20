@@ -1208,22 +1208,14 @@ def build_home():
     per = S.get("posts_per_page", 12)
     per = max(3, round(per / 3) * 3)  # ৩ কলামের গ্রিডে পুরো সারি ভরতে ৩-এর গুণিতক
     hero_cfg = HOME.get("hero", {})
-    main = None
-    if hero_cfg.get("main") in POST_BY_ID:
-        main = POST_BY_ID[hero_cfg["main"]]
-    if not main:
-        mc = hero_cfg.get("main_category")
-        main = next((p for p in POSTS if mc and mc in p["_cats"]), None) or (POSTS[0] if POSTS else None)
+    # হিরো: কেবল অ্যাডমিনের বেছে দেওয়া লেখা — সাইট নিজে থেকে কিছু বসায় না
+    main = POST_BY_ID.get(hero_cfg.get("main"))
     side = []
     for i in hero_cfg.get("side", []):
         if i in POST_BY_ID and POST_BY_ID[i] is not main and POST_BY_ID[i] not in side:
             side.append(POST_BY_ID[i])
-    for p in POSTS:
-        if len(side) >= 3:
-            break
-        if p is not main and p not in side:
-            side.append(p)
-    hero_ids = {id(main)} | {id(p) for p in side}
+    side = side[:3]
+    hero_ids = ({id(main)} if main else set()) | {id(p) for p in side}
     feed = [p for p in POSTS if id(p) not in hero_ids]
     # পাঠকের পছন্দ: বেশি পড়া লেখা আগে; সমান হলে নতুন আগে। পড়ার সংখ্যা না থাকলে পছন্দ-চিহ্নিত লেখা আগে, তারপর সর্বশেষ
     if any(view_count(p) for p in feed):
