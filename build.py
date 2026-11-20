@@ -975,7 +975,7 @@ def footer():
 </footer>
 <button class="to-top" type="button" data-to-top aria-label="উপরে যান">
   <svg class="to-top__ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22"/></svg>{icon("up", 20)}</button>
-<div class="toast" role="status" aria-live="polite" hidden></div>'''
+<div class="toast" role="status" aria-live="polite" hidden><span class="toast__ico"><svg viewBox="106.35 424.15 330 330" aria-hidden="true"><path d="M168.38,742.58v-309a228.72,228.72,0,0,0,0,309Z"/><path d="M308.48,435.94l-.41-.33L204,627.29l120.3,117.4V472.29L389.08,529a34.37,34.37,0,0,0-20.38,60.56l-.22.23c.88.6,1.78,1.15,2.68,1.67a34.24,34.24,0,0,0,19.76,6.25,34.65,34.65,0,0,0,7.94-.93c27.95-4.76,49.69-39.92,24.28-93.94C393.81,440.46,313.87,436.16,308.48,435.94Z"/></svg></span><span class="toast__txt"></span></div>'''
 
 
 def jsonld(obj):

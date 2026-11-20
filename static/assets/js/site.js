@@ -47,10 +47,11 @@
 
   // ---------- টোস্ট ----------
   var toastEl = $('.toast'), toastT;
-  function toast(msg) {
+  function toast(msg, ms) {
     if (!toastEl) return;
-    toastEl.textContent = msg; toastEl.hidden = false;
-    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.hidden = true; }, 2200);
+    var tx = $('.toast__txt', toastEl); (tx || toastEl).textContent = msg;
+    toastEl.hidden = false; toastEl.style.animation = 'none'; void toastEl.offsetWidth; toastEl.style.animation = '';
+    clearTimeout(toastT); toastT = setTimeout(function () { toastEl.hidden = true; }, ms || 2400);
   }
 
   // ---------- ডার্ক মোড ----------
@@ -586,7 +587,7 @@
       if (cmDemo) {
         var pd = readP(); (pd[cmPost] = pd[cmPost] || []).push({ id: 'demo' + Date.now(), name: name, text: text, ts: Date.now() }); writeP(pd);
         f.text.value = '';
-        cmMsg.textContent = 'ধন্যবাদ, আপনার মন্তব্য জমা হয়েছে।';
+        cmMsg.textContent = 'ধন্যবাদ, আপনার মন্তব্য জমা হয়েছে।'; toast('ধন্যবাদ, আপনার মন্তব্য জমা হয়েছে', 4200);
         cmMsg.className = 'cm__msg is-ok'; btn.disabled = false; btn.textContent = 'মন্তব্য পাঠান'; fetchList(); return;
       }
       fetch(cmEnd + '/comments', {
@@ -596,7 +597,7 @@
         if (!x.ok) throw new Error(x.d.error || 'পাঠানো যায়নি');
         var p = readP(); (p[cmPost] = p[cmPost] || []).push({ id: x.d.id, name: name, text: text, ts: Date.now() }); writeP(p);
         f.text.value = '';
-        cmMsg.textContent = 'ধন্যবাদ, আপনার মন্তব্য জমা হয়েছে।';
+        cmMsg.textContent = 'ধন্যবাদ, আপনার মন্তব্য জমা হয়েছে।'; toast('ধন্যবাদ, আপনার মন্তব্য জমা হয়েছে', 4200);
         cmMsg.className = 'cm__msg is-ok';
         fetchList();
       }).catch(function (err) {

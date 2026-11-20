@@ -1,7 +1,7 @@
 // কেয়ারি সম্পাদনা কক্ষ — প্রবেশ, কাঠামো, রাউটার, ড্যাশবোর্ড
 import { Backend } from './api.js';
 import { S, ROLES, can, loadAll, commit, statusBadge, authorName, siteUrl } from './state.js';
-import { $, $$, esc, bn, bnDate, toast, uid, nowIso, jsonText, stripTags, wordCount, MONTHS } from './util.js';
+import { $, $$, esc, bn, bnDate, toast, uid, nowIso, jsonText, stripTags, wordCount, MONTHS, confirmBox } from './util.js';
 
 const AUTH_KEY = 'keyari-admin-auth';
 let currentView = null;
@@ -206,7 +206,7 @@ let lastHash = '';
 async function route() {
   const hash = location.hash || '#/dashboard';
   if (S.dirty && hash !== lastHash) {
-    if (!window.confirm('অসংরক্ষিত পরিবর্তন আছে। না রেখেই চলে যাবেন?')) { history.replaceState(null, '', lastHash); return; }
+    if (!(await confirmBox('অসংরক্ষিত পরিবর্তন আছে। না রেখেই চলে যাবেন?', { ok: 'হ্যাঁ, চলে যাব', danger: true }))) { history.replaceState(null, '', lastHash); return; }
     S.dirty = false;
   }
   lastHash = hash;

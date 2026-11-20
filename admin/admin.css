@@ -391,3 +391,32 @@ body.ed-fullscreen { overflow: hidden; }
   .slide-row { grid-template-columns: minmax(0, 1fr) !important; }
   .slide-row .btn-row { flex-wrap: wrap; }
 }
+
+/* ---------- সব পপআপ কেয়ারির ব্র্যান্ড-স্টাইলে (মোডাল, নিশ্চিতকরণ, বার্তা, এডিটরের ডায়ালগ) ---------- */
+.modal-back { background: rgba(14, 30, 24, .48); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.modal { border-radius: 20px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0, 70, 45, .28); }
+.modal::before { content: ""; display: block; height: 4px; flex: none; background: linear-gradient(90deg, #80D3B2, #00A664 55%, #007A49); }
+.modal__head { justify-content: flex-start; gap: 12px; border-bottom: 1px solid var(--line); }
+.modal__head h2 { flex: 1; font-size: 19px; font-weight: 700; }
+.modal__brand { width: 34px; height: 34px; flex: none; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+.modal__brand svg { width: 17px; height: 17px; fill: currentColor; display: block; }
+.modal__head [data-x] { width: 34px; height: 34px; min-height: 0; padding: 0; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--text); display: grid; place-items: center; transition: background .2s, color .2s, border-color .2s; }
+.modal__head [data-x]:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.modal__foot { border-top: 1px solid var(--line); background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+.toast { display: flex; align-items: center; gap: 10px; background: linear-gradient(180deg, #1bb97a 0%, #00A664 58%, #008c55 100%); color: #fff; padding: 9px 18px 9px 9px; border-radius: 14px; font-weight: 600; box-shadow: 0 14px 34px rgba(0, 166, 100, .35), 0 2px 6px rgba(0, 0, 0, .08); }
+.toast__ico { width: 28px; height: 28px; flex: none; border-radius: 50%; background: rgba(255, 255, 255, .96); color: #00A664; display: grid; place-items: center; }
+.toast__ico svg { width: 15px; height: 15px; fill: currentColor; display: block; }
+.toast--ok { background: linear-gradient(180deg, #1bb97a 0%, #00A664 58%, #008c55 100%); }
+.toast--err { background: linear-gradient(180deg, #ea6a62 0%, #D93636 58%, #b92a2a 100%); box-shadow: 0 14px 34px rgba(217, 54, 54, .32), 0 2px 6px rgba(0, 0, 0, .08); }
+.toast--err .toast__ico { color: #D93636; }
+/* TinyMCE (লেখা-সম্পাদকের) ডায়ালগ ও বার্তা */
+.tox .tox-dialog-wrap__backdrop { background: rgba(14, 30, 24, .48) !important; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.tox .tox-dialog { border-radius: 20px !important; border: 1px solid var(--line) !important; box-shadow: 0 30px 80px rgba(0, 70, 45, .28) !important; overflow: hidden; border-top: 4px solid #00A664 !important; }
+.tox .tox-dialog__header { border-bottom: 1px solid var(--line) !important; padding: 14px 20px !important; }
+.tox .tox-dialog__title { font-weight: 700 !important; font-size: 19px !important; }
+.tox .tox-dialog__footer { border-top: 1px solid var(--line) !important; background: color-mix(in srgb, var(--accent-soft) 45%, transparent) !important; }
+.tox .tox-button:not(.tox-button--secondary):not(.tox-button--naked):not(.tox-button--icon) { background: var(--btn) !important; border-color: transparent !important; color: #fff !important; border-radius: var(--r-md) !important; }
+.tox .tox-button:not(.tox-button--secondary):not(.tox-button--naked):not(.tox-button--icon):hover { background: var(--btn-hover) !important; }
+.tox .tox-button--secondary { border-radius: var(--r-md) !important; }
+.tox .tox-notification, .tox .tox-snackbar { border-radius: 14px !important; }
+.tox .tox-snackbar { background: linear-gradient(180deg, #1bb97a, #00A664 58%, #008c55) !important; color: #fff !important; border: 0 !important; }
