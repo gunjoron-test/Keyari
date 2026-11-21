@@ -1,0 +1,40 @@
+{
+  "id": "p-mwq3vkpb2gal",
+  "title": "সোহরাওয়ার্দী",
+  "subtitle": "সোহরাওয়ার্দী",
+  "slug": "সোহরাওয়ার্দী",
+  "date": "2026-11-21T13:47:57+06:00",
+  "modified": "2026-11-21T13:48:32+06:00",
+  "status": "published",
+  "author": "sayid-ahmad",
+  "translator": "",
+  "categories": [
+    "rochonaboli"
+  ],
+  "tags": [],
+  "cover": {
+    "src": "",
+    "alt": "",
+    "caption": ""
+  },
+  "excerpt": "সোহরাওয়ার্দী…",
+  "body": "<p>সোহরাওয়ার্দী</p>",
+  "series": null,
+  "ayojon": "",
+  "featured": false,
+  "pick": false,
+  "comments": true,
+  "seo": {
+    "title": "",
+    "description": "",
+    "keyphrase": "",
+    "og_image": "",
+    "canonical": "",
+    "noindex": false
+  },
+  "layout": {
+    "justify": true,
+    "dropcap": false,
+    "toc": false
+  }
+}
