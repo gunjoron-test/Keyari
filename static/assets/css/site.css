@@ -2081,3 +2081,11 @@ body.fnp-open { overflow: hidden; }
 /* কার্ডের সারাংশ: লেখার লাইন যেমন, কার্ডেও তেমন — প্রতিটি লাইন/অনুচ্ছেদ নতুন লাইনে (কবিতা ও গল্প দুটোতেই) */
 .card__excerpt .ln { display: block; text-align: left; }
 .card__excerpt .ln:only-child { text-align: justify; }
+
+/* মোবাইলে হিরো কখনো পর্দার চেয়ে চওড়া হবে না: লম্বা শিরোনাম (nowrap) গ্রিডকে ঠেলে বড় করত, ফলে হেডার-হিরো অন্য অংশের চেয়ে বড় দেখাত */
+.home .hero { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 992px) { .home .hero { grid-template-columns: minmax(0, 1.46fr) minmax(0, 1fr); } }
+.hero__main, .hero__side, .hero__body, .hero__side .card-s, .card-s__body { min-width: 0; }
+.card-s__body { max-width: 100%; }
+/* কোনো একটি উপাদান ভুলেও পাতাকে আড়াআড়ি চওড়া করলে পুরো পাতা যেন বড় হয়ে না যায় */
+html, body { overflow-x: clip; }
