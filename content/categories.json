@@ -5,7 +5,7 @@
     "parent": null,
     "column": 1,
     "order": 1,
-    "icon": "✒",
+    "icon": "",
     "home_pill": true,
     "description": "সম্পাদকের কথা ও সূচনা-ভাবনা।"
   },
@@ -15,7 +15,7 @@
     "parent": null,
     "column": 2,
     "order": 5,
-    "icon": "📖",
+    "icon": "",
     "home_pill": true,
     "description": "গল্প, উপন্যাস ও অনুবাদ কথাসাহিত্য।"
   },
@@ -53,7 +53,7 @@
     "parent": null,
     "column": 3,
     "order": 8,
-    "icon": "💬",
+    "icon": "",
     "home_pill": true,
     "description": "সাক্ষাৎকার ও আলাপচারিতা।"
   },
@@ -63,7 +63,7 @@
     "parent": null,
     "column": 1,
     "order": 2,
-    "icon": "📜",
+    "icon": "",
     "home_pill": true,
     "description": "প্রবন্ধ, ইতিহাস, তুরাস ও ফিচার।"
   },
@@ -101,7 +101,7 @@
     "parent": null,
     "column": 2,
     "order": 4,
-    "icon": "🌿",
+    "icon": "",
     "home_pill": true,
     "description": "কবিতা ও অনুবাদ কবিতা।"
   },
@@ -111,7 +111,7 @@
     "parent": null,
     "column": 3,
     "order": 7,
-    "icon": "🔍",
+    "icon": "",
     "home_pill": true,
     "description": "আলোকপাত, মতামত ও বইকথা।"
   },
@@ -142,7 +142,7 @@
     "parent": null,
     "column": 1,
     "order": 3,
-    "icon": "🖋",
+    "icon": "",
     "home_pill": true,
     "description": "মুক্তগদ্য, স্মৃতিগদ্য, ভ্রমণকাহিনি ও দিনলিপি।"
   },
@@ -180,7 +180,7 @@
     "parent": null,
     "column": 2,
     "order": 6,
-    "icon": "👤",
+    "icon": "",
     "home_pill": true,
     "description": "গল্পভাষ্য, আত্মজীবনী ও জীবনপাঠ।"
   },
@@ -211,7 +211,7 @@
     "parent": null,
     "column": 3,
     "order": 9,
-    "icon": "🎨",
+    "icon": "",
     "home_pill": true,
     "description": "শিল্পভাবনা, শিল্পগল্প ও চিত্রকথা।"
   },
